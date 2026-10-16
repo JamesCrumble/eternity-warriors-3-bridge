@@ -1,0 +1,29 @@
+# Third-party toolchains, sources and downloads (fetched locally, never committed)
+/dotnet/
+/android-sdk
+/jdk
+/sdl-arm
+/downloads/
+/third_party/boost/
+# clone of azahar-emu/dynarmic, commit recorded in PROJECT_STATE.md
+/third_party/dynarmic/
+# Game files are the player's own (Glu), never the repo's
+/gamebin/
+/ew3data/
+/extracted/
+# Runtime, logs
+/ctl/
+/logs/
+/scratch/
+/release/
+# Build outputs
+/build/
+/port/build/
+__pycache__/
+*.apk
+*.idsig
+release.pass
+*:Zone.Identifier
+/host/build-win/
+/third_party/*
+/server/.venv/lib

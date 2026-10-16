@@ -1,0 +1,8498 @@
+{
+ "classes": {
+  "AIAgent": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "AIForTown": {
+   "base": "AIAgent",
+   "props": {}
+  },
+  "AINormalWarrior": {
+   "base": "AIAgent",
+   "props": {}
+  },
+  "AbstractCGSPayload": {
+   "base": "IJsonSerializable",
+   "props": {
+    "body": "object",
+    "cgsHeader": "CGSHeader",
+    "protocolVersion": "int"
+   }
+  },
+  "AbstractGlubnMessage": {
+   "base": null,
+   "props": {
+    "passthrough": "string"
+   }
+  },
+  "AbstractGluonMessage": {
+   "base": null,
+   "props": {
+    "passthrough": "string"
+   }
+  },
+  "AbstractGluonResponseMessage": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "action": "ErrorAction",
+    "description": "string",
+    "errorType": "ErrorType",
+    "status": "GluonResponseStatus"
+   }
+  },
+  "AcData": {
+   "base": null,
+   "props": {}
+  },
+  "AcDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "AcPrefab": {
+   "base": null,
+   "props": {}
+  },
+  "AcPrefabList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "AcceptJoinGroupInviteMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "AcceptJoinGroupInviteRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "invitiationId": "string",
+    "maxGroupSize": "int"
+   }
+  },
+  "AcceptJoinGroupInviteResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "invitationId": "string"
+   }
+  },
+  "AccountProfile": {
+   "base": null,
+   "props": {}
+  },
+  "AchievementConfig": {
+   "base": null,
+   "props": {}
+  },
+  "AchievementManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ActionController": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "ActionControllerManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ActiveAnimation": {
+   "base": "IgnoreTimeScale",
+   "props": {}
+  },
+  "ActivedTriggerInfo": {
+   "base": null,
+   "props": {}
+  },
+  "ActorProperties": {
+   "base": null,
+   "props": {}
+  },
+  "AdColony": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AdX": {
+   "base": null,
+   "props": {}
+  },
+  "AdXLogger": {
+   "base": "LoggerSingleton",
+   "props": {}
+  },
+  "AddQueuedItemsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "AddQueuedItemsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "items": "List<EscrowItem>",
+    "ownerId": "EscrowAccount",
+    "queueMaxWeight": "int",
+    "queueName": "string",
+    "targetId": "EscrowAccount"
+   }
+  },
+  "AddQueuedItemsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {}
+  },
+  "AdxTracking": {
+   "base": null,
+   "props": {}
+  },
+  "AgentKeyControl": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AiFourFoot": {
+   "base": "AINormalWarrior",
+   "props": {}
+  },
+  "AiNormalBoss": {
+   "base": "AINormalWarrior",
+   "props": {}
+  },
+  "AiNormalMonster": {
+   "base": "AINormalWarrior",
+   "props": {}
+  },
+  "AiNormalRanger": {
+   "base": "AINormalWarrior",
+   "props": {}
+  },
+  "AirGate": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AllocateSerialize": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AllocateTest": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AnalyticsClient": {
+   "base": null,
+   "props": {}
+  },
+  "AndroidAchievementsManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AndroidGPGSAchievementsButton": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AndroidGPGSButton": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AndroidGPGSLeaderboardsButton": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AndroidGiftingButton": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AndroidGoogleGiftingButton": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AndroidGoogleGiftingManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AndroidGroupGiftingButton": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AndroidPluginsManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AniSpeedAgent": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "AniSwitch": {
+   "base": null,
+   "props": {}
+  },
+  "AnimBackup": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "AnimStateMachine": {
+   "base": null,
+   "props": {}
+  },
+  "AnimatedAlpha": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AnimatedColor": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AnimationPlayer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AppLoading": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AppLogger": {
+   "base": "LoggerSingleton",
+   "props": {}
+  },
+  "AppManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AppVersion": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "ApplyCurrencyDeltaMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ApplyCurrencyDeltaRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "currencyType": "int",
+    "delta": "int"
+   }
+  },
+  "ApplyCurrencyDeltaResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "currency": "Currency",
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "ApplyDeltaToGroupAttributeMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ApplyDeltaToGroupAttributeRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeName": "string",
+    "delta": "long",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "ApplyDeltaToGroupAttributeResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "attribute": "GroupAttribute",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "ApplyDeltaToLeaderboardEntryMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ApplyDeltaToLeaderboardEntryRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "delta": "long",
+    "leaderboardName": "string",
+    "ownerId": "string"
+   }
+  },
+  "ApplyDeltaToLeaderboardEntryResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "leaderboardName": "string"
+   }
+  },
+  "ApplyShader": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ApproveJoinGroupRequestMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ApproveJoinGroupRequestRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "maxGroupSize": "int",
+    "requestId": "string"
+   }
+  },
+  "ApproveJoinGroupRequestResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "requestId": "string"
+   }
+  },
+  "AssetBundleInfo": {
+   "base": null,
+   "props": {}
+  },
+  "AssetBundlesOperation": {
+   "base": "AssetBundlesOperation",
+   "props": {}
+  },
+  "AsyncOperationCancelledException": {
+   "base": "Exception",
+   "props": {}
+  },
+  "AttachEmailCredentialsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "AttachEmailCredentialsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributes": "List<string>",
+    "email": "string",
+    "password": "string"
+   }
+  },
+  "AttachEmailCredentialsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerAndAttributesList": "List<PlayerAndAttributes>",
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "AttachFacebookCredentialsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "AttachFacebookCredentialsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "accessToken": "string",
+    "attributes": "List<string>",
+    "clientId": "string",
+    "clientSecret": "string"
+   }
+  },
+  "AttachFacebookCredentialsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerAndAttributesList": "List<PlayerAndAttributes>",
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "AttackAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "AttackAnimStateMachine": {
+   "base": "AnimStateMachine",
+   "props": {}
+  },
+  "AttackAutoIce": {
+   "base": "AttackNormal",
+   "props": {}
+  },
+  "AttackBase": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "AttackBaseInfo": {
+   "base": null,
+   "props": {}
+  },
+  "AttackBlackHole": {
+   "base": "AttackNormal",
+   "props": {}
+  },
+  "AttackBoomClose": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackCharge": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackChargeFire": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackChargeMonster": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackConditions": {
+   "base": null,
+   "props": {}
+  },
+  "AttackContinuity": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackDash": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackDashNormal": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackDodge": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackDodgeEnd": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackEarthGreatHit": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackEarthQuake": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackGhost": {
+   "base": "AttackNormal",
+   "props": {}
+  },
+  "AttackIceArmor": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackIceArmorFire": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackInfo": {
+   "base": null,
+   "props": {}
+  },
+  "AttackJump": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackKikoho": {
+   "base": "AttackContinuity",
+   "props": {}
+  },
+  "AttackLevelUp": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackMagicStorm": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackNormal": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackParry": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackParryFire": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackRevive": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackSevenPunch": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackSevenPunchEnd": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackShadowStrike": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttackShadowStrikeEnd": {
+   "base": "AttackNormal",
+   "props": {}
+  },
+  "AttackStand": {
+   "base": "AttackBase",
+   "props": {}
+  },
+  "AttributeDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "AuthenticatePlayerFlow": {
+   "base": null,
+   "props": {}
+  },
+  "AuthenticatePlayerMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "AuthenticatePlayerRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "clientSdkVersion": "string",
+    "gameId": "string",
+    "loginId": "string",
+    "password": "string",
+    "protocolVersion": "int"
+   }
+  },
+  "AuthenticatePlayerResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "expireTime": "DateTime",
+    "loginId": "string",
+    "playerInfo": "PlayerInfo",
+    "session": "string"
+   }
+  },
+  "AuthenticationValues": {
+   "base": null,
+   "props": {}
+  },
+  "AvatarController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BJIAPJson": {
+   "base": null,
+   "props": {}
+  },
+  "BMFont": {
+   "base": null,
+   "props": {}
+  },
+  "BMGlyph": {
+   "base": null,
+   "props": {}
+  },
+  "BMSymbol": {
+   "base": null,
+   "props": {}
+  },
+  "BackKeyManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BaseConfigData": {
+   "base": null,
+   "props": {}
+  },
+  "BasicFacebook": {
+   "base": "FacebookWrapper",
+   "props": {}
+  },
+  "BattleCharEffect": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BattleMonkEffect": {
+   "base": "BattleCharEffect",
+   "props": {}
+  },
+  "BattleSummary": {
+   "base": "MonoBehaviour",
+   "props": {
+    "HcCost": "int",
+    "HpCost": "int",
+    "IsFinish": "bool",
+    "MpCost": "int",
+    "RageUnleashed": "int",
+    "ReviveUsed": "int",
+    "RpCost": "int"
+   }
+  },
+  "BetterList": {
+   "base": null,
+   "props": {}
+  },
+  "BillboardLineRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BindEffectInfo": {
+   "base": null,
+   "props": {}
+  },
+  "BladeSlide": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "Blockade": {
+   "base": "AirGate",
+   "props": {}
+  },
+  "BlockadeController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BnMessage": {
+   "base": "AbstractGlubnMessage",
+   "props": {
+    "cgsid": "string",
+    "payload": "string"
+   }
+  },
+  "BnMessageType": {
+   "base": null,
+   "props": {}
+  },
+  "BnMessageTypes": {
+   "base": null,
+   "props": {}
+  },
+  "BoolConfigData": {
+   "base": "BaseConfigData",
+   "props": {}
+  },
+  "BornPoint": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BornPointCallback": {
+   "base": null,
+   "props": {}
+  },
+  "BossHPHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BossMessageReciever": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BrainAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "Brain_normalMelee": {
+   "base": "BrainAgent",
+   "props": {}
+  },
+  "Bson": {
+   "base": null,
+   "props": {}
+  },
+  "BubbleEffect": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BubbleEffectManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BuildInfo": {
+   "base": null,
+   "props": {}
+  },
+  "BulletAssembler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BulletBlackHole": {
+   "base": "EWBullet",
+   "props": {}
+  },
+  "BulletDisplayer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BulletFlash": {
+   "base": "EWBullet",
+   "props": {}
+  },
+  "BulletHitInfo": {
+   "base": null,
+   "props": {}
+  },
+  "BulletLightningBall": {
+   "base": "EWBullet",
+   "props": {}
+  },
+  "BulletLightningBallChain": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BulletLine": {
+   "base": "EWBullet",
+   "props": {}
+  },
+  "BulletList": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BulletMissile": {
+   "base": "EWBullet",
+   "props": {}
+  },
+  "BulletRanger": {
+   "base": "EWBullet",
+   "props": {}
+  },
+  "BulletRangerCap": {
+   "base": "EWBullet",
+   "props": {}
+  },
+  "BulletShadowStrike": {
+   "base": "BulletMissile",
+   "props": {}
+  },
+  "BulletTrace": {
+   "base": "BulletMissile",
+   "props": {}
+  },
+  "BulletWeaponCarrier": {
+   "base": "EWBullet",
+   "props": {}
+  },
+  "BundlesConfig": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "BuyEffect": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "BuyEnergyText": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ByteReader": {
+   "base": null,
+   "props": {}
+  },
+  "CGS": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CGSHeader": {
+   "base": null,
+   "props": {
+    "gameId": "string",
+    "messageId": "string",
+    "messageType": "string",
+    "playerId": "string",
+    "utc_timestamp": "long"
+   }
+  },
+  "CGSMessage": {
+   "base": null,
+   "props": {}
+  },
+  "CInAppPurchaseAndroid": {
+   "base": "ICInAppPurchase",
+   "props": {}
+  },
+  "CInAppPurchaseEditor": {
+   "base": "ICInAppPurchase",
+   "props": {}
+  },
+  "CInAppPurchaseInfoPH": {
+   "base": null,
+   "props": {}
+  },
+  "CInAppPurchaseProduct": {
+   "base": null,
+   "props": {}
+  },
+  "CInAppPurchaseTransaction": {
+   "base": null,
+   "props": {}
+  },
+  "CacheRequestQueue": {
+   "base": null,
+   "props": {}
+  },
+  "CacheRequestor": {
+   "base": null,
+   "props": {}
+  },
+  "CalendarEvent": {
+   "base": null,
+   "props": {
+    "calendarName": "string",
+    "data": "byte[]",
+    "endTime": "long",
+    "eventName": "string",
+    "startTime": "long",
+    "state": "CalendarEventState",
+    "tags": "List<string>",
+    "timezone": "int"
+   }
+  },
+  "CameraController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CameraSelector": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CatalogProduct": {
+   "base": null,
+   "props": {
+    "basePrice": "int",
+    "basePriceCurrency": "string",
+    "currentPrice": "int",
+    "currentPriceCurrency": "string",
+    "customOrder": "int",
+    "data": "byte[]",
+    "name": "string"
+   }
+  },
+  "CgsTest": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ChangeGroupNameMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ChangeGroupNameRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "newGroupName": "string"
+   }
+  },
+  "ChangeGroupNameResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "oldGroupName": "string"
+   }
+  },
+  "ChangeGroupOwnerMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ChangeGroupOwnerRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "playerId": "string"
+   }
+  },
+  "ChangeGroupOwnerResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "ChangeNickNameMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ChangeNickNameRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "currentName": "string",
+    "proposedName": "string"
+   }
+  },
+  "ChangeNickNameResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "suggestedNames": "List<string>"
+   }
+  },
+  "CharacterAssembler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CharacterEffectManager": {
+   "base": "EffectManagerBase",
+   "props": {}
+  },
+  "CharacterFactory": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CharacterInformation": {
+   "base": null,
+   "props": {}
+  },
+  "CharacterInstance": {
+   "base": null,
+   "props": {}
+  },
+  "CharacterSelector": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CharacterTable": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "ChargeEffect": {
+   "base": null,
+   "props": {}
+  },
+  "ChargeStateMachine": {
+   "base": "AnimStateMachine",
+   "props": {}
+  },
+  "ChartBoost": {
+   "base": null,
+   "props": {}
+  },
+  "ChatManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ChatMessage": {
+   "base": null,
+   "props": {
+    "fromPlayerInfo": "PlayerInfo",
+    "messageText": "string",
+    "messageType": "ChatMessageType",
+    "room": "string",
+    "timestamp": "DateTime"
+   }
+  },
+  "CheatManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CheckGroupNameMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "CheckGroupNameRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "CheckGroupNameResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "CheckIcon": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CheckNickNameMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "CheckNickNameRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "clientSdkVersion": "string",
+    "gameId": "string",
+    "nickName": "string",
+    "protocolVersion": "int"
+   }
+  },
+  "CheckNickNameResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "nickName": "string"
+   }
+  },
+  "ChestInfo": {
+   "base": null,
+   "props": {}
+  },
+  "ChestSpawner": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CircleCoverFlow": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CirclePlayer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ClaimQueuedItemsBeginMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ClaimQueuedItemsBeginRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "accountId": "EscrowAccount",
+    "itemIds": "List<string>"
+   }
+  },
+  "ClaimQueuedItemsBeginResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "pendingItemIds": "List<EscrowItem>"
+   }
+  },
+  "ClaimQueuedItemsCommitMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ClaimQueuedItemsCommitRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "accountId": "EscrowAccount",
+    "itemIds": "List<string>"
+   }
+  },
+  "ClaimQueuedItemsCommitResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {}
+  },
+  "ClaimQueuedItemsRollbackMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ClaimQueuedItemsRollbackRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "accountId": "EscrowAccount",
+    "itemIds": "List<string>"
+   }
+  },
+  "ClaimQueuedItemsRollbackResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {}
+  },
+  "ClearLeaderboardMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ClearLeaderboardRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "leaderboardName": "string"
+   }
+  },
+  "ClearLeaderboardResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "leaderboardName": "string"
+   }
+  },
+  "ComboCounter": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CommandManager": {
+   "base": "Photon.MonoBehaviour",
+   "props": {
+    "AttackPosCorrection": "bool",
+    "AvgCmdDelaySecond": "float"
+   }
+  },
+  "CommonIOSPlugin": {
+   "base": null,
+   "props": {}
+  },
+  "ComponentController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ConeLightRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ConnectManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ConsumeIAPMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ConsumeIAPRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "receipt": "string"
+   }
+  },
+  "ConsumeIAPResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "consumed": "bool",
+    "playerInfo": "PlayerInfo",
+    "whenConsumed": "DateTime"
+   }
+  },
+  "ConsumeIapReceiptMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ConsumeIapReceiptRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "transactionId": "string"
+   }
+  },
+  "ConsumeIapReceiptResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "bid": "string",
+    "environment": "string",
+    "playerInfo": "PlayerInfo",
+    "pod": "string",
+    "productId": "string",
+    "quantity": "string",
+    "signingStatus": "string",
+    "transactionId": "string"
+   }
+  },
+  "ContinuityMessageReceiver": {
+   "base": "MessageReciever",
+   "props": {}
+  },
+  "CoroutineHost": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CoroutineStarter": {
+   "base": "ICoroutineStarter",
+   "props": {}
+  },
+  "Cost": {
+   "base": null,
+   "props": {}
+  },
+  "CountAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CreateCharacters": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CreateGroupMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "CreateGroupRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributes": "List<GroupAttribute>",
+    "groupName": "string",
+    "groupType": "string",
+    "isGroupOpen": "bool",
+    "ownerAbandonBehaviour": "OwnerAbandonBehaviour"
+   }
+  },
+  "CreateGroupResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "CreatePlayerMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "CreatePlayerRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "clientSdkVersion": "string",
+    "gameId": "string",
+    "loginId": "string",
+    "password": "string",
+    "protocolVersion": "int"
+   }
+  },
+  "CreatePlayerResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "expireTime": "DateTime",
+    "playerInfo": "PlayerInfo",
+    "session": "string"
+   }
+  },
+  "CreateWalletReceiptMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "CreateWalletReceiptRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "currencyType": "int",
+    "initialState": "ReceiptState",
+    "providerType": "string",
+    "receiptData": "string"
+   }
+  },
+  "CreateWalletReceiptResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "currencyType": "int",
+    "initialState": "ReceiptState",
+    "playerInfo": "PlayerInfo",
+    "providerType": "string",
+    "receiptId": "string"
+   }
+  },
+  "CubicRNSpline": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "Currency": {
+   "base": null,
+   "props": {
+    "type": "int",
+    "value": "long"
+   }
+  },
+  "CurveObj": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "CustomGameServerMessageMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "CustomGameServerMessageRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "cgsId": "string",
+    "payload": "object"
+   }
+  },
+  "CustomGameServerMessageResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "payload": "object"
+   }
+  },
+  "CustomGameServerNotification": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "payload": "object"
+   }
+  },
+  "CycleCamera": {
+   "base": "EWCamera",
+   "props": {}
+  },
+  "CycleList": {
+   "base": null,
+   "props": {}
+  },
+  "DailyBonusData": {
+   "base": null,
+   "props": {}
+  },
+  "DailyBonusDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "DailyBonusManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "DamageCounter": {
+   "base": null,
+   "props": {}
+  },
+  "DamageMessageReciever": {
+   "base": "MessageReciever",
+   "props": {}
+  },
+  "DamageSetEnabled": {
+   "base": null,
+   "props": {}
+  },
+  "DataManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "DebufferSetEnabled": {
+   "base": null,
+   "props": {}
+  },
+  "DebugManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "DefenseInfo": {
+   "base": null,
+   "props": {}
+  },
+  "DeferredShadingRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "DeleteAllAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteAllAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "playerId": "string"
+   }
+  },
+  "DeleteAllAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "DeleteAllGroupAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteAllGroupAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "DeleteAllGroupAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "DeleteAllGroupMemberAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteAllGroupMemberAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "playerIds": "List<string>"
+   }
+  },
+  "DeleteAllGroupMemberAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "members": "List<PlayerInfo>"
+   }
+  },
+  "DeleteAllMyGroupMemberAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteAllMyGroupMemberAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "DeleteAllMyGroupMemberAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "memberInfo": "PlayerInfo"
+   }
+  },
+  "DeleteAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "playerId": "string"
+   }
+  },
+  "DeleteAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "DeleteDocumentByIdMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteDocumentByIdRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "documentId": "string"
+   }
+  },
+  "DeleteDocumentByIdResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {}
+  },
+  "DeleteDocumentsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteDocumentsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "tags": "List<string>"
+   }
+  },
+  "DeleteDocumentsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {}
+  },
+  "DeleteGroupAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteGroupAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "DeleteGroupAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "DeleteGroupMemberAttributesForAllMembersMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteGroupMemberAttributesForAllMembersRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "DeleteGroupMemberAttributesForAllMembersResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "members": "List<PlayerInfo>"
+   }
+  },
+  "DeleteGroupMemberAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteGroupMemberAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "groupName": "string",
+    "groupType": "string",
+    "playerIds": "List<string>"
+   }
+  },
+  "DeleteGroupMemberAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "members": "List<PlayerInfo>"
+   }
+  },
+  "DeleteGroupMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteGroupRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "DeleteGroupResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "DeleteJoinGroupInviteMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteJoinGroupInviteRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "invitiationId": "string"
+   }
+  },
+  "DeleteJoinGroupInviteResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "invitationId": "string"
+   }
+  },
+  "DeleteJoinGroupRequestMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteJoinGroupRequestRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "requestId": "string"
+   }
+  },
+  "DeleteJoinGroupRequestResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "requestId": "string"
+   }
+  },
+  "DeleteMailMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteMailRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "id": "string"
+   }
+  },
+  "DeleteMailResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "id": "string"
+   }
+  },
+  "DeleteMyGroupMemberAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "DeleteMyGroupMemberAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "DeleteMyGroupMemberAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "memberInfo": "PlayerInfo"
+   }
+  },
+  "DetailedPlayerInfo": {
+   "base": "PlayerInfo",
+   "props": {
+    "credentials": "List<ExternalCredential>"
+   }
+  },
+  "DeviceLOD": {
+   "base": null,
+   "props": {}
+  },
+  "DeviceLODSetting": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "DictionarySave": {
+   "base": null,
+   "props": {}
+  },
+  "DiscoverAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "Document": {
+   "base": null,
+   "props": {
+    "data": "byte[]",
+    "endDate": "DateTime",
+    "expires": "DateTime",
+    "id": "string",
+    "ownerId": "string",
+    "ownerType": "DocumentOwnerType",
+    "startDate": "DateTime",
+    "tags": "List<string>"
+   }
+  },
+  "DrawGizmos": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "DrillUIEffect": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "DynamicAssetLoader": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "DynamicConst": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "DynamicContent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "DynamicObjectPool": {
+   "base": null,
+   "props": {}
+  },
+  "EW2Camera": {
+   "base": "EWCamera",
+   "props": {}
+  },
+  "EW3DownloadManager": {
+   "base": "MonoBehaviour",
+   "props": {
+    "CurServerPostType": "static ServerPostType",
+    "IndexDownloadInfo": "IndexInfo",
+    "IndexDownloadName": "string",
+    "IndexDownloadType": "DownloadType",
+    "IsDownloadManagerInited": "bool",
+    "IsServerBlock": "bool"
+   }
+  },
+  "EW3DownloadManagerView": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EW3Json": {
+   "base": null,
+   "props": {}
+  },
+  "EWAnimationInfo": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "EWAnimationInfoDetails": {
+   "base": null,
+   "props": {}
+  },
+  "EWArmor": {
+   "base": "EWEquipmentsBase",
+   "props": {}
+  },
+  "EWAttackConfig": {
+   "base": null,
+   "props": {}
+  },
+  "EWAttackCountAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWBuffer": {
+   "base": null,
+   "props": {}
+  },
+  "EWBullet": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "EWCPathManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWCamera": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWCommand": {
+   "base": "EW_CMD",
+   "props": {}
+  },
+  "EWEquipmentsBase": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "EWHurtAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWJumpAction": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWObject": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWPassiveSkill": {
+   "base": null,
+   "props": {}
+  },
+  "EWPassiveSkillConfig": {
+   "base": null,
+   "props": {}
+  },
+  "EWPassiveSkillMap": {
+   "base": null,
+   "props": {}
+  },
+  "EWPath": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWPathAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWPet": {
+   "base": "EWEquipmentsBase",
+   "props": {}
+  },
+  "EWPlayerInfo": {
+   "base": null,
+   "props": {}
+  },
+  "EWSkill": {
+   "base": null,
+   "props": {}
+  },
+  "EWSkillConfig": {
+   "base": null,
+   "props": {}
+  },
+  "EWSkillMap": {
+   "base": null,
+   "props": {}
+  },
+  "EWStateAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWStateArmor1Break_normal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateArmor2Break_normal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateAttack_meleeNormal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateAvoid_rangerNormal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateBorn_meleeNormal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateBorn_town": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateDead_meleeNormal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateDead_player": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateDefy_meleeNormal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateHesitate_monster": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateHurt_meleeNormal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateIdle_meleeNormal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateIdle_monster": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateIdle_town": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateLeaveAway_monster": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateLevelUp_meleeNormal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateRevive_player": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateRun_meleeNormal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateRun_town": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWStateStand_meleeNormal": {
+   "base": "EWStateAgent",
+   "props": {}
+  },
+  "EWTicket": {
+   "base": null,
+   "props": {}
+  },
+  "EWTicketManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWWayPoints": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWWayPointsManger": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EWWeapon": {
+   "base": "EWEquipmentsBase",
+   "props": {}
+  },
+  "EWWing": {
+   "base": "EWEquipmentsBase",
+   "props": {}
+  },
+  "EW_CMD": {
+   "base": null,
+   "props": {}
+  },
+  "EW_COMMAND_NETSTREAM": {
+   "base": "EW_CMD",
+   "props": {}
+  },
+  "EW_CONST": {
+   "base": null,
+   "props": {}
+  },
+  "EdgeConnection": {
+   "base": "IDisposable",
+   "props": {}
+  },
+  "EdgeMessageType": {
+   "base": null,
+   "props": {}
+  },
+  "EdgeMessageTypes": {
+   "base": null,
+   "props": {}
+  },
+  "EffectAgent": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "EffectBinder": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EffectInstance": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EffectManagerBase": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EnchantingData": {
+   "base": null,
+   "props": {}
+  },
+  "EnchantingDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "Encrypted": {
+   "base": "IXmlSerializable",
+   "props": {}
+  },
+  "EncryptedData": {
+   "base": "ICloneable",
+   "props": {}
+  },
+  "EndlessEnemy": {
+   "base": null,
+   "props": {}
+  },
+  "EndlessLevel": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EndlessWave": {
+   "base": null,
+   "props": {}
+  },
+  "EnemyConfig": {
+   "base": null,
+   "props": {}
+  },
+  "EnemyGroup": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "EnemyGroupConfig": {
+   "base": null,
+   "props": {}
+  },
+  "EnemyInstance": {
+   "base": "CharacterInstance",
+   "props": {}
+  },
+  "EnemyInstanceInfo": {
+   "base": null,
+   "props": {}
+  },
+  "EnemySpot": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EnemySummary": {
+   "base": null,
+   "props": {}
+  },
+  "EnergyData": {
+   "base": null,
+   "props": {}
+  },
+  "EnergyDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "EnergyGain": {
+   "base": null,
+   "props": {}
+  },
+  "EnergyManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EnergyRecoverConfig": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "EnergyRecoverConfigItem": {
+   "base": null,
+   "props": {}
+  },
+  "EnergySubData": {
+   "base": null,
+   "props": {}
+  },
+  "Eot": {
+   "base": null,
+   "props": {}
+  },
+  "EotAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EquipAttList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "EquipAttributes": {
+   "base": null,
+   "props": {}
+  },
+  "EquipmentAssembler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "EquipmentsAgent": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "EquipmentsList": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "Error": {
+   "base": null,
+   "props": {}
+  },
+  "ErrorCode": {
+   "base": null,
+   "props": {}
+  },
+  "ErrorResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {}
+  },
+  "EscrowAccount": {
+   "base": null,
+   "props": {
+    "ownerId": "string",
+    "ownerType": "EscrowOwnerType"
+   }
+  },
+  "EscrowAttribute": {
+   "base": null,
+   "props": {
+    "name": "string",
+    "value": "string"
+   }
+  },
+  "EscrowItem": {
+   "base": null,
+   "props": {
+    "attributes": "List<EscrowAttribute>",
+    "count": "int",
+    "expirationDate": "DateTime",
+    "id": "string",
+    "type": "string",
+    "weight": "int"
+   }
+  },
+  "EventCode": {
+   "base": null,
+   "props": {}
+  },
+  "EvolutionData": {
+   "base": null,
+   "props": {}
+  },
+  "EvolutionDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "EvolutionUpgradeNeed": {
+   "base": null,
+   "props": {}
+  },
+  "ExternalCredential": {
+   "base": null,
+   "props": {
+    "credentialId": "string",
+    "credentialType": "PlayerCredentialType"
+   }
+  },
+  "FPSMemChecker": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FPSMemCollector": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FPSMemDataAbstract": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FPSMemDataBase": {
+   "base": "FPSMemDataAbstract",
+   "props": {}
+  },
+  "FPSMemDataPlatform": {
+   "base": "FPSMemDataAbstract",
+   "props": {}
+  },
+  "FPSMemDataScene": {
+   "base": "FPSMemDataAbstract",
+   "props": {}
+  },
+  "FPSMemRecord": {
+   "base": null,
+   "props": {}
+  },
+  "FPSMemStoreAbstract": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FPSMemStoreConsole": {
+   "base": "FPSMemStoreAbstract",
+   "props": {}
+  },
+  "FPSMemStoreWeb": {
+   "base": "FPSMemStoreAbstract",
+   "props": {}
+  },
+  "Facebook": {
+   "base": "IdentityProvider",
+   "props": {}
+  },
+  "FacebookAndroidPlugin": {
+   "base": null,
+   "props": {}
+  },
+  "FacebookGamestartHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FacebookIOSPlugin": {
+   "base": null,
+   "props": {}
+  },
+  "FacebookUIHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FastGUIOutput": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FeatureCamera": {
+   "base": "EWCamera",
+   "props": {}
+  },
+  "FightShadow": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FirstPayEventManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FixedObjectPool": {
+   "base": null,
+   "props": {}
+  },
+  "Flash": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FloatConfigData": {
+   "base": "BaseConfigData",
+   "props": {}
+  },
+  "FlurryAppCircle": {
+   "base": null,
+   "props": {}
+  },
+  "FlurryBehaviourScript": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FormatterSerializerAdapter": {
+   "base": "ISerializer",
+   "props": {}
+  },
+  "FpsCounter": {
+   "base": "MonoBehaviour",
+   "props": {
+    "debugInfo": "DebugInfoProc"
+   }
+  },
+  "FrameAnimation": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FrameAnimationUpdate": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "FriendData": {
+   "base": null,
+   "props": {}
+  },
+  "FriendInfo": {
+   "base": null,
+   "props": {}
+  },
+  "FriendManager": {
+   "base": null,
+   "props": {
+    "Changed": "bool",
+    "NeedUpdateInviteCodeInfo": "bool",
+    "SwitchCtrl": "bool",
+    "UINeedUpdateFriend": "bool",
+    "UINeedUpdateInviteCodeInfo": "bool",
+    "UINeedUpdateTownHome": "bool"
+   }
+  },
+  "FriendMessage": {
+   "base": null,
+   "props": {
+    "Nickname": "string",
+    "Online": "bool",
+    "PlayerId": "string"
+   }
+  },
+  "FuserData": {
+   "base": null,
+   "props": {}
+  },
+  "FusionConfigData": {
+   "base": null,
+   "props": {}
+  },
+  "FusionConfigDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "FusionData": {
+   "base": null,
+   "props": {}
+  },
+  "FusionDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "GBufferRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GachaEventManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GachaGroup": {
+   "base": null,
+   "props": {}
+  },
+  "GachaGroupList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "GachaGroupLoot": {
+   "base": null,
+   "props": {}
+  },
+  "GachaItem": {
+   "base": null,
+   "props": {}
+  },
+  "GachaItemList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "GachaItemShowData": {
+   "base": null,
+   "props": {}
+  },
+  "GachaLoot": {
+   "base": null,
+   "props": {}
+  },
+  "GameCenterManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GameLauncher": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GameManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GameProperties": {
+   "base": null,
+   "props": {}
+  },
+  "GameSaveData": {
+   "base": null,
+   "props": {}
+  },
+  "GameSettings": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "Gesture": {
+   "base": null,
+   "props": {}
+  },
+  "GestureController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GestureProcessor": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GetAllAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetAllAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "playerId": "string"
+   }
+  },
+  "GetAllAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "attributes": "List<PlayerAttribute>",
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "GetAllGroupAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetAllGroupAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "GetAllGroupAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "attributes": "List<GroupAttribute>",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "GetAllGroupMemberAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetAllGroupMemberAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "memberSize": "int",
+    "pageIndex": "int",
+    "playerIds": "List<string>"
+   }
+  },
+  "GetAllGroupMemberAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "memberSize": "int",
+    "membersWithAllAttributes": "List<PlayerAndAttributes>",
+    "pageIndex": "int",
+    "totalMemberSize": "long",
+    "totalPages": "int"
+   }
+  },
+  "GetAllMyGroupMemberAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetAllMyGroupMemberAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeSize": "int",
+    "groupName": "string",
+    "groupType": "string",
+    "pageIndex": "int"
+   }
+  },
+  "GetAllMyGroupMemberAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "attributeSize": "int",
+    "attributes": "PlayerAndAttributes",
+    "groupName": "string",
+    "groupType": "string",
+    "pageIndex": "int",
+    "totalAttributeSize": "long",
+    "totalPages": "int"
+   }
+  },
+  "GetAttributeForPlayersMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetAttributeForPlayersRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeName": "string",
+    "playerIds": "List<string>"
+   }
+  },
+  "GetAttributeForPlayersResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerAndAttributesList": "List<PlayerAndAttributes>"
+   }
+  },
+  "GetAttributesForPlayersMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetAttributesForPlayersRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "playerIds": "List<string>"
+   }
+  },
+  "GetAttributesForPlayersResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerAndAttributesList": "List<PlayerAndAttributes>"
+   }
+  },
+  "GetAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "playerId": "string"
+   }
+  },
+  "GetAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "attributes": "List<PlayerAttribute>",
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "GetCalendarEventMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetCalendarEventRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "calendarName": "string",
+    "eventName": "string",
+    "timezone": "int"
+   }
+  },
+  "GetCalendarEventResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "calendarEvent": "CalendarEvent"
+   }
+  },
+  "GetCalendarEventsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetCalendarEventsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "calendarNames": "List<string>",
+    "endTime": "long",
+    "startTime": "long",
+    "stateFilter": "List<CalendarEventState>",
+    "tagsFilter": "List<string>",
+    "timezone": "int"
+   }
+  },
+  "GetCalendarEventsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "events": "List<CalendarEvent>"
+   }
+  },
+  "GetCatalogMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetCatalogRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "baseCatalogName": "string",
+    "pageIndex": "int",
+    "productsPerPage": "int",
+    "sorting": "List<CatalogSort>",
+    "variantCatalogNames": "List<string>"
+   }
+  },
+  "GetCatalogResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "pageIndex": "int",
+    "products": "List<CatalogProduct>",
+    "totalNumberOfPages": "int",
+    "totalNumberOfProducts": "int"
+   }
+  },
+  "GetCurrenciesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetCurrenciesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {}
+  },
+  "GetCurrenciesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "currencies": "List<Currency>",
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "GetCurrencyMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetCurrencyRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "currencyType": "int"
+   }
+  },
+  "GetCurrencyResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "currency": "Currency",
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "GetCurrentUTCTimeMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetCurrentUTCTimeRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {}
+  },
+  "GetCurrentUTCTimeResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "time": "DateTime"
+   }
+  },
+  "GetDocumentByIdMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetDocumentByIdRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "documentId": "string"
+   }
+  },
+  "GetDocumentByIdResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "document": "Document"
+   }
+  },
+  "GetDocumentsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetDocumentsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "ownerId": "string",
+    "ownerType": "DocumentOwnerType",
+    "tags": "List<string>"
+   }
+  },
+  "GetDocumentsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "documents": "List<Document>"
+   }
+  },
+  "GetGroupAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetGroupAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "GetGroupAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "attributes": "List<GroupAttribute>",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "GetGroupMatchesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetGroupMatchesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "maxMatchesToReturn": "int",
+    "queryName": "string",
+    "referenceGroupName": "string",
+    "referenceGroupType": "string"
+   }
+  },
+  "GetGroupMatchesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupAttributes": "List<GroupAttributes>"
+   }
+  },
+  "GetGroupMemberAttributesForPlayersMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetGroupMemberAttributesForPlayersRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "groupName": "string",
+    "groupType": "string",
+    "playerIds": "List<string>"
+   }
+  },
+  "GetGroupMemberAttributesForPlayersResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "playersAndAttributes": "List<PlayerAndAttributes>"
+   }
+  },
+  "GetGroupMemberAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetGroupMemberAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "groupName": "string",
+    "groupType": "string",
+    "playerIds": "List<string>"
+   }
+  },
+  "GetGroupMemberAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "attributes": "List<PlayerAndAttributes>",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "GetGroupStatusMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetGroupStatusRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "GetGroupStatusResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "isGroupOpen": "bool"
+   }
+  },
+  "GetGroupsAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetGroupsAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groups": "List<GroupDescriptor>"
+   }
+  },
+  "GetGroupsAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "attributes": "List<GroupAttributes>"
+   }
+  },
+  "GetInboxStatusMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetInboxStatusRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {}
+  },
+  "GetInboxStatusResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "totalMailCount": "long",
+    "unreadMailCount": "long"
+   }
+  },
+  "GetJoinedRoomsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetJoinedRoomsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {}
+  },
+  "GetJoinedRoomsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "rooms": "List<string>"
+   }
+  },
+  "GetLeaderboardEntriesByRankRangeMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetLeaderboardEntriesByRankRangeRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "leaderboardName": "string",
+    "maxRank": "long",
+    "minRank": "long",
+    "type": "EntityType"
+   }
+  },
+  "GetLeaderboardEntriesByRankRangeResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "entries": "List<RankedLeaderboardEntry>",
+    "leaderboardName": "string",
+    "totalEntries": "long"
+   }
+  },
+  "GetLeaderboardEntriesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetLeaderboardEntriesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "leaderboardName": "string",
+    "ownerIds": "List<string>",
+    "type": "EntityType"
+   }
+  },
+  "GetLeaderboardEntriesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "entries": "List<RankedLeaderboardEntry>",
+    "leaderboardName": "string"
+   }
+  },
+  "GetMailMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetMailRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "page": "int",
+    "size": "int",
+    "tags": "List<string>",
+    "unreadMessagesOnly": "bool"
+   }
+  },
+  "GetMailResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "messages": "List<MailMessage>",
+    "page": "int",
+    "size": "int",
+    "totalPages": "int",
+    "totalSize": "long"
+   }
+  },
+  "GetMatchesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetMatchesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "maxMatchesToReturn": "int",
+    "presenceType": "PresenceType",
+    "queryName": "string"
+   }
+  },
+  "GetMatchesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerAndAttributes": "List<PlayerAndAttributes>"
+   }
+  },
+  "GetMyGroupMemberAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetMyGroupMemberAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "GetMyGroupMemberAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "attributes": "PlayerAndAttributes",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "GetMyGroupMembersMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetMyGroupMembersRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "memberSize": "int",
+    "pageIndex": "int"
+   }
+  },
+  "GetMyGroupMembersResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "group": "GroupSummary",
+    "memberSize": "int",
+    "members": "List<MyGroupMember>",
+    "pageIndex": "int",
+    "totalMemberSize": "long",
+    "totalPages": "int"
+   }
+  },
+  "GetMyGroupsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetMyGroupsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupType": "string"
+   }
+  },
+  "GetMyGroupsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groups": "List<GroupSummary>"
+   }
+  },
+  "GetMyReceivedGroupInvitesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetMyReceivedGroupInvitesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupType": "string"
+   }
+  },
+  "GetMyReceivedGroupInvitesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "receivedGroupInvites": "List<ReceivedGroupInvite>"
+   }
+  },
+  "GetMySentGroupInvitesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetMySentGroupInvitesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupType": "string"
+   }
+  },
+  "GetMySentGroupInvitesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "sentGroupInvites": "List<SentGroupInvite>"
+   }
+  },
+  "GetPaginatedGroupMemberAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetPaginatedGroupMemberAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "groupName": "string",
+    "groupType": "string",
+    "pageNumber": "int",
+    "pageSize": "int"
+   }
+  },
+  "GetPaginatedGroupMemberAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "playersAndAttributes": "List<PlayerAndAttributes>",
+    "totalPages": "int",
+    "totalSize": "int"
+   }
+  },
+  "GetPlayersInRoomMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetPlayersInRoomRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "roomName": "string"
+   }
+  },
+  "GetPlayersInRoomResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "players": "List<PlayerInfo>",
+    "roomName": "string"
+   }
+  },
+  "GetPlayersOnlineMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetPlayersOnlineRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "playerIds": "List<string>"
+   }
+  },
+  "GetPlayersOnlineResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "players": "List<PlayerInfo>"
+   }
+  },
+  "GetPlayersWhoLockedMeMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetPlayersWhoLockedMeRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "firstResult": "int",
+    "maxResultsToReturn": "int"
+   }
+  },
+  "GetPlayersWhoLockedMeResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "lockDetails": "List<LockDetail>"
+   }
+  },
+  "GetQueuedItemsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetQueuedItemsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "accountId": "EscrowAccount",
+    "filter": "Filter",
+    "queueName": "string"
+   }
+  },
+  "GetQueuedItemsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "items": "List<EscrowItem>"
+   }
+  },
+  "GetRandomGroupsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetRandomGroupsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupSizeMax": "int",
+    "groupSizeMin": "int",
+    "groupType": "string",
+    "maxGroupsReturned": "int"
+   }
+  },
+  "GetRandomGroupsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groups": "List<GroupSummary>"
+   }
+  },
+  "GetReceivedJoinGroupRequestsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetReceivedJoinGroupRequestsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupType": "string"
+   }
+  },
+  "GetReceivedJoinGroupRequestsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "requests": "List<ReceivedJoinGroupRequest>"
+   }
+  },
+  "GetSentJoinGroupRequestsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetSentJoinGroupRequestsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupType": "string"
+   }
+  },
+  "GetSentJoinGroupRequestsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "requests": "List<SentJoinGroupRequest>"
+   }
+  },
+  "GetSentMailMessagesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "GetSentMailMessagesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "page": "int",
+    "size": "int",
+    "tags": "List<string>"
+   }
+  },
+  "GetSentMailMessagesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "messages": "List<MailMessage>",
+    "page": "int",
+    "size": "int",
+    "totalPages": "int",
+    "totalSize": "long"
+   }
+  },
+  "GetUserInfo": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GiftData": {
+   "base": null,
+   "props": {}
+  },
+  "GiftDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "GiftItem": {
+   "base": null,
+   "props": {}
+  },
+  "GiftManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GiftState": {
+   "base": null,
+   "props": {}
+  },
+  "GlobalConfig": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "GlobalEffectManager": {
+   "base": "EffectManagerBase",
+   "props": {}
+  },
+  "GluAssetBundlesUnityEntity": {
+   "base": "UnityEntity",
+   "props": {}
+  },
+  "GluOnStatusHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GluPushNotificationsRoutiningMonoBehaviourProviderEntity": {
+   "base": "MonoBehaviourProvider.Entity",
+   "props": {}
+  },
+  "Glubn": {
+   "base": null,
+   "props": {}
+  },
+  "GlubnClient": {
+   "base": null,
+   "props": {}
+  },
+  "GlubnConnection": {
+   "base": "IDisposable",
+   "props": {}
+  },
+  "GlubnImpl": {
+   "base": "Glubn",
+   "props": {}
+  },
+  "GlubnMgr": {
+   "base": "MonoBehaviour",
+   "props": {
+    "GlubnSwitch": "bool",
+    "Host": "string",
+    "Port": "int"
+   }
+  },
+  "GlubnString": {
+   "base": null,
+   "props": {}
+  },
+  "Gluon": {
+   "base": null,
+   "props": {}
+  },
+  "GluonCGSManager": {
+   "base": null,
+   "props": {
+    "BattleToken": "string"
+   }
+  },
+  "GluonClient": {
+   "base": null,
+   "props": {}
+  },
+  "GluonException": {
+   "base": "Exception",
+   "props": {}
+  },
+  "GluonImpl": {
+   "base": "Gluon",
+   "props": {}
+  },
+  "GluonManager": {
+   "base": "MonoBehaviour",
+   "props": {
+    "delegateOnGetServerTime": "OnGetServerTime"
+   }
+  },
+  "GluonMessage": {
+   "base": null,
+   "props": {}
+  },
+  "GluonPlayerAttributes": {
+   "base": null,
+   "props": {}
+  },
+  "GluonTest": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GluonUtils": {
+   "base": null,
+   "props": {}
+  },
+  "GoogleAnalyticsHelper": {
+   "base": null,
+   "props": {}
+  },
+  "GroupAndModifiedAttributes": {
+   "base": null,
+   "props": {
+    "currentMemberCount": "int",
+    "group": "GroupDescriptor",
+    "maxMemberLimit": "int",
+    "modifiedAttributes": "List<ModifiedGroupAttribute>"
+   }
+  },
+  "GroupAttribute": {
+   "base": null,
+   "props": {
+    "name": "string",
+    "value": "object"
+   }
+  },
+  "GroupAttributes": {
+   "base": null,
+   "props": {
+    "attributes": "List<GroupAttribute>",
+    "group": "GroupDescriptor"
+   }
+  },
+  "GroupAttributesModifiedNotification": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "listGroupAndModifiedAttributes": "List<GroupAndModifiedAttributes>"
+   }
+  },
+  "GroupChat": {
+   "base": "IChatChannel",
+   "props": {}
+  },
+  "GroupDescriptor": {
+   "base": null,
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "GroupDescriptorWithStatus": {
+   "base": "GroupDescriptor",
+   "props": {
+    "subscriptionStatus": "GroupSubscriptionStatus"
+   }
+  },
+  "GroupMembershipModifiedNotification": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "group": "GroupSummary",
+    "modificationType": "ModificationType"
+   }
+  },
+  "GroupStateModifiedNotification": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "currentValue": "string",
+    "group": "GroupSummary",
+    "modificationType": "ModificationType",
+    "oldValue": "string"
+   }
+  },
+  "GroupSummary": {
+   "base": null,
+   "props": {
+    "attributes": "List<GroupAttribute>",
+    "groupSize": "int",
+    "isOpen": "bool",
+    "members": "List<PlayerInfo>",
+    "name": "string",
+    "ownerPlayerInfo": "PlayerInfo",
+    "type": "string"
+   }
+  },
+  "GuildJoinRequest": {
+   "base": null,
+   "props": {}
+  },
+  "GuildManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "GuildMember": {
+   "base": null,
+   "props": {}
+  },
+  "HTTPException": {
+   "base": "Exception",
+   "props": {}
+  },
+  "HUDActorController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "HUDBattleTopBar": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "HUDMemberHPController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "HUDPvPProgressBar": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "HUDSkillHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "HUDTownPortrait": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "HackValidator": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "HandleHitTarget": {
+   "base": null,
+   "props": {}
+  },
+  "HardnessAndSharpness": {
+   "base": null,
+   "props": {}
+  },
+  "HelpShift": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "HeroEquipmentWeight": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "HeroIconRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "HeroInstance": {
+   "base": "CharacterInstance",
+   "props": {}
+  },
+  "HighMeshesManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "HurtAnimStateMachine": {
+   "base": "AnimStateMachine",
+   "props": {}
+  },
+  "IAPContorl": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "IAPIOSPlugin": {
+   "base": null,
+   "props": {}
+  },
+  "IAPInfo": {
+   "base": null,
+   "props": {}
+  },
+  "IAPManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ICInAppPurchase": {
+   "base": null,
+   "props": {}
+  },
+  "IChatChannel": {
+   "base": null,
+   "props": {
+    "IsCooldownEnable": "bool",
+    "IsCooldowning": "bool"
+   }
+  },
+  "IconRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "Identity": {
+   "base": null,
+   "props": {}
+  },
+  "IdentityProvider": {
+   "base": null,
+   "props": {}
+  },
+  "IgnoreTimeScale": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "Index": {
+   "base": null,
+   "props": {}
+  },
+  "IndexInfo": {
+   "base": null,
+   "props": {}
+  },
+  "InitInformation": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "InitItem": {
+   "base": null,
+   "props": {}
+  },
+  "InputManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "Instantiation": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "IntConfigData": {
+   "base": "BaseConfigData",
+   "props": {}
+  },
+  "InterstitialCacheRequest": {
+   "base": "ICacheRequest",
+   "props": {}
+  },
+  "InterstitialNotCachedException": {
+   "base": "NotCachedException",
+   "props": {}
+  },
+  "InviteCodeInfo": {
+   "base": null,
+   "props": {
+    "Code": "string",
+    "CurGoalTimes": "int",
+    "HasCode": "bool",
+    "RemainTimes": "int",
+    "SwtichOn": "bool",
+    "UseTimes": "int"
+   }
+  },
+  "InviteCodeRewardInfo": {
+   "base": null,
+   "props": {
+    "Desc": "string",
+    "Index": "int",
+    "RewardItemCount": "int",
+    "RewardItemID": "string",
+    "State": "STATE",
+    "Times": "int"
+   }
+  },
+  "ItemData": {
+   "base": null,
+   "props": {}
+  },
+  "ItemDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "ItemDataManager": {
+   "base": null,
+   "props": {}
+  },
+  "ItemInventory": {
+   "base": null,
+   "props": {}
+  },
+  "ItemPack": {
+   "base": null,
+   "props": {}
+  },
+  "JoinRoomMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "JoinRoomRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "roomName": "string"
+   }
+  },
+  "JoinRoomResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "roomName": "string"
+   }
+  },
+  "Joystick": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "JoystickTest": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "KCCamera": {
+   "base": "EWCamera",
+   "props": {}
+  },
+  "KillAllBornPoint": {
+   "base": "BornPointCallback",
+   "props": {}
+  },
+  "KillEnemyData": {
+   "base": null,
+   "props": {}
+  },
+  "KontagentManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LBufferRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LEVEL_UP_CDI": {
+   "base": null,
+   "props": {}
+  },
+  "LIveOpsManagerHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LanguageDataBase": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "LanguageSelection": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LanguageTextEntry": {
+   "base": null,
+   "props": {}
+  },
+  "LeaderboardEntry": {
+   "base": null,
+   "props": {
+    "extraInfo": "string",
+    "leaderboardName": "string",
+    "ownerId": "string",
+    "value": "long"
+   }
+  },
+  "LeaveGroupMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "LeaveGroupRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "LeaveGroupResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "LeaveRoomMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "LeaveRoomRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "roomName": "string"
+   }
+  },
+  "LeaveRoomResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "roomName": "string"
+   }
+  },
+  "LevelConfig": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "LevelData": {
+   "base": null,
+   "props": {}
+  },
+  "LevelEnemyConfig": {
+   "base": null,
+   "props": {}
+  },
+  "LevelLightInfo": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LevelLootData": {
+   "base": null,
+   "props": {}
+  },
+  "LevelLootDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "LevelLootItemData": {
+   "base": null,
+   "props": {}
+  },
+  "LevelManager": {
+   "base": "Photon.MonoBehaviour",
+   "props": {
+    "LevelFinishFlag": "bool"
+   }
+  },
+  "LevelRewardData": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "LevelRewardRecord": {
+   "base": null,
+   "props": {}
+  },
+  "LightBinder": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LightningBallDisplayer": {
+   "base": "BulletDisplayer",
+   "props": {}
+  },
+  "List": {
+   "base": "SerializableObject",
+   "props": {}
+  },
+  "ListMask": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LiveOpsConditionDesc": {
+   "base": null,
+   "props": {
+    "Priority": "int",
+    "TagsList": "ArrayList"
+   }
+  },
+  "LiveOpsDataDesc": {
+   "base": null,
+   "props": {
+    "DataName": "string",
+    "dataContents": "ArrayList"
+   }
+  },
+  "LiveOpsDesc": {
+   "base": null,
+   "props": {}
+  },
+  "LiveOpsManager": {
+   "base": "MonoBehaviour",
+   "props": {
+    "EnableUpdate": "static bool",
+    "IsChatServerEnable": "bool",
+    "IsGuildServerEnable": "bool",
+    "IsLeaderboardEnable": "bool",
+    "IsUpdatingLiveOpsData": "static bool"
+   }
+  },
+  "LiveOpsManagerViewer": {
+   "base": "MonoBehaviour",
+   "props": {
+    "AlertTextMessage": "string",
+    "AlertTime": "DateTime"
+   }
+  },
+  "LiveOpsModificationDesc": {
+   "base": null,
+   "props": {
+    "Condition": "LiveOpsConditionDesc",
+    "CurModificationState": "LiveOpsManager.ModificationState",
+    "ModificationName": "string"
+   }
+  },
+  "LiveOpsTimeDesc": {
+   "base": null,
+   "props": {
+    "Type": "string"
+   }
+  },
+  "LiveOpsVersionDesc": {
+   "base": null,
+   "props": {}
+  },
+  "LiveOpsWebViewNative": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LoadbalancingPeer": {
+   "base": "PhotonPeer",
+   "props": {}
+  },
+  "LoadingManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LoadingScreen": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LoadingScreenBootstrap": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LobbyInfo": {
+   "base": null,
+   "props": {}
+  },
+  "Localization": {
+   "base": "MonoBehaviour",
+   "props": {
+    "Mode": "EnumResourcePath"
+   }
+  },
+  "LocalizationContainer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LocalizationFontDataSet": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "LocalizationInfo": {
+   "base": null,
+   "props": {}
+  },
+  "Location": {
+   "base": null,
+   "props": {}
+  },
+  "Locator": {
+   "base": null,
+   "props": {}
+  },
+  "LockAndGetAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "LockAndGetAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributeNames": "List<string>",
+    "lockDurationSeconds": "int",
+    "optimisticLocking": "bool",
+    "playerIds": "List<string>"
+   }
+  },
+  "LockAndGetAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerAndAttributes": "List<PlayerAndAttributes>"
+   }
+  },
+  "LockDetail": {
+   "base": null,
+   "props": {
+    "attributesModifiedWhenLocked": "List<PlayerAttribute>",
+    "lockerAttributes": "List<PlayerAttribute>",
+    "playerInfo": "PlayerInfo",
+    "reverseLockTime": "DateTime",
+    "whenLocked": "DateTime"
+   }
+  },
+  "LockGate": {
+   "base": "AirGate",
+   "props": {}
+  },
+  "Logger": {
+   "base": "LoggerSingleton",
+   "props": {}
+  },
+  "LoggerSingleton": {
+   "base": null,
+   "props": {}
+  },
+  "LoginCharAnimation": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LoginCharEffect": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LoginEmailFlow": {
+   "base": null,
+   "props": {}
+  },
+  "LoginFacebookFlow": {
+   "base": null,
+   "props": {}
+  },
+  "LoginMageEffect": {
+   "base": "LoginCharEffect",
+   "props": {}
+  },
+  "LoginMonkEffect": {
+   "base": "LoginCharEffect",
+   "props": {}
+  },
+  "LoginStateHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LoginWarriorEffect": {
+   "base": "LoginCharEffect",
+   "props": {}
+  },
+  "LoopList": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LootAgent": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "LootCollider": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LootData": {
+   "base": null,
+   "props": {}
+  },
+  "LootDatabase": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "LootEnemy": {
+   "base": null,
+   "props": {}
+  },
+  "LootManager": {
+   "base": "MonoBehaviour",
+   "props": {
+    "CurRole": "int",
+    "MF": "float"
+   }
+  },
+  "LootMove": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LootObjData": {
+   "base": null,
+   "props": {}
+  },
+  "LootObject": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LootResult": {
+   "base": null,
+   "props": {}
+  },
+  "LootTest": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LootTrigger": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "LootWeight": {
+   "base": null,
+   "props": {}
+  },
+  "MInt": {
+   "base": "SerializableObject",
+   "props": {}
+  },
+  "MMediaEffectInfo": {
+   "base": null,
+   "props": {}
+  },
+  "MMediaEffectInfoAll": {
+   "base": null,
+   "props": {}
+  },
+  "MMediaEffectInfoCemara": {
+   "base": "MMediaEffectInfoAll",
+   "props": {}
+  },
+  "MMediaEffectInfoList": {
+   "base": null,
+   "props": {}
+  },
+  "MMediaEffectInfoListAll": {
+   "base": null,
+   "props": {}
+  },
+  "MMediaEffectInfoMap": {
+   "base": null,
+   "props": {}
+  },
+  "MMediaEffectInfoMapAll": {
+   "base": null,
+   "props": {}
+  },
+  "MMediaEffectInfoSfx": {
+   "base": "MMediaEffectInfoAll",
+   "props": {}
+  },
+  "MMediaEffectInfoSight": {
+   "base": "MMediaEffectInfoAll",
+   "props": {}
+  },
+  "MODEL_LIST": {
+   "base": null,
+   "props": {}
+  },
+  "MString": {
+   "base": "SerializableObject",
+   "props": {}
+  },
+  "MUInt": {
+   "base": "MInt",
+   "props": {}
+  },
+  "MailBody": {
+   "base": null,
+   "props": {}
+  },
+  "MailMessage": {
+   "base": null,
+   "props": {
+    "body": "string",
+    "createDate": "DateTime",
+    "fromPlayerInfo": "PlayerInfo",
+    "id": "string",
+    "isRead": "bool",
+    "subject": "string",
+    "tags": "List<string>",
+    "toPlayerInfo": "PlayerInfo"
+   }
+  },
+  "MailMessageNotification": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "message": "MailMessage"
+   }
+  },
+  "Mailbox": {
+   "base": null,
+   "props": {
+    "ViewMail": "MultiUseMailMessage"
+   }
+  },
+  "MainLightBinder": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "MainThreadCallbackPump": {
+   "base": "IMainThreadCallbackPump",
+   "props": {}
+  },
+  "MarkMailAsReadMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "MarkMailAsReadRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "id": "string"
+   }
+  },
+  "MarkMailAsReadResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "id": "string"
+   }
+  },
+  "MatchPlayerManager": {
+   "base": "Photon.MonoBehaviour",
+   "props": {}
+  },
+  "MatchPlayerProfile": {
+   "base": null,
+   "props": {}
+  },
+  "MaterialBuilder": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "MaterialInst": {
+   "base": null,
+   "props": {}
+  },
+  "MaterialManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "MenuSelectionGestureProcessor": {
+   "base": "GestureProcessor",
+   "props": {}
+  },
+  "MeshUnloader": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "Message": {
+   "base": null,
+   "props": {}
+  },
+  "MessageBoxCamera": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "MessageController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "MessageController2": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "MessageReciever": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "MiniJSON": {
+   "base": null,
+   "props": {}
+  },
+  "MobileAppTracking": {
+   "base": null,
+   "props": {}
+  },
+  "ModelAnimInstance": {
+   "base": "EffectInstance",
+   "props": {}
+  },
+  "ModifiableMaterialBuilder": {
+   "base": "MaterialBuilder",
+   "props": {}
+  },
+  "ModifiableMaterialInst": {
+   "base": "MaterialInst",
+   "props": {}
+  },
+  "ModifiedGroupAttribute": {
+   "base": null,
+   "props": {
+    "name": "string",
+    "value": "object"
+   }
+  },
+  "MonoBehaviour": {
+   "base": "UnityEngine.MonoBehaviour",
+   "props": {}
+  },
+  "MonoBehaviourProvider": {
+   "base": "IMonoBehaviourProvider",
+   "props": {}
+  },
+  "MonthCardIAP": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "MoreAppsCacheRequest": {
+   "base": "ICacheRequest",
+   "props": {}
+  },
+  "MoreAppsNotCachedException": {
+   "base": "NotCachedException",
+   "props": {}
+  },
+  "MountingTest": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "MoveAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "MoveAnimStateMachine": {
+   "base": "AnimStateMachine",
+   "props": {}
+  },
+  "MultiUseMailMessage": {
+   "base": "MailMessage",
+   "props": {}
+  },
+  "MultiplayerDataManager": {
+   "base": "Photon.MonoBehaviour",
+   "props": {
+    "CurBattleReadyStep": "int",
+    "PvPTimestamp": "string"
+   }
+  },
+  "MultiplayerDataSet": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "MyGroupMember": {
+   "base": null,
+   "props": {
+    "permissions": "List<string>",
+    "playerInfo": "PlayerInfo",
+    "role": "string"
+   }
+  },
+  "MyTest": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "MyUIButtonPlayAnimation": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "NETWORK_CONST": {
+   "base": null,
+   "props": {}
+  },
+  "NGUICoverFlow": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "NGUIDebug": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "Nanigans": {
+   "base": null,
+   "props": {}
+  },
+  "NativeUI": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "NetworkAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "NetworkingPeer": {
+   "base": "LoadbalancingPeer",
+   "props": {
+    "CustomAuthenticationValues": "AuthenticationValues",
+    "lobby": "TypedLobby"
+   }
+  },
+  "NewMailQueue": {
+   "base": null,
+   "props": {}
+  },
+  "NormalAnimStateMachine": {
+   "base": "AnimStateMachine",
+   "props": {}
+  },
+  "NormalInfo": {
+   "base": null,
+   "props": {}
+  },
+  "NotCachedException": {
+   "base": "Exception",
+   "props": {}
+  },
+  "NotificationController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "NotificationsLogger": {
+   "base": "LoggerSingleton",
+   "props": {}
+  },
+  "NumberIncreaseEffect": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "OBJECT_ID": {
+   "base": null,
+   "props": {}
+  },
+  "ObjectManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "OnScreenLog": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "OnTapEvent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "OneHitInfo": {
+   "base": null,
+   "props": {}
+  },
+  "OperationCode": {
+   "base": null,
+   "props": {}
+  },
+  "OutLineRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "OutLineRendererSimple": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "OverheadViewController": {
+   "base": "IgnoreTimeScale",
+   "props": {}
+  },
+  "PBitStream": {
+   "base": null,
+   "props": {
+    "Position": "int"
+   }
+  },
+  "PLevelData": {
+   "base": null,
+   "props": {}
+  },
+  "PSkillBerserkerRage": {
+   "base": "PassiveSkillBase",
+   "props": {}
+  },
+  "PVPLevelLightInfo": {
+   "base": "LevelLightInfo",
+   "props": {}
+  },
+  "ParameterCode": {
+   "base": null,
+   "props": {}
+  },
+  "ParticleConfigBase": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ParticleConfigCommon": {
+   "base": "ParticleConfigBase",
+   "props": {}
+  },
+  "ParticleManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ParticleSystemInstance": {
+   "base": "EffectInstance",
+   "props": {}
+  },
+  "PassiveBoom": {
+   "base": "PassiveSkillBase",
+   "props": {}
+  },
+  "PassiveEnergySiphon": {
+   "base": "PassiveSkillBase",
+   "props": {}
+  },
+  "PassiveIceBoundry": {
+   "base": "PassiveSkillBase",
+   "props": {}
+  },
+  "PassiveMantra": {
+   "base": "PassiveSkillBase",
+   "props": {}
+  },
+  "PassiveReflexParry": {
+   "base": "PassiveSkillBase",
+   "props": {}
+  },
+  "PassiveRunHit": {
+   "base": "PassiveSkillBase",
+   "props": {}
+  },
+  "PassiveSkillAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PassiveSkillBase": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PathLoft": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PetAI": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PhotonHandler": {
+   "base": "Photon.MonoBehaviour",
+   "props": {}
+  },
+  "PhotonLagSimulationGui": {
+   "base": "MonoBehaviour",
+   "props": {
+    "Peer": "PhotonPeer"
+   }
+  },
+  "PhotonManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PhotonMessageInfo": {
+   "base": null,
+   "props": {}
+  },
+  "PhotonPlayer": {
+   "base": null,
+   "props": {}
+  },
+  "PhotonStatsGui": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PhotonStream": {
+   "base": null,
+   "props": {}
+  },
+  "PhotonView": {
+   "base": "Photon.MonoBehaviour",
+   "props": {}
+  },
+  "PhysicalMessageReciever": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PingCloudRegions": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PlayHavenBinding": {
+   "base": null,
+   "props": {}
+  },
+  "PlayHavenContentRequester": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PlayHavenManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PlayHavenVGPHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PlayerAndAttributes": {
+   "base": null,
+   "props": {
+    "attributes": "List<PlayerAttribute>",
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "PlayerAttribute": {
+   "base": null,
+   "props": {
+    "name": "string",
+    "value": "object"
+   }
+  },
+  "PlayerAuthorized": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "edgeServerAddress": "string",
+    "playerId": "string"
+   }
+  },
+  "PlayerInfo": {
+   "base": null,
+   "props": {
+    "nickName": "string",
+    "playerId": "string"
+   }
+  },
+  "PlayerInfoManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PlayerInventory": {
+   "base": null,
+   "props": {}
+  },
+  "PlayerLevelData": {
+   "base": null,
+   "props": {}
+  },
+  "PlayerLevelDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "PlayerMessageReceiver": {
+   "base": "MessageReciever",
+   "props": {}
+  },
+  "PlayerMutedNotification": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "PlayerProfile": {
+   "base": null,
+   "props": {}
+  },
+  "PlayerPvPStatisticsData": {
+   "base": null,
+   "props": {}
+  },
+  "PluginAdColony": {
+   "base": null,
+   "props": {}
+  },
+  "PluginManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PluginPlayHaven": {
+   "base": null,
+   "props": {}
+  },
+  "PluginPushNotifications": {
+   "base": null,
+   "props": {}
+  },
+  "PointLightRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PreBoot": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PrefetchedFile": {
+   "base": null,
+   "props": {}
+  },
+  "PreviewAnimation": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PreviewGestureProcessor": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PropertyScore": {
+   "base": null,
+   "props": {}
+  },
+  "PropertyWeightData": {
+   "base": null,
+   "props": {}
+  },
+  "PropertyWeightDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "PunEvent": {
+   "base": null,
+   "props": {}
+  },
+  "Purchase": {
+   "base": null,
+   "props": {}
+  },
+  "PushData": {
+   "base": null,
+   "props": {}
+  },
+  "PushManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PushNotifications": {
+   "base": null,
+   "props": {}
+  },
+  "PushNotifications_Android": {
+   "base": "PushNotifications",
+   "props": {
+    "alertAction": "string",
+    "alertBody": "string",
+    "alertLaunchImage": "string",
+    "applicationIconBadgeNumber": "int",
+    "fireDate": "DateTime",
+    "hasAction": "bool",
+    "soundName": "string",
+    "timeZone": "string",
+    "userInfo": "IDictionary"
+   }
+  },
+  "PushServerRegister": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "PvPBattleSummary": {
+   "base": "MonoBehaviour",
+   "props": {
+    "HcCost": "int",
+    "HpCost": "int",
+    "MpCost": "int",
+    "RpCost": "int"
+   }
+  },
+  "PvPPlayerSummaryData": {
+   "base": null,
+   "props": {}
+  },
+  "PvpTutorial": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "QuadMeshFactory": {
+   "base": null,
+   "props": {}
+  },
+  "QualityInformation": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "QuestData": {
+   "base": null,
+   "props": {}
+  },
+  "QuestDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "QuestManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "QuestProgress": {
+   "base": null,
+   "props": {}
+  },
+  "QuestRewardItem": {
+   "base": null,
+   "props": {}
+  },
+  "QuestTarget": {
+   "base": null,
+   "props": {}
+  },
+  "QuestTargetProgress": {
+   "base": null,
+   "props": {}
+  },
+  "QuitButton": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "RageAgent": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "RageCell": {
+   "base": null,
+   "props": {}
+  },
+  "RaidBossBuffData": {
+   "base": null,
+   "props": {}
+  },
+  "RaidBossContextTrigger": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "RaidBossEventInfo": {
+   "base": null,
+   "props": {}
+  },
+  "RaidBossEventManager": {
+   "base": "MonoBehaviour",
+   "props": {
+    "BattleWin": "bool",
+    "BuffData": "RaidBossBuffData",
+    "BuyClearCD": "bool",
+    "EnterMainFromTownUI": "bool",
+    "FailReason": "RAIDBOSS_FAILREASON",
+    "IsRaidBoss": "bool",
+    "MsgBoxQuit": "GameObject",
+    "OldSoulshard": "int",
+    "ReturnFromRaidBoss": "bool",
+    "SelectedBossID": "string",
+    "ShowingMsgBoxEventEnd": "bool",
+    "TimeLimit": "float",
+    "TimerCounting": "bool",
+    "UseBuff": "bool",
+    "townUIHasCurActiveEvent": "bool"
+   }
+  },
+  "RaidBossInfo": {
+   "base": null,
+   "props": {}
+  },
+  "RaidBossPlayerInfo": {
+   "base": null,
+   "props": {}
+  },
+  "RaidBossPodiumCfg": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "RaiseEventOptions": {
+   "base": null,
+   "props": {}
+  },
+  "RangerAgent": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "RankedLeaderboardEntry": {
+   "base": "LeaderboardEntry",
+   "props": {
+    "entryValueRank": "long"
+   }
+  },
+  "ReceivePrivateMessageNotification": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "fromPlayerInfo": "PlayerInfo",
+    "message": "string",
+    "timestamp": "DateTime"
+   }
+  },
+  "ReceiveRoomMessageNotification": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "fromPlayerInfo": "PlayerInfo",
+    "message": "string",
+    "room": "string",
+    "timestamp": "DateTime"
+   }
+  },
+  "ReceivedGroupInvite": {
+   "base": null,
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "invitationId": "string",
+    "senderPlayerInfo": "PlayerInfo"
+   }
+  },
+  "ReceivedJoinGroupRequest": {
+   "base": null,
+   "props": {
+    "createDate": "DateTime",
+    "groupName": "string",
+    "groupType": "string",
+    "playerInfo": "PlayerInfo",
+    "requestId": "string"
+   }
+  },
+  "RegisterPushNotificationTokenMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "RegisterPushNotificationTokenRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "deviceUDID": "string",
+    "pushNotificationDeviceToken": "string",
+    "tags": "List<string>"
+   }
+  },
+  "RegisterPushNotificationTokenResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {}
+  },
+  "RemoteNotificationResponseEventArgs": {
+   "base": "EventArgs",
+   "props": {}
+  },
+  "RemoteNotificationsManager": {
+   "base": null,
+   "props": {}
+  },
+  "RemoveLeaderboardEntryMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "RemoveLeaderboardEntryRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "leaderboardName": "string",
+    "ownerId": "string"
+   }
+  },
+  "RemoveLeaderboardEntryResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "leaderboardName": "string"
+   }
+  },
+  "RemovePlayerFromGroupMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "RemovePlayerFromGroupRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "playerId": "string"
+   }
+  },
+  "RemovePlayerFromGroupResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "Request": {
+   "base": null,
+   "props": {}
+  },
+  "RequestFrequencyLimiter": {
+   "base": null,
+   "props": {}
+  },
+  "RequestPriority": {
+   "base": "IComparable",
+   "props": {}
+  },
+  "RequestState": {
+   "base": null,
+   "props": {}
+  },
+  "RequestStatus": {
+   "base": null,
+   "props": {}
+  },
+  "ResolveEmailConflictMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ResolveEmailConflictRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "email": "string",
+    "loginId": "string",
+    "password": "string",
+    "playerId": "string"
+   }
+  },
+  "ResolveEmailConflictResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "ResolveFacebookConflictMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ResolveFacebookConflictRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "accessToken": "string",
+    "clientId": "string",
+    "clientSecret": "string",
+    "loginId": "string",
+    "playerId": "string"
+   }
+  },
+  "ResolveFacebookConflictResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "Response": {
+   "base": null,
+   "props": {}
+  },
+  "Reward": {
+   "base": null,
+   "props": {}
+  },
+  "RewardItem": {
+   "base": null,
+   "props": {}
+  },
+  "RimLightRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "Room": {
+   "base": "RoomInfo",
+   "props": {}
+  },
+  "RoomInfo": {
+   "base": null,
+   "props": {
+    "isLocalClientInside": "bool"
+   }
+  },
+  "RoomOptions": {
+   "base": null,
+   "props": {}
+  },
+  "Rot3rdCamera": {
+   "base": "EWCamera",
+   "props": {}
+  },
+  "Routine": {
+   "base": null,
+   "props": {}
+  },
+  "RuneData": {
+   "base": null,
+   "props": {}
+  },
+  "RuneDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "Runtime": {
+   "base": null,
+   "props": {}
+  },
+  "SHAKE": {
+   "base": null,
+   "props": {}
+  },
+  "SaveArray": {
+   "base": "SaveValue",
+   "props": {}
+  },
+  "SaveBool": {
+   "base": "SaveValue",
+   "props": {
+    "Value": "bool"
+   }
+  },
+  "SaveManager": {
+   "base": null,
+   "props": {}
+  },
+  "SaveNumber": {
+   "base": "SaveValue",
+   "props": {
+    "Value": "double"
+   }
+  },
+  "SaveObject": {
+   "base": "SaveValue",
+   "props": {}
+  },
+  "SaveString": {
+   "base": "SaveValue",
+   "props": {
+    "Value": "string"
+   }
+  },
+  "SaveValue": {
+   "base": null,
+   "props": {}
+  },
+  "SearchForGroupsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SearchForGroupsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupType": "string",
+    "pageIndex": "int",
+    "pageSize": "int",
+    "searchString": "string",
+    "searchType": "SearchType"
+   }
+  },
+  "SearchForGroupsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groups": "List<GroupSummary>",
+    "totalGroupsFound": "long"
+   }
+  },
+  "SearchForPlayersMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SearchForPlayersRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "identifiers": "List<string>",
+    "maxPlayersToReturn": "int",
+    "playerCredentialType": "PlayerCredentialType"
+   }
+  },
+  "SearchForPlayersResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "players": "List<DetailedPlayerInfo>"
+   }
+  },
+  "SendJoinGroupInviteMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SendJoinGroupInviteRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "playerId": "string"
+   }
+  },
+  "SendJoinGroupInviteResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "invitationId": "string"
+   }
+  },
+  "SendJoinGroupRequestMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SendJoinGroupRequestRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "maxGroupSize": "int"
+   }
+  },
+  "SendJoinGroupRequestResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "requestStatus": "JoinGroupRequestStatus"
+   }
+  },
+  "SendMailMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SendMailRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "body": "string",
+    "expiryDate": "DateTime?",
+    "fromPlayerId": "string",
+    "subject": "string",
+    "tags": "List<string>",
+    "toPlayerId": "string"
+   }
+  },
+  "SendMailResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "id": "string"
+   }
+  },
+  "SendPrivateMessageMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SendPrivateMessageRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "message": "string",
+    "to": "string"
+   }
+  },
+  "SendPrivateMessageResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {}
+  },
+  "SendRoomMessageMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SendRoomMessageRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "message": "string",
+    "room": "string"
+   }
+  },
+  "SendRoomMessageResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {}
+  },
+  "SentGroupInvite": {
+   "base": null,
+   "props": {
+    "createDate": "DateTime",
+    "groupName": "string",
+    "groupType": "string",
+    "invitationId": "string",
+    "recipientPlayerInfo": "PlayerInfo"
+   }
+  },
+  "SentJoinGroupRequest": {
+   "base": null,
+   "props": {
+    "createDate": "DateTime",
+    "groupName": "string",
+    "groupType": "string",
+    "requestId": "string"
+   }
+  },
+  "SerializableObject": {
+   "base": null,
+   "props": {}
+  },
+  "ServerSettings": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "ServiceAttached": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "serviceType": "ServiceType"
+   }
+  },
+  "SessionNotification": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "session": "string"
+   }
+  },
+  "SetAttributesAndUnlockMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetAttributesAndUnlockRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "playerAndAttributes": "List<PlayerAndAttributes>"
+   }
+  },
+  "SetAttributesAndUnlockResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerAndAttributes": "List<PlayerAndAttributes>"
+   }
+  },
+  "SetAttributesForPlayersMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetAttributesForPlayersRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "playerAndAttributes": "List<PlayerAndAttributes>"
+   }
+  },
+  "SetAttributesForPlayersResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerAndAttributes": "List<PlayerAndAttributes>"
+   }
+  },
+  "SetAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributes": "List<PlayerAttribute>",
+    "playerId": "string"
+   }
+  },
+  "SetAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "SetCurrenciesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetCurrenciesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "currencies": "List<Currency>"
+   }
+  },
+  "SetCurrenciesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "SetCurrencyMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetCurrencyRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "currencyType": "int",
+    "value": "long"
+   }
+  },
+  "SetCurrencyResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "currency": "Currency",
+    "playerInfo": "PlayerInfo"
+   }
+  },
+  "SetDocumentByIdMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetDocumentByIdRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "document": "byte[]",
+    "documentId": "string",
+    "tags": "List<string>"
+   }
+  },
+  "SetDocumentByIdResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "documentId": "string"
+   }
+  },
+  "SetDocumentMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetDocumentRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "document": "byte[]",
+    "mode": "ExistingDocumentMode",
+    "tags": "List<string>"
+   }
+  },
+  "SetDocumentResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "documentId": "string"
+   }
+  },
+  "SetGroupAttributesForGroupsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetGroupAttributesForGroupsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupsAndAttributes": "List<GroupAttributes>"
+   }
+  },
+  "SetGroupAttributesForGroupsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupsAndAttributes": "List<GroupAttributes>"
+   }
+  },
+  "SetGroupAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetGroupAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributes": "List<GroupAttribute>",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "SetGroupAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "SetGroupMemberAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetGroupMemberAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributes": "List<PlayerAttribute>",
+    "groupName": "string",
+    "groupType": "string",
+    "playerIds": "List<string>"
+   }
+  },
+  "SetGroupMemberAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "members": "List<PlayerInfo>"
+   }
+  },
+  "SetGroupStatusMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetGroupStatusRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "isGroupOpen": "bool"
+   }
+  },
+  "SetGroupStatusResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "SetLeaderboardEntryAsAccumulationMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetLeaderboardEntryAsAccumulationRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "sourceLeaderboardName": "string",
+    "sourceOwnerIds": "List<string>",
+    "targetLeaderboardName": "string",
+    "targetOwnerId": "string"
+   }
+  },
+  "SetLeaderboardEntryAsAccumulationResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "leaderboardName": "string"
+   }
+  },
+  "SetLeaderboardEntryMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetLeaderboardEntryRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "entry": "LeaderboardEntry"
+   }
+  },
+  "SetLeaderboardEntryResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "leaderboardName": "string"
+   }
+  },
+  "SetMyGroupMemberAttributesMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SetMyGroupMemberAttributesRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "attributes": "List<PlayerAttribute>",
+    "groupName": "string",
+    "groupType": "string"
+   }
+  },
+  "SetMyGroupMemberAttributesResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupName": "string",
+    "groupType": "string",
+    "memberInfo": "PlayerInfo"
+   }
+  },
+  "ShadowRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ShakeData": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "SharedTextureMaterialInst": {
+   "base": "MaterialInst",
+   "props": {}
+  },
+  "SimpleMaterialBuilder": {
+   "base": "MaterialBuilder",
+   "props": {}
+  },
+  "SimpleTimer": {
+   "base": null,
+   "props": {}
+  },
+  "SingletonConfig": {
+   "base": null,
+   "props": {}
+  },
+  "SkeletonAnim": {
+   "base": null,
+   "props": {}
+  },
+  "SkeletonLib": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "SkillCamera": {
+   "base": null,
+   "props": {}
+  },
+  "SkillCameraCache": {
+   "base": null,
+   "props": {}
+  },
+  "SkillCameraEditorScene": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "SkillCameraList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "SkillData": {
+   "base": null,
+   "props": {}
+  },
+  "SkillDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "SkillTipsInfo": {
+   "base": null,
+   "props": {}
+  },
+  "SkillUpgradeData": {
+   "base": null,
+   "props": {}
+  },
+  "SkillUpgradeDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "SocketData": {
+   "base": null,
+   "props": {}
+  },
+  "SocketDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "SocketNeed": {
+   "base": null,
+   "props": {}
+  },
+  "SoulStoreItem": {
+   "base": null,
+   "props": {}
+  },
+  "SoulStoreManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "SoundClip": {
+   "base": null,
+   "props": {}
+  },
+  "SoundClipList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "SoundManager": {
+   "base": "MonoBehaviour",
+   "props": {
+    "OnGoingMusicName": "string"
+   }
+  },
+  "SoundTrigger": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "SpecialAttackStateMachine": {
+   "base": "AnimStateMachine",
+   "props": {}
+  },
+  "SpecializedSerializer": {
+   "base": "ISerializer",
+   "props": {}
+  },
+  "SpecicalActionMonsterAgent": {
+   "base": "EWObject",
+   "props": {}
+  },
+  "SpringPanel": {
+   "base": "IgnoreTimeScale",
+   "props": {}
+  },
+  "SpringPosition": {
+   "base": "IgnoreTimeScale",
+   "props": {}
+  },
+  "StarterDailyBonusManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "StateToGoCondition": {
+   "base": null,
+   "props": {}
+  },
+  "StaticObjectController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "StaticObjectLoot": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "StaticObjectSpawner": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "StoreData": {
+   "base": null,
+   "props": {}
+  },
+  "StoreDataConfig": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "StoreDataForLanuage": {
+   "base": null,
+   "props": {}
+  },
+  "StoreDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "StoreDataManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "StoreDiscountData": {
+   "base": null,
+   "props": {}
+  },
+  "StoreDiscountDataList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "StringConfigData": {
+   "base": "BaseConfigData",
+   "props": {}
+  },
+  "SubscribeToGroupNotificationsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "SubscribeToGroupNotificationsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groups": "List<GroupDescriptor>"
+   }
+  },
+  "SubscribeToGroupNotificationsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupsWithStatus": "List<GroupDescriptorWithStatus>"
+   }
+  },
+  "SuperArmor": {
+   "base": null,
+   "props": {}
+  },
+  "SurvivalModeTest": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "SyncCommand": {
+   "base": "MonoBehaviour",
+   "props": {
+    "IsReadEnabled": "bool",
+    "IsWriteEnabled": "bool"
+   }
+  },
+  "TBufferRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TabButton": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TapjoyEvent": {
+   "base": null,
+   "props": {}
+  },
+  "TapjoyHelper": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TapjoyInterfaceInternal": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TapjoyManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TapjoyPlugin": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TapjoyPluginAndroid": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TestAppVersion": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TestAuthenticate": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TestGetUserInfoLib": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TestParticle": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ThreatAgent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "ThunderBulletDisplayer": {
+   "base": "BulletDisplayer",
+   "props": {}
+  },
+  "TieredSpenderHcManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TimeScaleListener": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TimerEvent": {
+   "base": null,
+   "props": {}
+  },
+  "TimerManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TournamentData": {
+   "base": null,
+   "props": {}
+  },
+  "TournamentFinishLevelData": {
+   "base": null,
+   "props": {}
+  },
+  "TournamentGachaData": {
+   "base": null,
+   "props": {}
+  },
+  "TournamentManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TournamentPvPData": {
+   "base": null,
+   "props": {}
+  },
+  "TournamentPvpStepReward": {
+   "base": null,
+   "props": {}
+  },
+  "TournamentReward": {
+   "base": null,
+   "props": {}
+  },
+  "TowerBuyEnergyText": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TowerManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TowerTutorialText": {
+   "base": "MonoBehaviour",
+   "props": {
+    "EnterLevelIndex": "int"
+   }
+  },
+  "TownBundleContextTrigger": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TownContextTrigger": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TownHUDGestureProcessor": {
+   "base": "GestureProcessor",
+   "props": {}
+  },
+  "TownPlayerManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TownPvPContextTrigger": {
+   "base": "TownContextTrigger",
+   "props": {}
+  },
+  "TriggerEnemyConfigMapping": {
+   "base": null,
+   "props": {}
+  },
+  "TriggerManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TutorialEvent": {
+   "base": null,
+   "props": {}
+  },
+  "TutorialLevel": {
+   "base": null,
+   "props": {}
+  },
+  "TutorialLevelList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "TutorialManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TutorialTown": {
+   "base": null,
+   "props": {}
+  },
+  "TutorialTownList": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "TutorialTownManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TutorialTrigger": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TweenAlpha": {
+   "base": "UITweener",
+   "props": {}
+  },
+  "TweenColor": {
+   "base": "UITweener",
+   "props": {}
+  },
+  "TweenEffectTrigger": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "TweenFOV": {
+   "base": "UITweener",
+   "props": {}
+  },
+  "TweenOrthoSize": {
+   "base": "UITweener",
+   "props": {}
+  },
+  "TweenPosition": {
+   "base": "UITweener",
+   "props": {}
+  },
+  "TweenRotation": {
+   "base": "UITweener",
+   "props": {}
+  },
+  "TweenScale": {
+   "base": "UITweener",
+   "props": {}
+  },
+  "TweenTransform": {
+   "base": "UITweener",
+   "props": {}
+  },
+  "TweenVolume": {
+   "base": "UITweener",
+   "props": {}
+  },
+  "TypedLobby": {
+   "base": null,
+   "props": {}
+  },
+  "UIAlphaFlash": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIAnchor": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIAtlas": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIBattleRewardHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIBattleRewardsCoverFlow": {
+   "base": "NGUICoverFlow",
+   "props": {}
+  },
+  "UIBattleRewardsHandler": {
+   "base": "GestureProcessor",
+   "props": {}
+  },
+  "UIBattleSkillTips": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIBattleSummary": {
+   "base": "GestureProcessor",
+   "props": {}
+  },
+  "UIBattleSummaryTimerHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIBtnDiscount": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIBundleDownloadHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIButton": {
+   "base": "UIButtonColor",
+   "props": {}
+  },
+  "UIButtonActivate": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIButtonColor": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIButtonKeyBinding": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIButtonKeys": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIButtonMessage": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIButtonOffset": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIButtonPlayAnimation": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIButtonRotation": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIButtonScale": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIButtonSound": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIButtonTween": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UICamera": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UICenterOnChild": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIChatHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIChatListHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UICheckbox": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UICheckboxControlledComponent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UICheckboxControlledObject": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIDailyBonus": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIDailyBonusItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIDragCamera": {
+   "base": "IgnoreTimeScale",
+   "props": {}
+  },
+  "UIDragCursor": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIDragDropContainer": {
+   "base": "UISkillSlot",
+   "props": {}
+  },
+  "UIDragObject": {
+   "base": "IgnoreTimeScale",
+   "props": {}
+  },
+  "UIDragPanelContents": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIDraggableCamera": {
+   "base": "IgnoreTimeScale",
+   "props": {}
+  },
+  "UIDraggablePanel": {
+   "base": "IgnoreTimeScale",
+   "props": {}
+  },
+  "UIDrawCall": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIDrillHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIEnergyBarPvP": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIEnterActivityLevel": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIEnterLevel": {
+   "base": "MonoBehaviour",
+   "props": {
+    "detailOpen": "bool"
+   }
+  },
+  "UIEvent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIEventList": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIEventListener": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIEvolution": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIEvolutionStarList": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIFilledSprite": {
+   "base": "UISprite",
+   "props": {}
+  },
+  "UIFirstPayEvtPopup": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIFirstPayRewardItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIFont": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIForwardEvents": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIFriendCell": {
+   "base": "MonoBehaviour",
+   "props": {
+    "friendsUI": "UIFriendsHandler"
+   }
+  },
+  "UIFriendWaveLeaderBoardItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIFriendsHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIFusion": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIFusionResult": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGacha": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGachaCoverFlow": {
+   "base": "CircleCoverFlow",
+   "props": {}
+  },
+  "UIGachaEvtPopup": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGachaHandler": {
+   "base": "MonoBehaviour",
+   "props": {
+    "detailOpen": "bool"
+   }
+  },
+  "UIGachaItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGachaItemHandle": {
+   "base": "MonoBehaviour",
+   "props": {
+    "_parentUI": "UIGachaHandler"
+   }
+  },
+  "UIGachaResult": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGachaResultItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGachaTip": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGamePauseHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGameSettings": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGameStart": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGeometry": {
+   "base": null,
+   "props": {}
+  },
+  "UIGetInviteCode": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGift": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGiftItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGlobalSettings": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGluOnLoginHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGoogleGifting": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGrid": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildBattlePanel": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildChatHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildConstructPanel": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildCreateHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildItemHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildJoinRequestItemHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildListPanel": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildManagementHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildMemberItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildMemberPanel": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildMemberPopup": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildQuestPanel": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIGuildTotalPanel": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIHPController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIImageButton": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIIndicatorManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIInput": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIInputMessage": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIInputSaved": {
+   "base": "UIInput",
+   "props": {}
+  },
+  "UIInputValidator": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIInsertRune": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIInventory": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIInventoryCombineRune": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIInventoryDetail": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIInventoryItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIInventoryPlayerInfo": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIInviteCodeRewardItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIKingdomBadgeHander": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UILabel": {
+   "base": "UIWidget",
+   "props": {}
+  },
+  "UILabelFont": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UILabelSize": {
+   "base": null,
+   "props": {}
+  },
+  "UILeaderBoard": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UILeaderBoardItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UILeaderboardComponent": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UILevelHome": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UILevelLootItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UILevelLootPreview": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UILocalize": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIMailAttachItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIMailDeleteHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIMailItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIMailReadHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIMailboxHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIMessageBox": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIMessageBoxManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIMonthCard": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UINGUIGrid": {
+   "base": "UIGrid",
+   "props": {}
+  },
+  "UINewDifficulty": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIOrthoCamera": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIPVPPromptAnimation": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIPanel": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIPhotonServerSelect": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIPlayerColorList": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIPlayerPreview": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIPopupList": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIProfileHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIPvPBattleSummary": {
+   "base": "UIPvpCGS",
+   "props": {}
+  },
+  "UIPvPEnter": {
+   "base": "UIPvpCGS",
+   "props": {}
+  },
+  "UIPvPRewardItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIPvpCGS": {
+   "base": "MonoBehaviour",
+   "props": {
+    "MatchState": "MatchStates",
+    "NeedCloseMenu": "static bool"
+   }
+  },
+  "UIQuest": {
+   "base": "MonoBehaviour",
+   "props": {
+    "hasDataChange": "bool"
+   }
+  },
+  "UIQuestItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIRaidBossBattleSummary": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIRaidBossCommon": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIRaidBossLeaderBoardItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIRaidBossMain": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIRenderer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIReviveHandler": {
+   "base": "GestureProcessor",
+   "props": {}
+  },
+  "UIRewardHint": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIRewardItemHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIRoot": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIRuneTutorial": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISavedOption": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIScrollBar": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISelectBoss": {
+   "base": "MonoBehaviour",
+   "props": {
+    "selectedBossID": "string"
+   }
+  },
+  "UISelectBossItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIShortcutIAPHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISkillCell": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISkillSlot": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISkillUsedSlot": {
+   "base": "UISkillSlot",
+   "props": {}
+  },
+  "UISkillViewSlot": {
+   "base": "UISkillSlot",
+   "props": {}
+  },
+  "UISkillsHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISlicedSprite": {
+   "base": "UISprite",
+   "props": {}
+  },
+  "UISlider": {
+   "base": "IgnoreTimeScale",
+   "props": {}
+  },
+  "UISliderColors": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISoulStore": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISoulStoreItem": {
+   "base": "MonoBehaviour",
+   "props": {
+    "Index": "int",
+    "_uiSoulStore": "UISoulStore"
+   }
+  },
+  "UISoulStoreItemDetail": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISoundVolume": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISprite": {
+   "base": "UIWidget",
+   "props": {}
+  },
+  "UISpriteAnimation": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIStarterDailyBonus": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIStarterGroup": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIStarterPackItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIStore": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIStoreGold": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIStoreItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIStretch": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISummaryPlayerCard": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISurvivalMode": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISurvivalModeEndlessItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UISurvivalModeTowerItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITable": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITextList": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITexture": {
+   "base": "UIWidget",
+   "props": {}
+  },
+  "UITierRewardItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITierSpenderHc": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITierSpenderHcHud": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITilePosition": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITiledSprite": {
+   "base": "UISlicedSprite",
+   "props": {}
+  },
+  "UITimer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITooltip": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITopPanel": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITournament": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITournamentBar": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITownCredits": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITownHome": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITownPlayer": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITownPlayerItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITownPlayerPopup": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UITweener": {
+   "base": "IgnoreTimeScale",
+   "props": {}
+  },
+  "UIUpgrade": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIUtils": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIViewport": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIWhisperItem": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIWidget": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UIWorldMapHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UnityEntity": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UnsubscribeFromGroupNotificationsMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "UnsubscribeFromGroupNotificationsRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "groups": "List<GroupDescriptor>"
+   }
+  },
+  "UnsubscribeFromGroupNotificationsResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "groupsWithStatus": "List<GroupDescriptorWithStatus>"
+   }
+  },
+  "UpgradeConfigData": {
+   "base": "ScriptableObject",
+   "props": {}
+  },
+  "UpgradeData": {
+   "base": null,
+   "props": {}
+  },
+  "UpgradeEffect": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "UpgradeMeshEffect": {
+   "base": "UpgradeEffect",
+   "props": {}
+  },
+  "UpgradeShadowEffect": {
+   "base": "UpgradeEffect",
+   "props": {}
+  },
+  "ValidateAppleIapReceiptMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ValidateAppleIapReceiptRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "expectedBid": "string",
+    "ticket": "string"
+   }
+  },
+  "ValidateAppleIapReceiptResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "bid": "string",
+    "environment": "string",
+    "playerId": "string",
+    "pod": "string",
+    "productId": "string",
+    "quantity": "string",
+    "signingStatus": "string",
+    "transactionId": "string",
+    "wasConfirmed": "bool",
+    "wasValid": "bool"
+   }
+  },
+  "ValidateIAPMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ValidateIAPRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "receipt": "string"
+   }
+  },
+  "ValidateIAPResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerInfo": "PlayerInfo",
+    "valid": "bool"
+   }
+  },
+  "ValidateIapReceiptMessage": {
+   "base": "GluonMessage",
+   "props": {}
+  },
+  "ValidateIapReceiptRequest": {
+   "base": "AbstractGluonMessage",
+   "props": {
+    "expectedBid": "string",
+    "ticket": "string"
+   }
+  },
+  "ValidateIapReceiptResponse": {
+   "base": "AbstractGluonResponseMessage",
+   "props": {
+    "playerId": "string",
+    "transactionId": "string",
+    "wasConfirmed": "bool",
+    "wasValid": "bool"
+   }
+  },
+  "VideoPlayerManager": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "VipBonus": {
+   "base": null,
+   "props": {}
+  },
+  "VolumeTexturePtr": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "WebRequest": {
+   "base": null,
+   "props": {}
+  },
+  "WebTexture": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "WhisperChat": {
+   "base": "IChatChannel",
+   "props": {}
+  },
+  "WorldBundlesData": {
+   "base": null,
+   "props": {}
+  },
+  "WorldMapChessPieceHandler": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "WorldMapController": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "WorldMapLightBinder": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "WorldMapsEntry": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "XmlDictionary": {
+   "base": "Dictionary",
+   "props": {}
+  },
+  "ZoomCamera": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "iTween": {
+   "base": "MonoBehaviour",
+   "props": {}
+  },
+  "testBulletDisplayer": {
+   "base": "BulletDisplayer",
+   "props": {}
+  },
+  "testFrameAnimation": {
+   "base": "MonoBehaviour",
+   "props": {}
+  }
+ },
+ "codes": {
+  "acrp": "ApplyCurrencyDeltaResponse",
+  "acrq": "ApplyCurrencyDeltaRequest",
+  "adlp": "ApplyDeltaToLeaderboardEntryResponse",
+  "adlq": "ApplyDeltaToLeaderboardEntryRequest",
+  "aecq": "AttachEmailCredentialsRequest",
+  "aecr": "AttachEmailCredentialsResponse",
+  "afcp": "AttachFacebookCredentialsResponse",
+  "afcq": "AttachFacebookCredentialsRequest",
+  "ajip": "AcceptJoinGroupInviteResponse",
+  "ajiq": "AcceptJoinGroupInviteRequest",
+  "ajrp": "ApproveJoinGroupRequestResponse",
+  "ajrq": "ApproveJoinGroupRequestRequest",
+  "aprp": "AuthenticatePlayerResponse",
+  "aprq": "AuthenticatePlayerRequest",
+  "cgnc": "CustomGameServerNotification",
+  "cgnp": "CheckGroupNameResponse",
+  "cgnq": "CheckGroupNameRequest",
+  "cgop": "ChangeGroupOwnerResponse",
+  "cgoq": "ChangeGroupOwnerRequest",
+  "cgrp": "CreateGroupResponse",
+  "cgrq": "CreateGroupRequest",
+  "cgsp": "CustomGameServerMessageResponse",
+  "cgsq": "CustomGameServerMessageRequest",
+  "cgxp": "ChangeGroupNameResponse",
+  "cgxq": "ChangeGroupNameRequest",
+  "cipq": "ConsumeIAPRequest",
+  "cipr": "ConsumeIAPResponse",
+  "cirq": "ConsumeIapReceiptRequest",
+  "cirr": "ConsumeIapReceiptResponse",
+  "clrp": "ClearLeaderboardResponse",
+  "clrq": "ClearLeaderboardRequest",
+  "cpnq": "ChangeNickNameRequest",
+  "cpnr": "ChangeNickNameResponse",
+  "cprp": "CreatePlayerResponse",
+  "cprq": "CreatePlayerRequest",
+  "curp": "CheckNickNameResponse",
+  "curq": "CheckNickNameRequest",
+  "cwrp": "CreateWalletReceiptResponse",
+  "cwrq": "CreateWalletReceiptRequest",
+  "daap": "DeleteAllAttributesResponse",
+  "daar": "DeleteAllAttributesRequest",
+  "dagp": "DeleteAllGroupAttributesResponse",
+  "dagq": "DeleteAllGroupAttributesRequest",
+  "damp": "DeleteAllMyGroupMemberAttributesResponse",
+  "damq": "DeleteAllMyGroupMemberAttributesRequest",
+  "dapp": "DeleteAllGroupMemberAttributesResponse",
+  "dapq": "DeleteAllGroupMemberAttributesRequest",
+  "datp": "DeleteAttributesResponse",
+  "datr": "DeleteAttributesRequest",
+  "ddip": "DeleteDocumentByIdResponse",
+  "ddiq": "DeleteDocumentByIdRequest",
+  "ddp": "DeleteDocumentsResponse",
+  "ddq": "DeleteDocumentsRequest",
+  "dgpp": "DeleteGroupMemberAttributesResponse",
+  "dgpq": "DeleteGroupMemberAttributesRequest",
+  "dgrp": "DeleteGroupResponse",
+  "dgrq": "DeleteGroupRequest",
+  "dgxp": "DeleteGroupAttributesResponse",
+  "dgxq": "DeleteGroupAttributesRequest",
+  "djip": "DeleteJoinGroupInviteResponse",
+  "djiq": "DeleteJoinGroupInviteRequest",
+  "djrp": "DeleteJoinGroupRequestResponse",
+  "djrq": "DeleteJoinGroupRequestRequest",
+  "dmmg": "DeleteMailRequest",
+  "dmpp": "DeleteMyGroupMemberAttributesResponse",
+  "dmpq": "DeleteMyGroupMemberAttributesRequest",
+  "dpap": "DeleteGroupMemberAttributesForAllMembersResponse",
+  "dpaq": "DeleteGroupMemberAttributesForAllMembersRequest",
+  "eaip": "AddQueuedItemsResponse",
+  "eaiq": "AddQueuedItemsRequest",
+  "ecbp": "ClaimQueuedItemsBeginResponse",
+  "ecbq": "ClaimQueuedItemsBeginRequest",
+  "eccp": "ClaimQueuedItemsCommitResponse",
+  "eccq": "ClaimQueuedItemsCommitRequest",
+  "ecrp": "ClaimQueuedItemsRollbackResponse",
+  "ecrq": "ClaimQueuedItemsRollbackRequest",
+  "egip": "GetQueuedItemsResponse",
+  "egiq": "GetQueuedItemsRequest",
+  "ersp": "ErrorResponse",
+  "gaap": "GetAllAttributesResponse",
+  "gaar": "GetAllAttributesRequest",
+  "gadp": "ApplyDeltaToGroupAttributeResponse",
+  "gadq": "ApplyDeltaToGroupAttributeRequest",
+  "gagp": "GetAllGroupAttributesResponse",
+  "gagq": "GetAllGroupAttributesRequest",
+  "galp": "GetAllGroupMemberAttributesResponse",
+  "galq": "GetAllGroupMemberAttributesRequest",
+  "gamp": "GetAllMyGroupMemberAttributesResponse",
+  "gamq": "GetAllMyGroupMemberAttributesRequest",
+  "gapp": "GetAttributeForPlayersResponse",
+  "gapq": "GetAttributeForPlayersRequest",
+  "garq": "GroupAttributesModifiedNotification",
+  "gasp": "GetAttributesForPlayersResponse",
+  "gasq": "GetAttributesForPlayersRequest",
+  "gcep": "GetCalendarEventResponse",
+  "gceq": "GetCalendarEventRequest",
+  "gcrp": "GetCurrencyResponse",
+  "gcrq": "GetCurrencyRequest",
+  "gcsp": "GetCalendarEventsResponse",
+  "gcsq": "GetCalendarEventsRequest",
+  "gctp": "GetCatalogResponse",
+  "gctq": "GetCatalogRequest",
+  "gdip": "GetDocumentByIdResponse",
+  "gdiq": "GetDocumentByIdRequest",
+  "gdp": "GetDocumentsResponse",
+  "gdq": "GetDocumentsRequest",
+  "ggmp": "GetMyGroupMembersResponse",
+  "ggmq": "GetMyGroupMembersRequest",
+  "ggpp": "GetGroupMemberAttributesResponse",
+  "ggpq": "GetGroupMemberAttributesRequest",
+  "ggsp": "GetGroupStatusResponse",
+  "ggsq": "GetGroupStatusRequest",
+  "ggxp": "GetGroupAttributesResponse",
+  "ggxq": "GetGroupAttributesRequest",
+  "gisp": "GetInboxStatusResponse",
+  "gisq": "GetInboxStatusRequest",
+  "gjrp": "GetJoinedRoomsResponse",
+  "gjrq": "GetJoinedRoomsRequest",
+  "glrp": "GetLeaderboardEntriesByRankRangeResponse",
+  "glrq": "GetLeaderboardEntriesByRankRangeRequest",
+  "glxp": "GetLeaderboardEntriesResponse",
+  "glxq": "GetLeaderboardEntriesRequest",
+  "gmaq": "GetGroupMemberAttributesForPlayersRequest",
+  "gmar": "GetGroupMemberAttributesForPlayersResponse",
+  "gmgp": "GetMyGroupsResponse",
+  "gmgq": "GetMyGroupsRequest",
+  "gmmg": "GetMailRequest",
+  "gmmn": "GroupMembershipModifiedNotification",
+  "gmmp": "GetGroupMatchesResponse",
+  "gmmq": "GetGroupMatchesRequest",
+  "gmpp": "GetMyGroupMemberAttributesResponse",
+  "gmpq": "GetMyGroupMemberAttributesRequest",
+  "gmrp": "GetMatchesResponse",
+  "gmrq": "GetMatchesRequest",
+  "gpop": "GetPlayersOnlineResponse",
+  "gpoq": "GetPlayersOnlineRequest",
+  "grgp": "GetRandomGroupsResponse",
+  "grgq": "GetRandomGroupsRequest",
+  "grip": "GetMyReceivedGroupInvitesResponse",
+  "griq": "GetMyReceivedGroupInvitesRequest",
+  "gsip": "GetMySentGroupInvitesResponse",
+  "gsiq": "GetMySentGroupInvitesRequest",
+  "gsmn": "GroupStateModifiedNotification",
+  "gsmp": "GetSentMailMessagesResponse",
+  "gsmq": "GetSentMailMessagesRequest",
+  "gsrp": "GetAttributesResponse",
+  "gsrq": "GetAttributesRequest",
+  "gurp": "GetPlayersInRoomResponse",
+  "gurq": "GetPlayersInRoomRequest",
+  "gxrp": "GetCurrenciesResponse",
+  "gxrq": "GetCurrenciesRequest",
+  "gxxp": "GetGroupsAttributesResponse",
+  "gxxq": "GetGroupsAttributesRequest",
+  "jrm": "JoinRoomRequest",
+  "jrmx": "JoinRoomResponse",
+  "larp": "LockAndGetAttributesResponse",
+  "larq": "LockAndGetAttributesRequest",
+  "lgpp": "LeaveGroupResponse",
+  "lgpq": "LeaveGroupRequest",
+  "lrm": "LeaveRoomRequest",
+  "lrmx": "LeaveRoomResponse",
+  "md": "DeleteMailResponse",
+  "mmar": "MarkMailAsReadResponse",
+  "mmmr": "MarkMailAsReadRequest",
+  "mmpg": "GetMailResponse",
+  "ms": "SendMailResponse",
+  "nmn": "MailMessageNotification",
+  "pgmq": "GetPaginatedGroupMemberAttributesRequest",
+  "pgmr": "GetPaginatedGroupMemberAttributesResponse",
+  "psrp": "SearchForPlayersResponse",
+  "psrq": "SearchForPlayersRequest",
+  "recq": "ResolveEmailConflictRequest",
+  "recr": "ResolveEmailConflictResponse",
+  "rfcq": "ResolveFacebookConflictRequest",
+  "rfcr": "ResolveFacebookConflictResponse",
+  "rjrp": "GetReceivedJoinGroupRequestsResponse",
+  "rjrq": "GetReceivedJoinGroupRequestsRequest",
+  "rlep": "RemoveLeaderboardEntryResponse",
+  "rleq": "RemoveLeaderboardEntryRequest",
+  "rpgp": "RemovePlayerFromGroupResponse",
+  "rpgq": "RemovePlayerFromGroupRequest",
+  "rpmg": "ReceivePrivateMessageNotification",
+  "rrmg": "ReceiveRoomMessageNotification",
+  "ruap": "RegisterPushNotificationTokenResponse",
+  "ruaq": "RegisterPushNotificationTokenRequest",
+  "safp": "SetAttributesForPlayersResponse",
+  "safq": "SetAttributesForPlayersRequest",
+  "sasp": "SetAttributesResponse",
+  "sasq": "SetAttributesRequest",
+  "scrp": "SetCurrencyResponse",
+  "scrq": "SetCurrencyRequest",
+  "scsq": "SetCurrenciesRequest",
+  "scsr": "SetCurrenciesResponse",
+  "sdip": "SetDocumentByIdResponse",
+  "sdiq": "SetDocumentByIdRequest",
+  "sdp": "SetDocumentResponse",
+  "sdq": "SetDocumentRequest",
+  "sfgp": "SearchForGroupsResponse",
+  "sfgq": "SearchForGroupsRequest",
+  "sgap": "SetGroupAttributesForGroupsResponse",
+  "sgaq": "SetGroupAttributesForGroupsRequest",
+  "sgpp": "SetGroupMemberAttributesResponse",
+  "sgpq": "SetGroupMemberAttributesRequest",
+  "sgrp": "SubscribeToGroupNotificationsResponse",
+  "sgrq": "SubscribeToGroupNotificationsRequest",
+  "sgsp": "SetGroupStatusResponse",
+  "sgsq": "SetGroupStatusRequest",
+  "sgxp": "SetGroupAttributesResponse",
+  "sgxq": "SetGroupAttributesRequest",
+  "sjip": "SendJoinGroupInviteResponse",
+  "sjiq": "SendJoinGroupInviteRequest",
+  "sjrp": "SendJoinGroupRequestResponse",
+  "sjrq": "SendJoinGroupRequestRequest",
+  "slep": "SetLeaderboardEntryResponse",
+  "sleq": "SetLeaderboardEntryRequest",
+  "slxp": "SetLeaderboardEntryAsAccumulationResponse",
+  "slxq": "SetLeaderboardEntryAsAccumulationRequest",
+  "smmg": "SendMailRequest",
+  "smpp": "SetMyGroupMemberAttributesResponse",
+  "smpq": "SetMyGroupMemberAttributesRequest",
+  "snot": "SessionNotification",
+  "spmg": "SendPrivateMessageRequest",
+  "spmq": "SendPrivateMessageResponse",
+  "srmg": "SendRoomMessageRequest",
+  "srmq": "SendRoomMessageResponse",
+  "ssa": "ServiceAttached",
+  "surp": "SetAttributesAndUnlockResponse",
+  "surq": "SetAttributesAndUnlockRequest",
+  "timp": "GetCurrentUTCTimeResponse",
+  "timr": "GetCurrentUTCTimeRequest",
+  "ugrp": "UnsubscribeFromGroupNotificationsResponse",
+  "ugrq": "UnsubscribeFromGroupNotificationsRequest",
+  "um": "PlayerMutedNotification",
+  "usau": "PlayerAuthorized",
+  "varq": "ValidateAppleIapReceiptRequest",
+  "varr": "ValidateAppleIapReceiptResponse",
+  "vipq": "ValidateIAPRequest",
+  "vipr": "ValidateIAPResponse",
+  "vrq": "ValidateIapReceiptRequest",
+  "vrr": "ValidateIapReceiptResponse",
+  "wlrp": "GetPlayersWhoLockedMeResponse",
+  "wlrq": "GetPlayersWhoLockedMeRequest",
+  "xjrp": "GetSentJoinGroupRequestsResponse",
+  "xjrq": "GetSentJoinGroupRequestsRequest"
+ },
+ "enums": {
+  "APP_LOADING_STEP": [
+   "START",
+   "SERVER_INFO",
+   "BUNDLE_CHECK",
+   "SCENE_GAMELUNCH",
+   "SCENE_GLUON",
+   "SERVER_NEWS",
+   "FINAL_STEP"
+  ],
+  "ActionTypes": [
+   "FUSION",
+   "EVOLUTION",
+   "GACHA",
+   "KILL_ENEMY",
+   "FINISH_LEVEL",
+   "PVP",
+   "SURVIVAL_WAVE",
+   "SURVIVAL_KILL",
+   "RUNE_UPGRADE"
+  ],
+  "AuthenticationState": [
+   "AUTHENTICATING",
+   "ALREADY_AUTHENTICATED",
+   "ERROR"
+  ],
+  "BattlingStates": [
+   "Loading",
+   "Ready",
+   "Battling",
+   "CountDown",
+   "Complete",
+   "Cancel"
+  ],
+  "CalendarEventState": [
+   "ACTIVE",
+   "CONSUMING",
+   "CONSUMED"
+  ],
+  "CatalogSort": [
+   "NAME_ASC",
+   "NAME_DESC",
+   "PRICE_ASC",
+   "PRICE_DESC",
+   "CURRENCY_ASC",
+   "CURRENCY_DESC",
+   "CUSTOM_ASC",
+   "CUSTOM_DESC"
+  ],
+  "CharacterGraphicsQuality": [
+   "CharacterGraphicsQuality_Battle",
+   "CharacterGraphicsQuality_Town",
+   "CharacterGraphicsQuality_Preview",
+   "CharacterGraphicsQuality_Count"
+  ],
+  "CloudServerRegion": [
+   "EU",
+   "US",
+   "Asia",
+   "Japan"
+  ],
+  "ConnectionState": [
+   "Disconnected",
+   "Connecting",
+   "Connected",
+   "Disconnecting",
+   "InitializingApplication"
+  ],
+  "Direction": [
+   "Reverse",
+   "Toggle",
+   "Forward"
+  ],
+  "DisableCondition": [
+   "DisableAfterReverse",
+   "DoNotDisable",
+   "DisableAfterForward"
+  ],
+  "DisconnectCause": [
+   "ExceptionOnConnect",
+   "SecurityExceptionOnConnect",
+   "[Obsolete(\"Replaced by clearer: DisconnectByClientTimeout\")]\n\tTimeoutDisconnect",
+   "DisconnectByClientTimeout",
+   "InternalReceiveException",
+   "[Obsolete(\"Replaced by clearer: DisconnectByServerTimeout\")]\n\tDisconnectByServer",
+   "DisconnectByServerTimeout",
+   "DisconnectByServerLogic",
+   "DisconnectByServerUserLimit",
+   "Exception",
+   "InvalidRegion",
+   "MaxCcuReached",
+   "InvalidAuthentication"
+  ],
+  "DisconnectReason": [
+   "ClientInitiated",
+   "ServerDisconnected",
+   "NetworkError"
+  ],
+  "DismissType": [
+   "Unknown",
+   "NoContent",
+   "BackButton",
+   "Emergency",
+   "Launch",
+   "NoThanks",
+   "OptIn",
+   "Purchase",
+   "Reward",
+   "SelfClose"
+  ],
+  "DocumentOwnerType": [
+   "PLAYER",
+   "GAME",
+   "GROUP",
+   "ADMINISTRATOR"
+  ],
+  "EW_ACTION_SWITCH_FLAG": [
+   "IN_NPC",
+   "IN_GOD",
+   "IN_SUPER_SAIYAJIN",
+   "IN_SUPER_SAIYAJIN2",
+   "IN_SUPER_NAMEKIAN",
+   "IN_ATTACK",
+   "IN_SKILL",
+   "IN_RIGIDBODY",
+   "IN_RIGIDBODY2",
+   "IN_DEADLOCK",
+   "IN_DEFENCE",
+   "IN_FREEZE",
+   "IN_CHARGE",
+   "NO_COST_WITH_SKILL",
+   "IN_DEEP_FREEZE",
+   "CANT_MOVE",
+   "CANT_ROTATE",
+   "NO_GRAVITY",
+   "IGNORE_DOT",
+   "USE_SP_DATA",
+   "IN_ATTACK_BUFF",
+   "IN_DEF_BUFF",
+   "COST_NO_ENERGY",
+   "GAIN_NO_ENERGY",
+   "GAIN_ENERGY_BY_ATTACK"
+  ],
+  "EW_AC_FACTIOH_TYPE": [
+   "FRIEND",
+   "NEUTRAL_1",
+   "NEUTRAL_2",
+   "ENEMY"
+  ],
+  "EW_AI_TYPE": [
+   "PLAYER_MAGE",
+   "PLAYER_WARRIOR",
+   "PLAYER_MONK",
+   "PLAYER_MAX",
+   "ENEMY_MELEE_NORMAL",
+   "ENEMY_NPC_TOWN",
+   "ENEMY_BOSS_TEST",
+   "NORMAL",
+   "ENEMY_FLY_SMALL",
+   "MAX"
+  ],
+  "EW_All_ANI_ENUM": [
+   "none",
+   "idle",
+   "idle2",
+   "born_begin",
+   "run",
+   "runFast",
+   "runCircleL1",
+   "runCircleR1",
+   "runCircleF1",
+   "runCircleB1",
+   "jumpLeave1",
+   "normalAttack1",
+   "normalAttack2",
+   "normalAttack3",
+   "normalAttack4",
+   "fakeAttack0",
+   "claw",
+   "smash_bellow",
+   "skeleon_boss_close_slash",
+   "slash_on_running",
+   "dash1",
+   "fire1",
+   "smash1",
+   "bash1",
+   "block1_start",
+   "block1_end",
+   "block1_parry",
+   "block1_beAttack",
+   "dash1_start",
+   "dash1_end",
+   "dash1_end_attack",
+   "dash1_attack",
+   "bash_start",
+   "bash_attack",
+   "bash_end",
+   "lighting_chain",
+   "iceShield_start",
+   "iceShield_end",
+   "iceShield_blink",
+   "iceShield_beAttack",
+   "lightning_ball",
+   "passive_skill",
+   "dodge_start",
+   "dodge_end1",
+   "dodge_end2",
+   "sevenPunch_start",
+   "sevenPunch_end1",
+   "sevenPunch_end2_attack",
+   "sevenPunch_end3_attack",
+   "kikoho_start",
+   "kikoho_end",
+   "vortex_draw",
+   "vortex_attack",
+   "shadow_show",
+   "shadow_show_end",
+   "shadow_bonus_attack",
+   "kick_after_run",
+   "charge1_holding_loop",
+   "charge1_start",
+   "charge1_spinning_loop",
+   "charge1_end",
+   "charge1_end_slash",
+   "spin_start",
+   "spin_end",
+   "hurt",
+   "hurt_groups",
+   "dizzy",
+   "knockDown",
+   "absorb",
+   "knock_back",
+   "block1_break_iceShield_break",
+   "hurt_parryBack",
+   "stand",
+   "die",
+   "hurt_flyup_start",
+   "hurt_flyup_loop",
+   "hurt_flyup_end",
+   "hurt2",
+   "revive",
+   "combo1_slash",
+   "smash1_dual",
+   "smash2_fire",
+   "dash1_kick",
+   "dash1_slash",
+   "combo2_smash",
+   "rage",
+   "charge",
+   "defy",
+   "charge_fire",
+   "power_up",
+   "dash1_start_loop",
+   "armor_break",
+   "idle_weak",
+   "dash1_kick2",
+   "slash1",
+   "slash2",
+   "slash3",
+   "slash4",
+   "jump_front",
+   "jump_back",
+   "level_up",
+   "charge2",
+   "charge2_fire",
+   "sskill_Tip",
+   "cat_jump_left",
+   "cat_jump_right",
+   "cat_jump_back",
+   "cat_charge",
+   "cat_defy2",
+   "cat_rabbit_shoot1_start",
+   "cat_rabbit_shoot1_loop",
+   "cat_rabbit_shoot1_end",
+   "cat_rabbit_shoot2_start",
+   "cat_rabbit_shoot2_loop",
+   "cat_rabbit_shoot2_end",
+   "kylin_charge_start",
+   "kylin_charge_loop",
+   "kylin_charge_fire_start",
+   "kylin_charge_fire_loop",
+   "kylin_charge_end",
+   "eragon_slash1_right",
+   "eragon_slash2_left",
+   "eragon_slash3_skyfall",
+   "eragon_trace_start",
+   "eragon_trace_loop",
+   "eragon_trace_end",
+   "eragon_charge_start",
+   "eragon_charge_loop",
+   "eragon_charge_smash",
+   "eragon_flash_forward",
+   "eragon_flash_back",
+   "eragon_defy_manual",
+   "eragon_wait_defy",
+   "eragon_rage",
+   "boar_smash",
+   "boar_fire",
+   "boar_dash_start",
+   "boar_dash_end1_head",
+   "boar_dash_end2_head_slash",
+   "boar_dash_loop",
+   "bear_slash_dual",
+   "bear_fire",
+   "bear_jump_start",
+   "bear_jump_smash_1",
+   "bear_jump_smash_2",
+   "bear_jump_end_1",
+   "bear_jump_end_2",
+   "bear_throw_start",
+   "bear_throw_done",
+   "bear_throw_end",
+   "bear_smash",
+   "slash1_left_start",
+   "slash1_left_loop",
+   "slash1_left",
+   "slash1_left_center",
+   "slash2_right_start",
+   "slash2_right_loop",
+   "slash2_right_attack",
+   "slash2_dual_1",
+   "slash2_dual_2",
+   "dash1_jump_dual",
+   "dash1_slash_samurai",
+   "jump_start",
+   "jump",
+   "jump_end",
+   "defy2",
+   "defy3",
+   "slash1_right",
+   "mino_slash1_right",
+   "mino_slash2_left",
+   "mino_slash3_right_left",
+   "mino_slash4_right_end",
+   "mino_slash5_right_heavy",
+   "mino_slash6_right_bash",
+   "mino_slash7_dual",
+   "mino_def1_start",
+   "mino_def1_loop",
+   "mino_def1_end",
+   "mino_def1_slash_right",
+   "mino_dash1_start",
+   "mino_dash1_loop",
+   "mino_dash1_attack_jump",
+   "mino_move_back_slide",
+   "mino_sky_thunder_fall"
+  ],
+  "EW_BUFFER_ATTRIBUTES": [
+   "SKIN_COLOR",
+   "BODY_SIZE",
+   "MOVE_SPEED",
+   "ANI_SPEED",
+   "DAMAGE",
+   "DEFENSE"
+  ],
+  "EW_CHARACTER_EFFECT": [
+   "INVALID",
+   "START",
+   "DIZZY",
+   "LEVEL_UP",
+   "STORM_ATTACK",
+   "STORM_CHARGE",
+   "FIRE_ATTACK",
+   "STORM_CHARGE_LV1",
+   "SPEAR_CHARGE_LV3",
+   "SPEAR_CHARGE_BODY",
+   "ICE_ARMOR",
+   "STORM_CHARGE_NEW",
+   "DOT_ICE2",
+   "HAND_LEFT_LIGHT",
+   "HAND_RIGHT_LIGHT",
+   "HAND_LEFT_ARCANE",
+   "HAND_RIGHT_ARCANE",
+   "HAND_LEFT_FIRE",
+   "HAND_RIGHT_FIRE",
+   "HAND_LEFT_ICE",
+   "HAND_RIGHT_ICE",
+   "ICE_ARMOR2",
+   "BASH_START",
+   "PARRY_ATTACK",
+   "DIRECTION_INDICATOR",
+   "FLASH_CHAIN_FIRE",
+   "DAMAGE_PHYSICAL",
+   "DAMAGE_ICE",
+   "DAMAGE_FIRE",
+   "DAMAGE_THUNDER",
+   "DAMAGE_POISON",
+   "DOT_PHYSICAL",
+   "DOT_ICE",
+   "DOT_FIRE",
+   "DOT_THUNDER",
+   "DOT_POISON",
+   "SPEAR_CHARGE_LV0",
+   "PARRY_MAGE_ATTACK",
+   "PSY_ATTACK_WARRIOR",
+   "DASH_PARTICLE",
+   "DASH_MODEL",
+   "TRAIL_RED",
+   "START_LIGHTNINGBALL",
+   "DAMAGE_LIGHTNINGBALL",
+   "DASH_PARTICLE1",
+   "DASH_MODEL1",
+   "DASH_PARTICLE2",
+   "DASH_MODEL2",
+   "DUST_LARGE",
+   "MONK_SEVEN_WAVE",
+   "DODGE",
+   "KIKOHO",
+   "DODGE_TAIL",
+   "MONK_PUNCH_LEFT",
+   "MONK_PUNCH_RIGHT",
+   "MONK_PUNCH_SMASH",
+   "MONK_PUNCH4_EFFECT",
+   "MONK_KIKOHO_START",
+   "MONK_SEVEN_LEFT",
+   "MONK_SEVEN_RIGHT",
+   "WARRIOR_SPIN_END",
+   "WARRIOR_DASH_END1",
+   "DUST_WEAPON_LEFT",
+   "DUST_WEAPON_RIGHT",
+   "ARCHER_CHARGE_LEFT",
+   "CYCLOP_SMASH_FIRE_RIGHT",
+   "DIE_BOSS_EFFECT",
+   "REVIVE_HERO_EFFECT",
+   "HERO_AIMING",
+   "WARRIOR_DASH_END2",
+   "RESTORE_HP_ONCE",
+   "RESTORE_HP_LOOP",
+   "RESTORE_MP_ONCE",
+   "RESTORE_MP_LOOP",
+   "MONK_PUNCH_TRIAL_LEFT",
+   "MONK_PUNCH_TRIAL_RIGHT",
+   "SLIME_MOVE_NORMAL",
+   "SLIME_MOVE_POISON",
+   "WOLFMAN_SLASH_LEFT",
+   "WOLFMAN_SLASH_RIGHT",
+   "WOLFMAN_SPEED_FORWARD",
+   "WOLFMAN_SPEED_BACK",
+   "WOLFMAN_DEFY",
+   "SLIME_DIE_NORMAL",
+   "SLIME_DIE_POISON",
+   "HANMMER_SMASH_EFFECT",
+   "BALL_SMASH_EFFECT",
+   "MONK_VORTEX_DRAW",
+   "MONK_VORTEX_ATTACK",
+   "MONK_SHADOW_DOWN",
+   "ERAGON_SHADOW_HIDE",
+   "ERAGON_SHADOW_SHOW",
+   "ERAGON_SHADOW_DIE_EXPLODE",
+   "KYLIN_SMASH_LEFT_EFFECT",
+   "KYLIN_SMASH_RIGHT_EFFECT",
+   "KYLIN_CHARGE_EFFECT",
+   "KYLIN_RELEASE_EFFECT",
+   "KYLIN_PREPAIRE_EFFECT",
+   "BASH_HITGROUND_EFFECT",
+   "BASH_HITGROUND_BONUS_EFFECT",
+   "BASH_SMASHGROUND_EFFECT_1",
+   "BASH_WEAPON_GIANT_1",
+   "CATW_SPEED_EFFECT",
+   "CATW_SLASH_LEFT_EFFECT",
+   "CATW_SLASH_RIGHT_EFFECT",
+   "CATW_BORN_EFFECT",
+   "CATW_DEFY_EFFECT",
+   "MAGE_FIREPILLAR_RELEASE_EFFECT",
+   "BASH_WEAPON_GIANT_2",
+   "BASH_WEAPON_GIANT_3",
+   "BASH_WEAPON_GIANT_4",
+   "BASH_SMASHGROUND_EFFECT_2",
+   "BASH_SMASHGROUND_EFFECT_3",
+   "BASH_SMASHGROUND_EFFECT_4",
+   "BASH_WEAPON_FLASH",
+   "ENEMY_SPIN_EFFECT",
+   "KIKOHO_END_EFFECT",
+   "KYLIN_DASH_START_EFFECT",
+   "KYLIN_DASH_SMASH_EFFECT",
+   "ICE_SPARKLE_LEFT_EFFECT",
+   "ICE_SPARKLE_RIGHT_EFFECT",
+   "ERAGON_BORN_EFFECT",
+   "BALL_SMASH_START",
+   "BALL_DASH_TAIL",
+   "BALL_DASH_EXPLODE",
+   "BAT_WAVE_FIRE_START",
+   "BORN_MAGE_FLASH_SHOW",
+   "SKELETON_DASH_SLASH_EFFECT",
+   "DIRECTION_INDICATOR_MULTIPLAYER",
+   "ATTACK_TIP_RED_LEFT",
+   "ATTACK_TIP_RED_RIGHT",
+   "ATTACK_TIP_RED_LEFT_LOOP",
+   "ATTACK_TIP_RED_RIGHT_LOOP",
+   "ATTACK_TIP_WHITE_LEFT",
+   "ATTACK_TIP_WHITE_RIGHT",
+   "ATTACK_TIP_WHITE_LEFT_LOOP",
+   "ATTACK_TIP_WHITE_RIGHT_LOOP",
+   "SAMURAI_CHARGE_BODY_LOOP",
+   "SAMURAI_DASH",
+   "SAMURAI_HIDE",
+   "SAMURAI_SHOW",
+   "SAMURAI_SLASH_LEFT",
+   "SAMURAI_SLASH_RIGHT",
+   "SAMURAI_SLASH_LINE",
+   "SKELETON_ARCHER_ICE_CHARGE",
+   "CATWOMAN_RABBIT_ICE_ARCHER_EFFECT",
+   "CATWOMAN_RABBIT_ICE_ARCHER_EFFECT_Simple",
+   "SKELETON_ARCHER_LIGHTING_CHARGE",
+   "CATWOMAN_RABBIT_LIGHTING_ARCHER_EFFECT_Simple",
+   "MAX"
+  ],
+  "EW_COMBO_KIND": [
+   "NONE",
+   "NORMAL_ATTACK",
+   "SKILL_ATTACK",
+   "DEFENSE_ATTACK",
+   "CHARGE_ATTACK",
+   "PASSIVE",
+   "MAX"
+  ],
+  "EW_DAMAGE_TYPE": [
+   "NONE",
+   "PHYSICAL",
+   "ICE",
+   "THUNDER",
+   "FIRE",
+   "POISON",
+   "DRAGON",
+   "MAX"
+  ],
+  "EW_DANGER_LEVEL": [
+   "SAFE",
+   "DANGER",
+   "VERY_DANGER",
+   "OUT_OF_ATTACK_RANG"
+  ],
+  "EW_DEBUFFER_TYPE": [
+   "DAMAGE",
+   "SLOW",
+   "FREEZE"
+  ],
+  "EW_EFFECT": [
+   "FIRE",
+   "ICE",
+   "LIGHTING",
+   "MAX"
+  ],
+  "EW_EFFECT_EVENT_POS": [
+   "AT_BEGIN",
+   "AT_FIREBULLET",
+   "AT_ATTACK_START",
+   "AT_CHARGE_FULL",
+   "AT_HIT_TARGET",
+   "AT_KNOCK_BACK",
+   "AT_SPEC_TIME",
+   "AT_ANY_TIME",
+   "AT_JUMP_END"
+  ],
+  "EW_EFFECT_KIND": [
+   "FIRE",
+   "ICE",
+   "LIGHTING",
+   "MAX"
+  ],
+  "EW_ELITE_TYPE": [
+   "VeryEasy",
+   "Easy",
+   "Normal",
+   "Hard",
+   "Elite",
+   "MiniBoss",
+   "Boss",
+   "hero",
+   "Chest",
+   "Bigchest",
+   "Obj",
+   "BigObj"
+  ],
+  "EW_EQUIPMENTS_TYPE": [
+   "ARMOR",
+   "WEAPON_HEAD",
+   "WEAPON_HEAVY",
+   "WEAPON_TRAIL",
+   "WEAPON_SINGLE_BLADE",
+   "WEAPON_LIGHT",
+   "WEAPON_LIGHT_LEFT",
+   "WEAPON_LIGHT_RIGHT",
+   "WEAPON_THIGH",
+   "WEAPON_THIGH_LEFT",
+   "WEAPON_THIGH_RIGHT",
+   "WEAPON_SHOULDER",
+   "MAX"
+  ],
+  "EW_EQUIP_TYPE": [
+   "NORMAL",
+   "HELM",
+   "SHOUDER",
+   "BREAST",
+   "ARM",
+   "LEG",
+   "WEAPON_LIGHT",
+   "WEAPON_HEAVY",
+   "WEAPON_SP",
+   "WING",
+   "PET",
+   "MAX"
+  ],
+  "EW_FIRE_POINT_WAY": [
+   "NONE",
+   "LOOP",
+   "RANDOM"
+  ],
+  "EW_FIRE_WAY": [
+   "RANDOM",
+   "FROM_ONE_SIDE_TO_OTHER"
+  ],
+  "EW_GLOBAL_EFFECT": [
+   "INVALID",
+   "START",
+   "BASH",
+   "BORN",
+   "BLOOD",
+   "ATTACK_PHYSICAL",
+   "PARRY_SUCCESS",
+   "PARRY_RECOIL",
+   "PARRY_FAIL",
+   "ICE_ARMOR_SUCCESS",
+   "ICE_ARMOR_RECOIL",
+   "ICE_ARMOR_FAIL",
+   "ICE_GROUND",
+   "ICE_GROUND_DISAPPEAR",
+   "FLASH_HIDE",
+   "FLASH_SHOW",
+   "BLOOD_GROUND",
+   "THUNDER_NO_TARGET",
+   "BLOOD_EXPLODE",
+   "ICE_GROUND1",
+   "ICE_GROUND2",
+   "BLOCKADE_FADEOUT",
+   "DEAD_EFFECT",
+   "BORN_FLY",
+   "MAX"
+  ],
+  "EW_HIT_PARAMS": [
+   "HITPOINT",
+   "ANIMATION_SPEED",
+   "CRITICAL_STRIKE_CHANCE",
+   "CRITICAL_STRIKE_DAMAGE",
+   "RUNSPEED",
+   "PHYSICAL_RESIST",
+   "PHYSICAL_DAMAGE",
+   "FIRE_RESIST",
+   "FIRE_DAMAGE",
+   "POISON_RESIST",
+   "POISON_DAMAGE",
+   "THUNDER_RESIST",
+   "THUNDER_DAMAGE",
+   "ICE_RESIST",
+   "ICE_DAMAGE",
+   "PARALYSIS_RESIST",
+   "FREEZE_RESIST",
+   "DAMAGE_SCALE",
+   "MANAPOINT",
+   "CURE_POINT",
+   "FREEZE_TIME",
+   "FREEZE_PERCENT",
+   "PARALYSIS_TIME",
+   "PARALYSIS_PERCENT",
+   "STUN_TIME",
+   "STUN_PERCENT",
+   "POISON_TIME",
+   "POISON_TOTAL",
+   "FIRE_TIME",
+   "FIRE_TOTAL",
+   "BLOOD_TIME",
+   "BLOOD_TOTAL",
+   "THRESHOLD_MAX",
+   "EXP_ADD",
+   "RAGE_RESTORE",
+   "MANA_RESTORE",
+   "HP_RESTORE",
+   "RUN_SPEED_PERCENT",
+   "SC_ADD",
+   "ITEM_FIND",
+   "REDUCE_ENERGY",
+   "NONE",
+   "UNVALID",
+   "MAX"
+  ],
+  "EW_HIT_TYPE": [
+   "NONE",
+   "NORMAL",
+   "PARRYATT",
+   "HURT_TINY",
+   "HURT_NORMAL",
+   "HURT_FLASH",
+   "KNOCK",
+   "DOWN",
+   "DIZZY",
+   "BACK",
+   "UP",
+   "FEAR",
+   "BLACKHOLE",
+   "LOCK",
+   "PARRY_FAIL",
+   "FORCE_BACK",
+   "FORCE_FREEZE",
+   "NORMAL_HURT",
+   "NORMAL_PARRYATT",
+   "NORMAL_HURT_TINY",
+   "NORMAL_HURT_NORMAL",
+   "NORMAL_HURT_FLASH",
+   "NORMAL_KNOCK",
+   "NORMAL_DOWN",
+   "NORMAL_DIZZY",
+   "NORMAL_BACK",
+   "NORMAL_UP",
+   "NORMAL_FEAR",
+   "NORMAL_BLACKHOLE",
+   "NORMAL_LOCK",
+   "NORMAL_PARRY_FAIL",
+   "NORMAL_FORCE_BACK",
+   "NORMAL_FORCE_FREZZ",
+   "BLEND_HURT",
+   "BLEND_PARRYATT",
+   "BLEND_HURT_TINY",
+   "BLEND_HURT_NORMAL",
+   "BLEND_HURT_FLASH",
+   "BLEND_KNOCK",
+   "BLEND_DOWN",
+   "BLEND_DIZZY",
+   "BLEND_BACK",
+   "BLEND_UP",
+   "BLEND_FEAR",
+   "BLEND_BLACKHOLE",
+   "BLEND_LOCK",
+   "BLEND_PARRY_FAIL",
+   "BLEND_FORCE_BACK",
+   "BLEND_FORCE_FREZZ"
+  ],
+  "EW_HURT_SOURCE": [
+   "WEAPON",
+   "BULLET"
+  ],
+  "EW_KEY_BIND": [
+   "NONE",
+   "DIRECTION",
+   "ATTACK_1",
+   "ATTACK_2",
+   "ATTACK_3",
+   "ATTACK_4",
+   "KEY_FOR_TOUCH",
+   "ATTACK_5",
+   "ATTACK_6",
+   "ATTACK_7",
+   "ATTACK_8",
+   "ATTACK_9",
+   "ATTACK_10",
+   "MAX"
+  ],
+  "EW_LEVEL_STATE": [
+   "LOCKED",
+   "NEW_UNLOCK",
+   "E",
+   "D",
+   "C",
+   "B",
+   "A"
+  ],
+  "EW_MULTIPLAY_STATUS": [
+   "INVALID",
+   "LOADING",
+   "DISCONNECTED",
+   "READY"
+  ],
+  "EW_NET_SYNC_TYPE": [
+   "POSITION",
+   "HIT_PONIT",
+   "ATTACK",
+   "MAX"
+  ],
+  "EW_OBJECT_TYPE": [
+   "OBJ_NORMAL",
+   "OBJ_AC",
+   "OBJ_WEAPON",
+   "OBJ_BULLET",
+   "OBJ_OBJECT_TYPE_MAX"
+  ],
+  "EW_PARAM_TYPE": [
+   "NONE",
+   "BOOL",
+   "FLOAT",
+   "INT",
+   "VECTOR3",
+   "QUATERNION",
+   "OBJECT",
+   "OTHERS"
+  ],
+  "EW_PARRY_EFFECT": [
+   "NONE",
+   "SUCCESS",
+   "PARRY",
+   "FAIL",
+   "PARRY_BULLET_FAIL"
+  ],
+  "EW_PARTICLE_BULLET_NUMBER": [
+   "EW_PARTICLE_BULLET_1",
+   "EW_PARTICLE_BULLET_5",
+   "EW_PARTICLE_BULLET_10",
+   "EW_PARTICLE_BULLET_20",
+   "EW_PARTICLE_BULLET_COUNT"
+  ],
+  "EW_PASSIVE_SKILL_TYPE": [
+   "HIT_POINT",
+   "ARMOR",
+   "DAMAGE",
+   "CRITICLE_DAMAGE_PERCENTS",
+   "MOVE_SPEED",
+   "SKILL_GAIN_ENERGY",
+   "SPECIAL",
+   "NONE"
+  ],
+  "EW_PHOTON_STATIC_SCENE_ID": [
+   "MATCH_PLAYER_MGR",
+   "MULTIPLAYER_DATA_MGR",
+   "LEVEL_MGR"
+  ],
+  "EW_POTION_TYPE": [
+   "HIT_POINT",
+   "ENERGY_POINT"
+  ],
+  "EW_SP_ACTION_CONDITONS": [
+   "HIT_TARGET_COUNT",
+   "HIT_TARGET_HP",
+   "AFTER_HURT",
+   "WHEN_HURT",
+   "AFTER_ATTACK",
+   "AFTER_HIT_TARGET",
+   "PER_XXX_SECONDS",
+   "AFTER_IDLE"
+  ],
+  "EW_SP_ACTION_LISTS": [
+   "AROUNT_PLAYER",
+   "AWAY_FROM_PLAYER",
+   "RUN_RANDOM",
+   "COPY_PLAYER_ACTION"
+  ],
+  "EW_STEALTHY_LEVEL": [
+   "IN_STEALTHY",
+   "CAN_BE_SEE"
+  ],
+  "EnableCondition": [
+   "DoNothing",
+   "EnableThenPlay"
+  ],
+  "Endpoint": [
+   "LOCAL1",
+   "LOCAL2",
+   "STAGE1",
+   "STAGE2",
+   "STAGE3",
+   "STAGE4",
+   "PREPROD",
+   "DEV",
+   "TEST",
+   "LOAD",
+   "CERT",
+   "SUBMISSION",
+   "PROD"
+  ],
+  "EntityType": [
+   "PLAYER",
+   "GROUP"
+  ],
+  "EnumAvatarArea": [
+   "face",
+   "helmet",
+   "shoulder",
+   "chest",
+   "arm",
+   "arm_armor",
+   "leg",
+   "leg_armor",
+   "belt",
+   "MAX"
+  ],
+  "EnumCGSStatus": [
+   "idle",
+   "busy",
+   "result_ok",
+   "result_error"
+  ],
+  "EnumCameraEffect": [
+   "none",
+   "effect_0",
+   "effect_1",
+   "effect_2",
+   "effect_3",
+   "effect_4",
+   "effect_5",
+   "effect_6",
+   "effect_7",
+   "effect_8",
+   "effect_9",
+   "effect_10",
+   "effect_11",
+   "effect_12",
+   "effect_13",
+   "effect_14",
+   "effect_15",
+   "effect_16",
+   "effect_17"
+  ],
+  "EnumEquipSlot": [
+   "head",
+   "chest",
+   "shoulder_left",
+   "shoulder_right",
+   "arm_left",
+   "arm_right",
+   "weapon_left",
+   "weapon_right",
+   "thigh_left",
+   "thigh_right",
+   "calf_left",
+   "calf_right",
+   "belt",
+   "foot_point",
+   "head_point",
+   "damage_main_A",
+   "damage_main_B",
+   "smash_effect",
+   "weapon_hang",
+   "MAX"
+  ],
+  "EnumRareLevel": [
+   "white",
+   "green",
+   "blue",
+   "purple",
+   "gold",
+   "MAX"
+  ],
+  "EnumRole": [
+   "NotAvailable",
+   "NotSelected",
+   "Mage",
+   "Warrior",
+   "Monk"
+  ],
+  "EnumShakeEffect": [
+   "none",
+   "shake1",
+   "shake2",
+   "shake3_loop",
+   "shake4",
+   "shake5",
+   "shake6"
+  ],
+  "Error": [
+   "Internal",
+   "InternetUnavailable",
+   "TooManyConnections",
+   "WrongOrientation",
+   "FirstSessionInterstitialsDisabled",
+   "NetworkFailure",
+   "NoAdFound",
+   "SessionNotStarted",
+   "AgeGateFailure",
+   "UserCancellation"
+  ],
+  "ErrorAction": [
+   "DISCARD",
+   "HOLD_AND_RESEND",
+   "FIX_AND_RESEND"
+  ],
+  "ErrorType": [
+   "DUPLICATE_TRANSACTION",
+   "DUPLICATE_TRANSACTION_FAILURE",
+   "DUPLICATE_TRANSACTION_SUCCESS",
+   "DUPLICATE_TRANSACTION_WAITING",
+   "UNKNOWN_ERROR",
+   "CANNOT_PROCESS_REQUEST",
+   "INVALID_REQUEST_MESSAGE",
+   "INVALID_GAMEID",
+   "INVALID_PLAYERID",
+   "INVALID_REQUEST_DEPRECATED",
+   "INVALID_REQUEST_PARAMETERS",
+   "INVALID_SESSION",
+   "SESSION_EXPIRED",
+   "USER_NOT_FOUND",
+   "PLAYER_ALREADY_EXISTS",
+   "PLAYER_NOT_FOUND",
+   "ACCOUNT_NAME_TAKEN",
+   "AUTHENTICATION_FAILURE",
+   "CREDENTIAL_NOT_FOUND",
+   "UNSUPPORTED_ACCOUNT_TYPE",
+   "CREATE_PLAYER_ERROR",
+   "RETIRE_PLAYER_ERROR",
+   "INVALID_MATCH_MAKER_NAME",
+   "CREDENTIAL_ALREADY_ATTACHED_TO_SAME_PLAYER",
+   "CREDENTIAL_ATTACHED_TO_DIFFERENT_PLAYER",
+   "RESOLVE_CONFLICT_ERROR",
+   "FACEBOOK_CREDENTIAL_VALIDATION_ERROR",
+   "CURRENT_NICKNAME_INVALID",
+   "PLAYER_ATTACHED_TO_DIFFERENT_CREDENTIAL",
+   "INVALID_EMAIL",
+   "INVALID_PASSWORD",
+   "LOCK_EXISTS",
+   "GROUP_ALREADY_EXISTS",
+   "GROUP_DOES_NOT_EXIST",
+   "UNKNOWN_MAIL_RECEIPENT",
+   "INVALID_MAIL_ID",
+   "UNKNOWN_CHAT_RECEIPENT",
+   "PLAYER_MUTED",
+   "PLAYER_NOT_JOINED_ROOM",
+   "LEADERBOARD_SERVER_DOWN",
+   "LEADERBOARD_NO_DATA",
+   "ALREADY_CONSUMED",
+   "RECEIPT_NOT_FOUND",
+   "BAD_PLAYER_ID",
+   "UNKNOWN_PRODUCT",
+   "NOT_VALID",
+   "DECODE_FAILED",
+   "BAD_BID",
+   "RETRIEVED_BID_MISMATCH",
+   "VERIFY_EXCEPTION",
+   "RETRIEVED_PLAYER_MISMATCH",
+   "INVALID_IAP_RECEIPT_VERIFICATION_URL",
+   "IAP_INVALID",
+   "IAP_GAME_MISMATCH",
+   "IAP_PLAYER_MISMATCH",
+   "IAP_DOES_NOT_EXIST",
+   "IAP_ALREADY_CONSUMED",
+   "IAP_CONSUME_FAILED",
+   "IAP_PARSE_FAILED",
+   "FILE_EXISTS",
+   "NON_UNIQUE",
+   "FILE_TRANSFER_ERROR",
+   "FILE_NOT_FOUND",
+   "QUEUE_FULL",
+   "ITEMS_NOT_AVAILABLE",
+   "URBAN_AIRSHIP_KEY_OR_SECRET_NOT_AVAILABLE",
+   "INVALID_PARAMETERS",
+   "TIMEOUT",
+   "CANCELLED",
+   "NOT_CONNECTED",
+   "EXCEPTION",
+   "SEND_ERROR",
+   "NO_ERROR"
+  ],
+  "ExistingDocumentMode": [
+   "REPLACE",
+   "OVERWRITE",
+   "ABORT",
+   "IGNORE"
+  ],
+  "FILTER_TYPE": [
+   "WEAPON",
+   "HELM",
+   "SHOULDER",
+   "BREAST",
+   "ARM",
+   "LEG",
+   "NECKLACE",
+   "RING",
+   "VANITY",
+   "DRILLANDRUNE",
+   "OTHER",
+   "MAX"
+  ],
+  "FacebookStatus": [
+   "ERROR",
+   "NOT_STARTED",
+   "LOGGING_IN",
+   "COMPLETE"
+  ],
+  "GLUON_LOADING_STATUS": [
+   "Connecting",
+   "Loading",
+   "Saving"
+  ],
+  "GLUON_STATUS_FLAGS": [
+   "LOADING",
+   "SAVING",
+   "LOGIN",
+   "AUTO_RECONNECT",
+   "NONE"
+  ],
+  "GiftType": [
+   "LEVEL_SUCCESS",
+   "LEVEL_FAIL",
+   "FINISH_LEVEL",
+   "FINISH_TUTORIAL",
+   "FREE_DAYS",
+   "PLAY_DAYS",
+   "PLAYER_LEVEL",
+   "PLAYER_GS",
+   "BUY_HC"
+  ],
+  "GluonResponseStatus": [
+   "SUCCESS",
+   "FAILURE"
+  ],
+  "ID_BUTTON": [
+   "ID_OK",
+   "ID_YES",
+   "ID_NO",
+   "ID_CANCEL"
+  ],
+  "IdentityStatus": [
+   "NOT_STARTED",
+   "RETRIEVING_REQUEST",
+   "RETRIEVING_AUTHORIZATION",
+   "RETRIEVING_IDENTIFICATION",
+   "COMPLETE",
+   "ERROR"
+  ],
+  "ItemType": [
+   "Weapon",
+   "Armor",
+   "Ornament",
+   "Gem",
+   "Drug",
+   "Element",
+   "Token",
+   "Vanity",
+   "Pet",
+   "Drill",
+   "Rune",
+   "VanityPlus",
+   "Evo",
+   "NONE"
+  ],
+  "JoinGroupRequestStatus": [
+   "PENDING",
+   "ACCEPTED",
+   "REJECTED",
+   "ERROR"
+  ],
+  "LEVEL_RANK": [
+   "RANK_A",
+   "RANK_B",
+   "RANK_C",
+   "RANK_D",
+   "RANK_E"
+  ],
+  "LOGIN_STEP": [
+   "NOT_START",
+   "LOGINING",
+   "LOGIN_OK",
+   "LOGIN_FAILED",
+   "LOGIN_RECONNECTING",
+   "LOGIN_RECONNECTING_DELAY"
+  ],
+  "LOOTTYPE": [
+   "RANDOM",
+   "VERTICLE",
+   "ARC",
+   "GRID",
+   "LINE",
+   "CIRCLE",
+   "INCIRCLE",
+   "MAX"
+  ],
+  "LeaderboardTypes": [
+   "PlayerGS",
+   "PlayerVP",
+   "PlayerTournament",
+   "GuildGS",
+   "GuildVP",
+   "GuildTournament",
+   "HallOfFamePlayer",
+   "HallOfFameGuild",
+   "PlayerRankInSurvivalMode",
+   "PvpPlayerTournamentMmr",
+   "PvpPlayerTournamentAp",
+   "PvpPlayerAp",
+   "PvpGuildTournamentAp",
+   "PvpGuildAp",
+   "PvpHallOfFamePlayer",
+   "PvpHallOfFameGuild",
+   "RaidBoss",
+   "Count"
+  ],
+  "LogLevel": [
+   "LOG_LEVEL_DEBUG",
+   "LOG_LEVEL_INFO",
+   "LOG_LEVEL_WARN",
+   "LOG_LEVEL_ERROR"
+  ],
+  "MB_TYPE": [
+   "MB_NULL",
+   "MB_OK",
+   "MB_OKCANCEL",
+   "MB_YESNO",
+   "MB_WAITING",
+   "MB_INPUT",
+   "MB_FLOATING",
+   "MB_WAITING_DELAY",
+   "MB_CANCEL"
+  ],
+  "OnSerializeRigidBody": [
+   "OnlyVelocity",
+   "OnlyAngularVelocity",
+   "All"
+  ],
+  "OnSerializeTransform": [
+   "OnlyPosition",
+   "OnlyRotation",
+   "OnlyScale",
+   "PositionAndRotation",
+   "All"
+  ],
+  "PART": [
+   "helm",
+   "shoulder",
+   "belt",
+   "armpiece",
+   "leggings",
+   "weapon",
+   "necklace",
+   "ring",
+   "drug",
+   "element",
+   "gem",
+   "vanity",
+   "pet",
+   "drill",
+   "rune",
+   "none"
+  ],
+  "PHOTON_ROOM_PROPERTYS": [
+   "NAME",
+   "C0",
+   "C1",
+   "C5",
+   "C6"
+  ],
+  "PHOTON_SERVER_LIST": [
+   "Asia",
+   "Europe",
+   "US",
+   "Beijing",
+   "PhotonTest",
+   "Count"
+  ],
+  "PeerState": [
+   "Uninitialized",
+   "PeerCreated",
+   "Queued",
+   "Authenticated",
+   "JoinedLobby",
+   "DisconnectingFromMasterserver",
+   "ConnectingToGameserver",
+   "ConnectedToGameserver",
+   "Joining",
+   "Joined",
+   "Leaving",
+   "DisconnectingFromGameserver",
+   "ConnectingToMasterserver",
+   "QueuedComingFromGameserver",
+   "Disconnecting",
+   "Disconnected",
+   "ConnectedToMaster",
+   "ConnectingToNameServer",
+   "ConnectedToNameServer",
+   "DisconnectingFromNameServer",
+   "Authenticating"
+  ],
+  "PhotonLogLevel": [
+   "ErrorsOnly",
+   "Informational",
+   "Full"
+  ],
+  "PhotonNetworkingMessage": [
+   "OnConnectedToPhoton",
+   "OnLeftRoom",
+   "OnMasterClientSwitched",
+   "OnPhotonCreateRoomFailed",
+   "OnPhotonJoinRoomFailed",
+   "OnCreatedRoom",
+   "OnJoinedLobby",
+   "OnLeftLobby",
+   "OnDisconnectedFromPhoton",
+   "OnConnectionFail",
+   "OnFailedToConnectToPhoton",
+   "OnReceivedRoomListUpdate",
+   "OnJoinedRoom",
+   "OnPhotonPlayerConnected",
+   "OnPhotonPlayerDisconnected",
+   "OnPhotonRandomJoinFailed",
+   "OnConnectedToMaster",
+   "OnPhotonSerializeView",
+   "OnPhotonInstantiate",
+   "OnPhotonMaxCccuReached",
+   "OnPhotonCustomRoomPropertiesChanged",
+   "OnPhotonPlayerPropertiesChanged",
+   "OnUpdatedFriendList",
+   "OnCustomAuthenticationFailed"
+  ],
+  "PhotonTargets": [
+   "All",
+   "Others",
+   "MasterClient",
+   "AllBuffered",
+   "OthersBuffered",
+   "AllViaServer",
+   "AllBufferedViaServer"
+  ],
+  "PlayerColorTypes": [
+   "Red",
+   "Blue",
+   "Green",
+   "Yellow",
+   "Count"
+  ],
+  "PlayerCredentialType": [
+   "LOCAL",
+   "EMAIL",
+   "TWITTER",
+   "FACEBOOK",
+   "NICKNAME"
+  ],
+  "PresenceType": [
+   "ONLINE",
+   "OFFLINE",
+   "EITHER"
+  ],
+  "PurchaseResolution": [
+   "Bought",
+   "Cancelled",
+   "Error",
+   "Invalid",
+   "Owned",
+   "Unset"
+  ],
+  "PvpEndReasons": [
+   "TimeUp",
+   "PlayerDropped",
+   "KillReached"
+  ],
+  "QuestCycleType": [
+   "once",
+   "daily",
+   "weekly"
+  ],
+  "QuestStatus": [
+   "inactive",
+   "active",
+   "inprogress",
+   "completed",
+   "closed"
+  ],
+  "QuestTargetType": [
+   "complete_level",
+   "kill_monster",
+   "find_loot",
+   "level_up",
+   "evolution_up",
+   "fusion_up",
+   "purchase_item",
+   "facebook_login",
+   "join_guild",
+   "add_friend",
+   "survival_wave_clear",
+   "survival_wave_any",
+   "change_nickName",
+   "max"
+  ],
+  "QuestType": [
+   "main",
+   "side"
+  ],
+  "RAIDBOSS_EVENTTYPE": [
+   "EVENT_END",
+   "BREAK_END",
+   "CD_END",
+   "EVENTSTATE_UPDATED",
+   "EVENTINFO_UPDATED",
+   "BOSSINFO_UPDATED",
+   "LEADERBOARD_UPDATED",
+   "EVENTTIMELEFT_UPDATED",
+   "BREAKTIMELEFT_UPDATED",
+   "CDTIMELEFT_UPDATED"
+  ],
+  "RAIDBOSS_FAILREASON": [
+   "NONE",
+   "KILLED",
+   "TIMEOUT",
+   "QUIT"
+  ],
+  "ReceiptState": [
+   "RECEIVED",
+   "SENT",
+   "DENIED",
+   "ACCEPTED"
+  ],
+  "RequestState": [
+   "Waiting",
+   "Reading",
+   "Done"
+  ],
+  "RequestType": [
+   "Open",
+   "Metadata",
+   "Content",
+   "Preload",
+   "CrossPromotionWidget"
+  ],
+  "SOUL_STORE_CURRENCY_TYPE": [
+   "SOUL_SLICE",
+   "HC"
+  ],
+  "SaveValueType": [
+   "Invalid",
+   "Object",
+   "Array",
+   "String",
+   "Number",
+   "Bool"
+  ],
+  "ServerConnection": [
+   "MasterServer",
+   "GameServer",
+   "NameServer"
+  ],
+  "ServiceType": [
+   "BUS_SERVER",
+   "EDGE_SERVER",
+   "CHAT_SERVICE",
+   "MAIL_SERVICE",
+   "GROUP_SERVICE",
+   "PLAYER_SERVICE",
+   "PLAYER_SERVICE_RDBMS",
+   "LEADERBOARD_SERVICE",
+   "METRICS_SERVICE",
+   "STORE_SERVICE",
+   "UNKNOWN"
+  ],
+  "StoreItemType": [
+   "POTION",
+   "TOKEN",
+   "GRID",
+   "HC",
+   "VANITY",
+   "PET",
+   "GACHA",
+   "MAX"
+  ],
+  "TapjoyDisplayAdSize": [
+   "[Description(\"320x50\")]\n\tSIZE_320X50",
+   "[Description(\"640x100\")]\n\tSIZE_640X100",
+   "[Description(\"768x90\")]\n\tSIZE_768X90"
+  ],
+  "TapjoyViewType": [
+   "OFFERWALL",
+   "FULL_SCREEN_AD",
+   "DAILY_REWARD_AD",
+   "VIDEO_AD"
+  ],
+  "TestUser": [
+   "TESTUSER_1",
+   "TESTUSER_2"
+  ],
+  "TournamentTypes": [
+   "Normal",
+   "PvP",
+   "Count"
+  ],
+  "Trigger": [
+   "OnClick",
+   "OnHover",
+   "OnPress",
+   "OnHoverTrue",
+   "OnHoverFalse",
+   "OnPressTrue",
+   "OnPressFalse",
+   "OnActivate",
+   "OnActivateTrue",
+   "OnActivateFalse",
+   "OnDoubleClick",
+   "OnSelect",
+   "OnSelectTrue",
+   "OnSelectFalse"
+  ],
+  "TriggerActiveType": [
+   "TriggerActiveType_KillAll"
+  ],
+  "TutorialAction": [
+   "Start",
+   "Finish"
+  ],
+  "TutorialEventType": [
+   "StartLevel",
+   "FinishLevel",
+   "ChangeNickName",
+   "EnterTown"
+  ],
+  "ValidateIapReceiptResult": [
+   "IS_VALID",
+   "NOT_VALID",
+   "DECODE_FAILED",
+   "BAD_BID",
+   "RETRIEVED_BID_MISMATCH",
+   "VERIFY_EXCEPTION",
+   "RETRIEVED_PLAYER_MISMATCH"
+  ],
+  "ViewSynchronization": [
+   "Off",
+   "ReliableDeltaCompressed",
+   "Unreliable",
+   "UnreliableOnChange"
+  ]
+ }
+}

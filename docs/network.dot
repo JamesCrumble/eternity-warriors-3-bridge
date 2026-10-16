@@ -1,0 +1,54 @@
+// Eternity Warriors 3 v4.1.0: сетевые маршруты. Рендер: dot -Tsvg docs/network.dot -o docs/network.svg
+digraph ew3net {
+  graph [rankdir=TB, fontname="Helvetica", fontsize=11, nodesep=0.35, ranksep=0.45, bgcolor="white",
+         label="Eternity Warriors 3 v4.1.0 — сеть ({root} = d2fo9k0pax5pvp.cloudfront.net/ew3, {p} = android/live, {tag} = EW3_20150403-155116_r28787)\nВсе серверы мертвы (2026-10-15)", labelloc=t];
+  node  [shape=box, style="rounded,filled", fillcolor="#f4f4f4", color="#888888", fontname="Helvetica", fontsize=10];
+  edge  [color="#555555", fontname="Helvetica", fontsize=9];
+
+  boot  [label="AppManager: старт", shape=oval, fillcolor="#dde8f8"];
+  sel   [label="CheckServerSelection"];
+  sp    [label="GET {root}/{p}/serverpost_{tag}.json?p=ts\nтаймаут 5 с", fillcolor="#fff1c9"];
+  dsp   [label="Диалог IDS_NATIVE_SERVER_POST\n«Повторить» — БЛОКЕР", fillcolor="#f8d4d4", color="#c04040"];
+  chk   [label="BlockerPolicy / ForceUpdate /\nServerMaintain", shape=diamond, fillcolor="#ffffff"];
+  web   [label="WebView, игра стоит", fillcolor="#f8d4d4", color="#c04040"];
+  avail [label="OnServerAvailable"];
+  dci   [label="GET {root}/{p}/bundles/{tag}/\nDynamicContentInfo.json", fillcolor="#fff1c9"];
+  db    [label="Диалог IDS_NATIVE_SERVER_BANDLE_FAILED\n— БЛОКЕР", fillcolor="#f8d4d4", color="#c04040"];
+  idx   [label="GET …/AssetBundles/{AssetBundleTag}/index.version", fillcolor="#fff1c9"];
+  bnd   [label="Бандлы: base_* — из OBB (assets/AssetBundles)\nостальные миры — с CDN (утеряны)"];
+  title [label="Стартовый экран / город", shape=oval, fillcolor="#d6f0d6"];
+
+  boot -> sel -> sp;
+  sp -> dsp [label="ошибка", color="#c04040", fontcolor="#c04040"];
+  sp -> chk [label="JSON"];
+  chk -> web [label="блок / обновление /\nтехработы", color="#c04040", fontcolor="#c04040"];
+  chk -> avail [label="ок"];
+  avail -> dci;
+  dci -> db [label="ошибка", color="#c04040", fontcolor="#c04040"];
+  dci -> idx [label="ок"];
+  idx -> bnd -> title;
+
+  subgraph cluster_online {
+    label="Онлайн-бэкенд (после старта)"; style="rounded,dashed"; color="#888888"; fontsize=10;
+    gluon  [label="Gluon: HTTP EdgeLB\nlb.prod.gluon.glu.com:8015/edgeServer\n→ TCP gluon-prdedge-1.glu.com:4024\n(свой протокол, 427 типов сообщений)", fillcolor="#e9e0f6"];
+    cgs    [label="CGS prd3ew3-maincgs-1.aws.glu.com:\ncheck_version, профиль, сохранения,\nпочта, друзья, лидерборды", fillcolor="#e9e0f6"];
+    photon [label="Photon TCP\nns.exitgamescloud.com:5058\napp-eu.exitgamescloud.com\nPvP, рейды", fillcolor="#e9e0f6"];
+    gluon -> cgs;
+  }
+  title -> gluon;
+  title -> photon;
+
+  subgraph cluster_side {
+    label="Неблокирующие"; style="rounded,dashed"; color="#aaaaaa"; fontsize=10;
+    ops   [label="{root}/{p}/ops — LiveOps"];
+    html  [label="{root}/…/html: serverNews,\ntournament, shopBanner, cheater"];
+    music [label="{root}/music"];
+    iap   [label="bjiap.glu.com/v3/private/i/{v,gt}\n— IAP"];
+    gift  [label="prdags-tc-1.glu.com\n:8443/gift, :8090"];
+    misc  [label="google-analytics, Kontagent, push,\ngeoservice, graph.facebook.com, helpshift"];
+  }
+  java [label="Java-SDK Glu / Tapjoy / AWS\n(через JNI)"];
+  title -> ops [style=dotted]; title -> html [style=dotted]; title -> music [style=dotted];
+  title -> iap [style=dotted]; title -> gift [style=dotted]; title -> misc [style=dotted];
+  title -> java [style=dotted];
+}
