@@ -1,41 +1,50 @@
-# Eternity Warriors 3 Bridge (Windows 11 x64)
+# Eternity Warriors 3 Bridge
 
-Нативный порт-прослойка и локальный сервер для запуска **Eternity Warriors 3 v4.1.0** (`com.glu.ewarriors3`, Android `armeabi-v7a`, Unity 4.6.1p5 + Mono) на Windows 11 x64 без Android-эмулятора, с восстановлением удалённых с CDN уровней, врагов и боссов из архивной сборки **v0.1.0 (iOS IPA)**.
+Прослойка и локальный сервер для запуска **Eternity Warriors 3 v4.1.0** (`com.glu.ewarriors3`, Android `armeabi-v7a`, Unity 4.6.1p5 + Mono) без серверов Glu, которые давно закрыты: на **Android-телефоне** (готовый релиз) и на **Windows 11** (через qemu в WSL, нативный хост в работе). Удалённые с CDN уровни, враги и боссы восстанавливаются из архивной сборки **v0.1.0 (iOS IPA)**.
 
----
-
-## Быстрый старт
-
-1. Убедитесь, что в рабочей папке находятся игровые архивы:
-   - `ew3data/Android/obb/com.glu.ewarriors3/main.4100.com.glu.ewarriors3.obb` (кэш Android v4.1.0)
-   - `31263-Eternity-Warriors-3-v0-1-0.ipa` в корне проекта (необязательно, но открывает все 25 уровней кампании в 3 королевствах, всех врагов и боссов)
-2. Запустите игру через:
-   ```bat
-   play_win.cmd
-   ```
-   Сейчас рабочий запуск — `tools/play_win.sh` из WSL (гость под `qemu-arm`, графика через `host/build-win/ew3gl.exe`, сервер `server/ew3server.py` на `:18080` HTTP и `:18024` Gluon TCP). `play_win.py` и нативный `ew3host.exe` не закончены (см. PROJECT_STATE.md).
+Файлы игры в репозиторий и релизы не входят: нужны ваши собственные (APK 4.1.0 и её данные).
 
 ---
 
-## Архитектура проекта
+## Android (релиз v0.1)
+
+Скачайте APK из релиза `v0.1` и следуйте `INSTALL.txt`:
+
+1. Установить `Eternity-Warriors-3-Bridge-0.1.apk`, открыть приложение, разрешить доступ ко всем файлам.
+2. Положить в `/sdcard/BridgeGames/com.jamescrumble.ew3/` оригинальный `E-Warriors-3-v4-1-0.apk` и cache-zip (или `main.4100.com.glu.ewarriors3.obb`). Необязательно: `31263-Eternity-Warriors-3-v0-1-0.ipa` для восстановленных уровней (на телефоне не проверялось).
+3. Нажать «Играть». Первый запуск дольше: распаковка и старт сервера занимают до минуты.
+
+Проверено на OnePlus CPH2723 (Android 16): ~60 кадров/с. Управление сенсорное; PvP, рейды, покупки и реклама отключены. Сохранения лежат в личной папке приложения (пропадают при удалении).
+
+Приложение: игра исполняется в qemu-user (`libqemu.so`), OpenGL ES идёт на GPU телефона, а сервер на Python 3.8 работает внутри приложения в том же qemu. Подробности: [docs/PORTING_GUIDE.md](docs/PORTING_GUIDE.md#часть-7-android-bridge-apk).
+
+---
+
+## Windows (qemu в WSL)
+
+Сейчас рабочий запуск — `tools/play_win.sh` из WSL: гость `port/build/ew3` под `qemu-arm`, графика через `host/build-win/ew3gl.exe` (ANGLE -> Direct3D 11), сервер `server/ew3server.py` на `:18080` (HTTP) и `:18024` (Gluon TCP). Нужны `ew3data/Android/obb/com.glu.ewarriors3/main.4100.com.glu.ewarriors3.obb` и, по желанию, `31263-Eternity-Warriors-3-v0-1-0.ipa` в корне проекта (открывает все 25 уровней кампании).
+
+`play_win.py` / `play_win.cmd` и нативный `ew3host.exe` (dynarmic, без WSL) не закончены, см. [PROJECT_STATE.md](PROJECT_STATE.md).
+
+---
+
+## Архитектура
 
 ```
-ew3host.exe (план: Windows x64, MSVC + dynarmic + ANGLE/SDL2; пока заготовка. Сейчас: qemu-arm в WSL + ew3gl.exe)
-  │
-  ├─► Гостевой ARM32 процесс (port/build/ew3)
-  │     ├── Bionic ELF loader: libunity.so, libmono.so, libmain.so
-  │     ├── JNI-мост и заглушки SDK (Glu, Tapjoy, AJavaTools, UnityWWW)
-  │     ├── Перехват сети (symtab_net.cpp / unity_www.cpp) -> 127.0.0.1:18080 / :18024
-  │     └── GLES2 wire-протокол -> рендеринг через ANGLE (D3D11) на хосте
-  │
-  └─► Локальный бэкенд (server/ew3server.py)
-        ├── HTTP CDN & Config (:18080): serverpost, DynamicContentInfo, index.version, AssetBundles
-        ├── Gluon Edge (:18024, TCP + BSON): авторизация, синхронизация атрибутов профиля
-        ├── Custom Game Server (server/cgs.py, server/cgs_state.py):
-        │     бои, лут, инвентарь, экипировка, ковка (Fuse/Evolve), скиллы, гача, квесты и дейлики
-        └── Конвертер ассетов (server/bundle_patcher.py):
-              динамический патч OBB-бандлов и конвертация 33 недостающих бандлов из iOS IPA v0.1.0
-              (Unity 4.2.1f4 iOS -> Unity 4.6.1p5 Android)
+Игра (port/build/ew3, ARM32 гость под qemu-user)
+  ├── Bionic ELF loader: libunity.so, libmono.so, libmain.so
+  ├── JNI-мост и заглушки SDK (Glu, Tapjoy, AJavaTools, UnityWWW)
+  ├── Перехват сети (symtab_net.cpp / unity_www.cpp) -> 127.0.0.1:18080 / :18024
+  └── GLES wire-протокол ──► GL на видеокарте:
+        Android: apk/ GlBridge.java (GPU телефона)
+        Windows: host/glbridge/ew3gl.exe (ANGLE -> D3D11)
+
+Локальный бэкенд (server/ew3server.py; на Android внутри приложения)
+  ├── HTTP CDN & Config (:18080): serverpost, DynamicContentInfo, index.version, AssetBundles
+  ├── Gluon Edge (:18024, TCP + BSON): авторизация, синхронизация атрибутов профиля
+  ├── Custom Game Server (server/cgs*.py): бои, лут, инвентарь, экипировка, ковка (Fuse/Evolve), скиллы, гача, квесты и дейлики
+  └── Конвертер ассетов (server/bundle_patcher.py): патч OBB-бандлов и конвертация 33 недостающих бандлов из iOS IPA v0.1.0
+      (Unity 4.2.1f4 iOS -> Unity 4.6.1p5 Android)
 ```
 
 ---
@@ -57,7 +66,7 @@ ew3host.exe (план: Windows x64, MSVC + dynarmic + ANGLE/SDL2; пока за�
 
 ## Сохранения и админ-панель
 
-- **Файл сохранений**: `ew3data/server/players.json`
+- **Файл сохранений**: `ew3data/server/players.json` (на Android — `files/serverdata/players.json` в личной папке приложения)
   - **`hc_current`** — донатная валюта (кристаллы / Gems, общая на аккаунт; хранится строкой, например `"99999"`).
   - **`warrior_sc_current` / `mage_sc_current` / `monk_sc_current`** — золото (монеты) каждого класса.
 - **Swagger UI (при запущенном сервере)**: `http://127.0.0.1:18080/docs`
@@ -71,8 +80,23 @@ ew3host.exe (план: Windows x64, MSVC + dynarmic + ANGLE/SDL2; пока за�
   ```bash
   ./build.sh
   ```
-- **Windows-хост (`host/build-win/ew3host.exe`)** — собирается через MSVC + CMake + Ninja:
-  ```powershell
-  cmake --build host/build-win --config Release
+- **Android-APK и релиз** (подробности в [docs/PORTING_GUIDE.md](docs/PORTING_GUIDE.md#71-сборка)):
+  ```bash
+  bash apk/make_sysroot.sh   # sysroot armhf + файлы сервера
+  bash apk/build_apk.sh      # debug-APK
+  tools/make_release.sh      # release/v<версия>/: подписанный APK, INSTALL.txt, RELEASE_NOTES.md, src, SHA256SUMS
   ```
-- **Кэш сконвертированных бандлов**: `ew3data/server/bundle_cache/` (пересоздаётся автоматически при изменении хэшей в `server/ew3server.py`).
+- **GL-мост для Windows (`host/build-win/ew3gl.exe`)** — MSVC + CMake + Ninja из WSL: `host/build.sh ew3gl`. Цель `ew3host` пока не линкуется (хост не закончен).
+- **Кэш сконвертированных бандлов**: `ew3data/server/bundle_cache/` (пересоздаётся автоматически при изменении хэшей в `server/ew3server.py`; каталог задаёт `EW3_BUNDLE_CACHE`).
+
+---
+
+## Документация
+
+- [PROJECT_STATE.md](PROJECT_STATE.md) — состояние и планы.
+- [docs/PORTING_GUIDE.md](docs/PORTING_GUIDE.md) — как делался порт, по шагам (части 1–7, Android — часть 7).
+- [docs/NETWORK.md](docs/NETWORK.md) — сетевые маршруты игры и их локальная подмена.
+
+## Лицензии
+
+Код проекта: GPL-3.0 (`port/LICENSE`). `libqemu.so` в APK — QEMU (GPL-2.0) с патчами, они приложены к релизу. Eternity Warriors 3 и его материалы принадлежат Glu; проект с Glu не связан и файлы игры не распространяет.

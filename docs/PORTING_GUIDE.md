@@ -2,14 +2,14 @@
 
 ETERNITY WARRIORS 3 4.1.0 (Glu) — игра на Unity 4.5.2 с кодом на Mono. От остальных проектов семейства она
 отличается двумя вещами. Во-первых, это онлайн-игра: экипировку, валюты и награды считал сервер Glu, а серверов
-давно нет — без своего сервера игра не проходит дальше экрана загрузки. Во-вторых, целевая платформа — Windows:
-графика идёт на видеокарту ПК через ANGLE, а не на телефон.
+давно нет — без своего сервера игра не проходит дальше экрана загрузки. Во-вторых, целевых платформ две: Windows
+(графика на видеокарту ПК через ANGLE, части 2–6) и Android-телефон (Bridge-APK, часть 7).
 
 Каждый шаг описан одинаково: что было видно, как нашли причину, что и где исправили. Текущее состояние —
 в [PROJECT_STATE.md](../PROJECT_STATE.md), сетевой протокол — в [NETWORK.md](NETWORK.md).
 
 Состояние: меню, выбор героя, город, вход в сюжетные уровни, бой; звук; 60 кадров/с на RX 9070 XT при 720p
-(процессор эмулирует qemu-arm в WSL).
+(процессор эмулирует qemu-arm в WSL). Android: релиз v0.1, около 60 кадров/с на OnePlus CPH2723 (Adreno 830).
 
 ## Почему не пересобрать под x86 или arm64
 
@@ -160,10 +160,98 @@ CGS (`server/cgs*.py`). Правило для всех ответов: блок�
 ## Часть 6. Управление на ПК
 
 Игра знает только касания: плавающий джойстик слева, кнопки справа. [ew3gl_input.inc](../host/glbridge/ew3gl_input.inc)
-переводит WASD/мышь/клавиши в касания (мультитач). Это хост, игра и порт не меняются, Android-сборка не
-затронута. `EW3_GL_KEYMAP=0` выключает, F1 — режим мыши, `ctl/keymap.txt` — координаты кнопок.
+переводит WASD/мышь/клавиши в касания (мультитач). Это хост, игра и порт не меняются, Android-сборка
+([часть 7](#часть-7-android-bridge-apk)) не затронута. `EW3_GL_KEYMAP=0` выключает, F1 — режим мыши, `ctl/keymap.txt` — координаты кнопок.
 Джойстик ставится через пару кадров после касания, иначе центр окажется в смещённой точке.
 Стик рисует сама игра, убрать его без изменения игры нельзя — точка касания в углу экрана.
+
+## Часть 7. Android: Bridge-APK
+
+Схема та же, что у Shadowgun: APK несёт свой qemu-user, 32-битная игра исполняется в нём, а OpenGL ES идёт
+на GPU телефона. Обёртка взята из `../shadowgun-probe` и переделана под EW3 ([apk/](../apk)).
+
+В APK: `lib/arm64-v8a/libqemu.so` (статический aarch64 `qemu-arm`, QEMU 11.1.2 + патчи Shadowgun-проекта; патчи
+прикладываются к релизу), `assets/sysroot.zip` (armhf: glibc 2.31, SDL2, Python 3.8), `assets/ew3` (гость,
+`port/build/ew3`), `assets/serverroot.zip` (файлы сервера) и Java-код `apk/src/com/jamescrumble/ew3/`:
+`GameProcess` (подготовка файлов, запуск сервера и гостя, команды, звук), `GlBridge` (GLES-вызовы на GPU),
+`MainActivity`, `SettingsActivity`, `Storage`. Протокол GL тот же, что у `ew3gl`: наборы опкодов гостя и Java
+совпадают (38 штук), поэтому Java-мост от Shadowgun подошёл без изменений протокола.
+
+### 7.1. Сборка
+
+```bash
+./build.sh                 # гость port/build/ew3
+bash apk/make_sysroot.sh   # sysroot + serverroot (нужны downloads/armhf/debs и wheels-android)
+bash apk/build_apk.sh      # Eternity-Warriors-3-Bridge-debug.apk
+tools/make_release.sh      # release/v<версия>/: подписанный APK, INSTALL.txt, RELEASE_NOTES.md, src, SHA256SUMS
+```
+
+`libqemu.so` берётся из `../shadowgun-probe/qemu/out/qemu-arm-E.stripped` (`QEMU_BIN` меняет путь);
+`patch_syscalls.py` переписывает в нём `set_robust_list`/`rseq`/`faccessat2` под seccomp-фильтр Android.
+`jdk/` и `android-sdk/` — симлинки на соседний проект. Debian-пакеты Python (`downloads/armhf/debs`) и
+чистые колёса (`downloads/armhf/wheels-android`, `pip download --no-deps --platform any -r server/requirements-android.txt`)
+лежат вне git.
+
+### 7.2. Раскладка данных на телефоне
+
+- **Видно:** без файлов игры приложение пишет «Не найден оригинальный APK игры».
+- **Решение:** игрок кладёт `.apk`, cache-`.zip` (или `main.*.obb`) и, по желанию, `.ipa` в
+  `/sdcard/BridgeGames/com.jamescrumble.ew3/` (нужен доступ ко всем файлам) или в `Android/data/<пакет>/files/`.
+  Приложение собирает из них `files/game/` в том виде, как ждёт порт: `lib/armeabi-v7a/{libmain,libmono,libunity}.so`,
+  `base.apk`, `Android/obb/com.glu.ewarriors3/main.*.obb`.
+- `glu_properties.txt` (его читает `AJTUtil.GetProperty`) обёртка делает сама: `res/raw/properties.dat` из APK
+  расшифровывается AES-128-CBC, ключ и IV лежат в `classes.dex` по смещениям `0x301c68` и `0x301c80`
+  (`GameProcess.writeGluProperties`, то же, что `tools/extract_properties.sh`; результат проверен побайтно).
+
+### 7.3. Сервер на телефоне
+
+- **Требование:** сервер остаётся Python, но у `pydantic-core` и `pycryptodome` нет колёс под armv7.
+- **Решение:** в sysroot лежит armhf Python 3.8 из Ubuntu 20.04, и он запускается в том же `libqemu.so`
+  (`-cpu cortex-a15 -B 0x100000000 -L sysroot`, `PYTHONHOME=/usr`). Зависимости — чистый Python:
+  [requirements-android.txt](../server/requirements-android.txt) (FastAPI 0.95 + pydantic 1.10), а DES-CBC для отчёта
+  боя даёт [des_py.py](../server/des_py.py), к которому [cgs_state.py](../server/cgs_state.py) переходит, если
+  `Crypto` не импортируется (результат сверен с pycryptodome на 300 случайных наборах).
+- Сервер стартует около 20 секунд на ПК. `GameProcess.startServer` ждёт ответа `:18080` до трёх минут и только
+  потом запускает игру (`EW3_SERVER=127.0.0.1`). Для сокетов на loopback приложению нужно разрешение `INTERNET`.
+- Данные сервера (`players.json`, `bundle_cache/`) — в личной папке приложения, `files/serverdata/`. Они пропадают
+  вместе с приложением.
+- **Ловушка:** первая сборка sysroot пропустила `libutil.so.1`, потому что тест на ПК прошёл: qemu на хосте
+  подхватил библиотеку из системы. Теперь `make_sysroot.sh` обходит `NEEDED` у `python3.8` и всех модулей
+  `lib-dynload` и падает, если чего-то нет.
+
+### 7.4. Бандлы из кэша
+
+- **Видно:** в логе `WWW jar:…obb!/assets/AssetBundles/base_uniform_global_manager_<хэш>… -> not found`.
+- **Причина:** пропатченные бандлы имеют другой хэш в имени, чем в OBB, и там их нет.
+- **Исправлено:** `read_zip_entry` в [unity_www.cpp](../port/jni/unity_www.cpp) после промаха ищет файл в
+  `EW3_BUNDLE_CACHE`, а затем просит его у сервера. Сервер пишет подготовленные бандлы в тот же каталог
+  (`EW3_BUNDLE_CACHE`, по умолчанию `<data>/bundle_cache`).
+
+### 7.5. Чёрный экран и 0 FPS
+
+- **Видно:** загрузка доходит до конца, счётчик в `status.json` (`frame=`) встаёт на 60, 90 или 150, экран чёрный
+  с «0.0 FPS», приложение в фокусе. В конце кадра сервер видит только `client connected` от Gluon.
+- **Как нашли:** профилировщик показал, что поток движка всё время в `mono_unity_liveness_stop_gc_world`, внутри —
+  цикл `nanosleep`: Unity остановил мир сборщика мусора Boehm и ждёт подтверждений. Обёртка читает дополнительные
+  аргументы qemu из `qemu_args.txt`, с `-strace` в логе видно: `SIGPWR` (остановка потока) отправлен двум только что
+  созданным потокам Mono около 1300 раз каждому и ни разу не доставлен, остальные потоки спят в `rt_sigsuspend`.
+  `GC_RETRY_SIGNALS` ([main.cpp](../port/src/main.cpp), потерянный сигнал остановки) этот случай не закрывает.
+- **Причина:** включённый отладочный профилировщик (`EW3_PC_PROF`, настройка `PROFILING`): он шлёт потоку движка
+  `SIGPROF` 250 раз в секунду. Без него два запуска подряд (100 и 120 секунд) шли на ~60 кадрах/с без зависаний.
+  Точный механизм, по которому сигналы теряются у новых потоков, не выяснен.
+- **Исправлено:** `PROFILING` по умолчанию выключен ([GameProcess.java](../apk/src/com/jamescrumble/ew3/GameProcess.java)),
+  в настройках подписано, что он может подвесить игру.
+
+### 7.6. Остальное
+
+- Закрепление на «быстрых ядрах» (`CPU_PRIME`, маска `c0`) подходило только OnePlus, поэтому по умолчанию выключено.
+- Иконка приложения — нейтральная, её рисует `apk/make_icon.py`: материалы игры в релиз не входят.
+- Порт принимает от обёртки только `touch`, `key`, `pause`, `resume`, `quit`, поэтому управление сенсорное;
+  статус содержит `state` и `frame` (поля `menu` нет, обёртка выходит с экрана загрузки по числу кадров).
+- Релиз: `tools/make_release.sh` кладёт в `release/v<версия>/` APK (подпись release-ключом `apk/build/release.keystore`,
+  пароль в `apk/build/release.pass`; оба вне git, копию надо хранить), архив исходников рабочего дерева,
+  `qemu-patches.zip`, `INSTALL.txt`, `RELEASE_NOTES.md` и `SHA256SUMS`. Тег `v0.1` указывает на коммит, из которого
+  собран этот релиз.
 
 ## Что осталось
 
@@ -172,5 +260,7 @@ CGS (`server/cgs*.py`). Правило для всех ответов: блок�
 - Башня, рейд-боссы, PvP, гильдии — отвечают «недоступно».
 - `MethodBase.GetCurrentMethod()` под Mono (5.4).
 - Потолок 60 кадров/с.
-- Свой exe: эмулятор Linux-процесса на dynarmic вместо qemu, сервер на портативном Python, упаковка,
+- Свой exe для Windows: эмулятор Linux-процесса на dynarmic вместо qemu (`host/src/` пока только привязка dynarmic
+  и память, без `main`, ELF-загрузчика, сисколлов, потоков и сокетов), сервер на портативном Python, упаковка,
   меню настроек (окно / без рамки / полный экран).
+- Android: уровни из `.ipa` на телефоне не проверялись; причина потери `SIGPWR` (7.5); геймпад.
