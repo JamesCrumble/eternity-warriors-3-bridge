@@ -63,7 +63,7 @@ _TINY_JPEG = bytes.fromhex(
 import bundle_patcher  # noqa: E402
 
 
-DEFAULT_IPA = os.path.join(ROOT, "31263-Eternity-Warriors-3-v0-1-0.ipa")
+DEFAULT_IPA = os.environ.get("EW3_IPA") or os.path.join(ROOT, "31263-Eternity-Warriors-3-v0-1-0.ipa")
 
 
 class Obb:

@@ -29,3 +29,5 @@ release.pass
 /host/build-win/
 /third_party/*
 /server/.venv/
+/server/.venv-android/
+/apk/build/

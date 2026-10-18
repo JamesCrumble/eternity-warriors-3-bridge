@@ -13,14 +13,14 @@
    ```bat
    play_win.cmd
    ```
-   Скрипт (`play_win.py`) автоматически поднимает локальный сервер (`server/ew3server.py` на портах `:18080` HTTP и `:18024` Gluon TCP) и запускает `host/build-win/ew3host.exe`.
+   Сейчас рабочий запуск — `tools/play_win.sh` из WSL (гость под `qemu-arm`, графика через `host/build-win/ew3gl.exe`, сервер `server/ew3server.py` на `:18080` HTTP и `:18024` Gluon TCP). `play_win.py` и нативный `ew3host.exe` не закончены (см. PROJECT_STATE.md).
 
 ---
 
 ## Архитектура проекта
 
 ```
-ew3host.exe (Windows x64, MSVC + dynarmic + ANGLE/SDL2)
+ew3host.exe (план: Windows x64, MSVC + dynarmic + ANGLE/SDL2; пока заготовка. Сейчас: qemu-arm в WSL + ew3gl.exe)
   │
   ├─► Гостевой ARM32 процесс (port/build/ew3)
   │     ├── Bionic ELF loader: libunity.so, libmono.so, libmain.so

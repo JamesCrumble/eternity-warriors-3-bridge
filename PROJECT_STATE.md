@@ -26,7 +26,9 @@
 ## Что сделано и работает (2026-10-18)
 
 ### 1. Windows x64 хост (`host/`, `ew3host.exe`) и ARM32 гость (`port/`)
-- Полностью рабочий запуск на Windows 11 x64 через `ew3host.exe` (MSVC + `dynarmic` + `ANGLE` + `SDL2`) без WSL во время игры.
+- **Фактически работает** схема из `tools/play_win.sh`: гость `port/build/ew3` под `qemu-arm` в WSL, GL-поток по TCP в `host/build-win/ew3gl.exe` (ANGLE -> D3D11, SDL2), сервер Python.
+- **`ew3host.exe` (нативный dynarmic-хост без WSL) не закончен**: в `host/src/` только привязка dynarmic (`cpu.cpp`), память (`mem.c`) и заголовки. Нет `main`, ELF-загрузчика, сисколлов, потоков, сигналов, VFS и сокетов (план модулей в `host/src/host.h`), exe не линкуется. `play_win.py` ссылается на каталоги, которых нет в дереве (`third_party/qemu-guest`, `wsl-distro`, `zig`), поэтому рабочий запуск — `tools/play_win.sh`.
+- Android: `apk/` — заготовка обёртки из `../shadowgun-probe` (в работе). Сервер для телефона: `server/requirements-android.txt` (чистый Python) + `server/des_py.py` вместо pycryptodome.
 - Поддержка многопоточности (`clone` -> потоки Windows, `futex`, TLS, общие таблицы памяти и `ExclusiveMonitor`), обработка JIT `cacheflush` (`InvalidateCacheRange`).
 - Проброс `SIGSEGV` из JIT-кода Mono в обработчик `libmono.so` (корректная генерация `NullReferenceException` в C#).
 - Исправлен `__fpclassifyf` в `port/thunks/libc/legacy.cpp` (битовые флаги Bionic вместо констант glibc, иначе PhysX 2.8 отвергал матрицы с `0.0f`).

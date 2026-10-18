@@ -22,7 +22,10 @@ import os
 import random
 import re
 
-from Crypto.Cipher import DES
+try:
+    from Crypto.Cipher import DES
+except ImportError:   # the Android build: no pycryptodome wheel for armv7
+    import des_py as DES
 
 ROLES = ["mage", "warrior", "monk"]          # EnumRole order; role_current indexes it
 START_SC = 1000                               # soft currency a new hero starts with
