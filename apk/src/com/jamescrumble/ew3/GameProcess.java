@@ -263,6 +263,7 @@ final class GameProcess {
             }
             ready.createNewFile();
         }
+        installExtended();
         File props = new File(game, "glu_properties.txt");
         if (!props.exists()) {
             File apk = new File(game, "base.apk");
@@ -305,6 +306,46 @@ final class GameProcess {
         return bo.toByteArray();
     }
 
+    /**
+     * The extended pack (*.ew3x, a zip made by tools/make_extended.py): the AssetBundles recovered from the iOS build
+     * v0.1.0, ready to serve. It goes next to the game's APK like the other files and is unpacked once into the
+     * server's bundle cache (again when the file changes); the server then opens all levels without the IPA.
+     */
+    private void installExtended() throws IOException {
+        File ext = Storage.firstWithSuffix(ctx, ".ew3x");
+        if (ext == null) return;
+        File cache = new File(root, "serverdata/bundle_cache");
+        File stampFile = new File(root, "serverdata/.ew3x.stamp");
+        String stamp = ext.getName() + "|" + ext.length() + "|" + ext.lastModified();
+        if (stamp.equals(readText(stampFile).trim()) && new File(cache, ".has_ipa").exists()) return;
+        listener.onStatus("Распаковка расширенных данных…\nЭто делается один раз.");
+        stampFile.delete();
+        deleteTree(cache);
+        cache.mkdirs();
+        String base = cache.getCanonicalPath() + File.separator;
+        int n = 0;
+        try (ZipFile z = new ZipFile(ext)) {
+            java.util.Enumeration<? extends ZipEntry> en = z.entries();
+            while (en.hasMoreElements()) {
+                ZipEntry e = en.nextElement();
+                if (e.isDirectory() || e.getName().contains("/")) continue;
+                File out = new File(cache, e.getName());
+                if (!out.getCanonicalPath().startsWith(base)) throw new IOException("bad zip entry " + e.getName());
+                try (FileOutputStream o = new FileOutputStream(out)) { pump(z.getInputStream(e), o); }
+                n++;
+            }
+        } catch (IOException ex) {
+            deleteTree(cache);
+            throw new IOException("Не удалось распаковать " + ext.getName() + ": " + ex.getMessage());
+        }
+        if (!new File(cache, ".has_ipa").exists()) {
+            deleteTree(cache);
+            throw new IOException(ext.getName() + " не похож на расширенный пакет (нет .has_ipa).");
+        }
+        writeText(stampFile, stamp);
+        appendLog("[wrapper] extended pack " + ext.getName() + ": " + n + " files");
+    }
+
     private volatile Process serverProcess;
 
     /**
@@ -313,6 +354,14 @@ final class GameProcess {
      */
     private void startServer(File qemu) throws Exception {
         listener.onStatus("Запуск сервера…\nПервый раз это занимает до минуты.");
+        // Settings: 0.0.0.0 opens the server to the local network (/docs from a PC), else 127.0.0.1 only.
+        final boolean lan = "1".equals(SettingsActivity.load(ctx).get("SERVER_LAN"));
+        ServerService.start(ctx, lan, this);
+        // A server of an earlier start (the settings screen restarts the game) may still be shutting down; it must be
+        // gone, and its port free, before the new one binds - and "up" must mean this one, see the token below.
+        killStaleServers();
+        waitPortFree(18080, 10000);
+        final String token = java.util.UUID.randomUUID().toString();
         File sysroot = new File(root, "sysroot");
         File serverRoot = new File(root, "serverroot");
         File data = new File(root, "serverdata");
@@ -322,6 +371,8 @@ final class GameProcess {
         ProcessBuilder b = new ProcessBuilder(qemu.getPath(), "-cpu", "cortex-a15", "-B", "0x100000000",
                 "-L", sysroot.getPath(), new File(sysroot, "usr/bin/python3.8").getPath(),
                 "-u", new File(serverRoot, "server/ew3server.py").getPath(),
+                "--host", lan ? "0.0.0.0" : "127.0.0.1",
+                "--ready-token", token,
                 "--data", data.getPath());
         if (obbs != null && obbs.length > 0) { b.command().add("--obb"); b.command().add(obbs[0].getPath()); }
         Map<String, String> env = b.environment();
@@ -330,7 +381,7 @@ final class GameProcess {
         bundleCache.mkdirs();
         env.put("EW3_BUNDLE_CACHE", bundleCache.getPath());
         env.put("PYTHONHOME", "/usr");
-        env.put("PYTHONDONTWRITEBYTECODE", "1");
+        // Bytecode caches stay on: compiling FastAPI and pydantic under qemu on every start took far longer than the rest.
         env.put("PYTHONIOENCODING", "utf-8");
         env.put("GLIBC_TUNABLES", "glibc.pthread.rseq=0");
         env.put("HOME", new File(root, "home").getPath());
@@ -345,21 +396,90 @@ final class GameProcess {
         long end = SystemClock.elapsedRealtime() + 180000;
         while (SystemClock.elapsedRealtime() < end) {
             if (!p.isAlive()) throw new IOException("Сервер игры завершился (код " + p.exitValue() + "). Смотрите server.log рядом с логом.");
-            try (java.net.Socket s = new java.net.Socket()) {
-                s.connect(new java.net.InetSocketAddress("127.0.0.1", 18080), 300);
+            if (token.equals(readyToken())) {
                 appendLog("[wrapper] server is up");
+                // The notification now has the admin password the server has just made (LAN mode).
+                if (lan) ServerService.start(ctx, true, this);
                 return;
-            } catch (IOException notYet) {
-                Thread.sleep(500);
             }
+            Thread.sleep(500);
         }
         throw new IOException("Сервер игры не запустился за 3 минуты. Смотрите server.log.");
+    }
+
+    /** The address of another server when the settings ask for one (not the loopback), else null: the built-in one runs. */
+    private String externalServer() {
+        java.util.Map<String, String> st = SettingsActivity.load(ctx);
+        String a = st.get("SERVER_ADDR");
+        if (!"1".equals(st.get("SERVER_CUSTOM")) || !SettingsActivity.validIpv4(a) || a.startsWith("127.")) return null;
+        return a;
+    }
+
+    /** Fails early, with a readable message, when the chosen server does not answer. */
+    private void checkServer(String addr) throws Exception {
+        listener.onStatus("Проверка сервера " + addr + "…");
+        appendLog("[wrapper] using the server at " + addr + "; the built-in one is not started");
+        for (int port : new int[] { 18080, 18024 }) {
+            try (java.net.Socket s = new java.net.Socket()) {
+                s.connect(new java.net.InetSocketAddress(addr, port), 4000);
+            } catch (IOException e) {
+                throw new IOException("Сервер " + addr + " не отвечает на порту " + port + ".\nПроверьте адрес в настройках и что сервер запущен "
+                        + "с --host 0.0.0.0 (порты 18080 и 18024).");
+            }
+        }
+    }
+
+    /**
+     * What GET /_ew3/ready of the server on this phone says, or null. A bare socket, not HttpURLConnection: Android
+     * refuses cleartext HTTP to it, even to 127.0.0.1.
+     */
+    private static String readyToken() {
+        try (java.net.Socket s = new java.net.Socket()) {
+            s.connect(new java.net.InetSocketAddress("127.0.0.1", 18080), 700);
+            s.setSoTimeout(1500);
+            s.getOutputStream().write("GET /_ew3/ready HTTP/1.0\r\nHost: 127.0.0.1\r\nConnection: close\r\n\r\n".getBytes("US-ASCII"));
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+            pump(s.getInputStream(), bo);
+            String r = bo.toString("UTF-8");
+            int body = r.indexOf("\r\n\r\n");
+            return r.startsWith("HTTP/1.") && r.contains(" 200 ") && body >= 0 ? r.substring(body + 4).trim() : null;
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /** Kills servers (ew3server.py under qemu) left by an earlier start of this app, found by their command line. */
+    private void killStaleServers() {
+        File[] procs = new File("/proc").listFiles();
+        if (procs == null) return;
+        for (File d : procs) {
+            if (!d.getName().matches("\\d+")) continue;
+            int pid = Integer.parseInt(d.getName());
+            if (pid == android.os.Process.myPid()) continue;
+            if (readText(new File(d, "cmdline")).contains("ew3server.py")) {
+                appendLog("[wrapper] stopping an earlier server, pid " + pid);
+                android.os.Process.killProcess(pid);
+            }
+        }
+    }
+
+    private static void waitPortFree(int port, long ms) throws InterruptedException {
+        long end = SystemClock.elapsedRealtime() + ms;
+        while (SystemClock.elapsedRealtime() < end) {
+            try (java.net.Socket s = new java.net.Socket()) {
+                s.connect(new java.net.InetSocketAddress("127.0.0.1", port), 200);
+            } catch (IOException free) {
+                return;
+            }
+            Thread.sleep(200);
+        }
     }
 
     private void stopServer() {
         Process p = serverProcess;
         serverProcess = null;
         if (p != null) p.destroy();
+        ServerService.stop(ctx, this);
     }
 
     /** lib/armeabi-v7a/{libmain,libmono,libunity}.so of the APK into game/. */
@@ -431,7 +551,12 @@ final class GameProcess {
         logFile.delete();
         gl.start();
 
-        startServer(qemu);
+        String external = externalServer();
+        if (external == null) {
+            startServer(qemu);
+        } else {
+            checkServer(external);
+        }
         ProcessBuilder b = new ProcessBuilder(qemu.getPath());
         // Diagnostics: extra qemu arguments, one per line, from qemu_args.txt next to the log.
         for (String arg : readText(new File(logFile.getParentFile(), "qemu_args.txt")).split("\n")) {
@@ -456,7 +581,7 @@ final class GameProcess {
         env.put("SDL_DISKAUDIOFILE", fifo.getPath());
         // Shorter than one 1024-frame period (23.2 ms): the device thread is then paced by the FIFO, see audioLoop().
         env.put("SDL_DISKAUDIODELAY", "15");
-        env.put("EW3_SERVER", "127.0.0.1");
+        env.put("EW3_SERVER", external != null ? external : "127.0.0.1");
         env.put("EW3_BUNDLE_CACHE", new File(root, "serverdata/bundle_cache").getPath());
         env.put("EW3_ALLOW_UNRESOLVED", "1");
         env.put("EW3_CONTROL_DIR", control.getPath());
@@ -551,7 +676,10 @@ final class GameProcess {
             env.put(k, v);
         }
         // The menu's frame-rate limit is what the engine is told to run at (src/fps_unlock.cpp).
-        if (settings.containsKey("FPS_LIMIT")) env.put("EW3_TARGET_FPS", settings.get("FPS_LIMIT"));
+        // The engine paces itself by the refresh rate it is told, so both numbers follow the limit (default 120).
+        final int fps = Math.max(30, Math.min(240, intSetting(settings, "FPS_LIMIT", 120)));
+        env.put("EW3_TARGET_FPS", String.valueOf(fps));
+        env.put("EW3_REFRESH_RATE", String.valueOf(fps));
         // Our qemu: guest syscall counts and a sampled guest-PC profile every 10 s in the log.
         // Off by default: the sampling profiler signals the engine thread 250 times a second, and that can leave Boehm's
         // stop-the-world waiting forever for two freshly started Mono threads (game frozen on a black screen).
@@ -723,6 +851,7 @@ final class GameProcess {
 
     private void appendLog(String line) {
         try (FileOutputStream out = new FileOutputStream(logFile, true)) {
+            if (line.startsWith("[wrapper]")) line = new java.text.SimpleDateFormat("HH:mm:ss.SSS ", java.util.Locale.US).format(new java.util.Date()) + line;
             out.write((line + "\n").getBytes("UTF-8"));
         } catch (IOException ignored) {
         }

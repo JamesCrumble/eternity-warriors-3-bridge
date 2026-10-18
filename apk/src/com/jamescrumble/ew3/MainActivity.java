@@ -122,11 +122,15 @@ public final class MainActivity extends Activity {
         } else {
             startGame();
         }
+        // The "server is running" notification needs this permission (Android 13+); asked here too, so the prompt
+        // appears however the game was started (launcher, notification, restart).
+        ServerService.askNotifications(this);
         ui.post(poller);
     }
 
     @Override public void onRequestPermissionsResult(int code, String[] perms, int[] results) {
-        startGame();
+        // Code 1 is the storage permission the game waits for; the notification prompt (3) must not start it again.
+        if (code == 1) startGame();
     }
 
     private void startGame() {

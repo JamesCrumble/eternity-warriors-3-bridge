@@ -8,7 +8,7 @@ PLATFORM="$SDK/platforms/android-34/android.jar"
 OUT="$ROOT/apk/build/apk"
 # QEMU_BIN: the static aarch64 qemu-arm to ship. Default: our patched build (../qemu/out, tools/qemu_build.sh),
 # else Debian's qemu-user-static.
-QEMU="${QEMU_BIN:-$ROOT/../shadowgun-probe/qemu/out/qemu-arm-E.stripped}"
+QEMU="${QEMU_BIN:-$ROOT/third_party/qemu/qemu-arm-E.stripped}"
 
 if [ ! -x "$BT/aapt2" ] || [ ! -f "$PLATFORM" ]; then
     echo "Android SDK build-tools 34.0.0 and platform 34 are required" >&2

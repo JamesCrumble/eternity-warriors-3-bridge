@@ -12,6 +12,7 @@ typedef void (*set_fps_fn)(int value);
 
 static add_icall_fn g_real_add_icall = NULL;
 static set_fps_fn   g_real_set_fps = NULL;
+static set_fps_fn   g_real_set_vsync = NULL;   /* UnityEngine.QualitySettings::set_vSyncCount */
 static int          g_forced_fps = -1;      /* -1: not read yet */
 static volatile int g_game_called = 0;      /* the game has set a rate itself (and got ours) */
 
@@ -46,6 +47,10 @@ static ABI_ATTR void set_fps_hook(int value)
 /* What the guest calls instead of il2cpp_add_internal_call / mono_add_internal_call (same signature). */
 static ABI_ATTR void add_icall_hook(const char *name, void *fn)
 {
+    if (name && !strcmp(name, "UnityEngine.QualitySettings::set_vSyncCount")) {
+        g_real_set_vsync = (set_fps_fn)fn;
+        trace("fps unlock: found %s", name);
+    }
     if (name && !strcmp(name, "UnityEngine.Application::set_targetFrameRate") && forced_fps() > 0) {
         g_real_set_fps = (set_fps_fn)fn;
         fn = (void *)set_fps_hook;
@@ -72,6 +77,17 @@ extern "C" void *fps_unlock_hook_symbol(const char *name, void *sym)
  */
 extern "C" void fps_unlock_tick(long frame)
 {
+    /*
+     * With vSyncCount > 0 Unity 4 paces frames to the display and ignores targetFrameRate: the game ran at 60 fps
+     * whatever the limit was (30 or 120). Turn it off once Mono is up, and again now and then in case a quality level
+     * sets it back. The panel's own refresh (the wrapper asks Android for the limit) still bounds the rate.
+     * EW3_VSYNC=1 leaves the engine's setting alone.
+     */
+    if (frame >= 600 && frame % 300 == 0 && g_real_set_vsync && port_getenv_long("VSYNC", 0) == 0) {
+        if (frame == 600)
+            trace("fps unlock: QualitySettings.vSyncCount = 0");
+        g_real_set_vsync(0);
+    }
     if (frame == 600 && !g_game_called && g_real_set_fps && forced_fps() > 0) {
         trace("fps unlock: setting targetFrameRate %d", forced_fps());
         g_real_set_fps(forced_fps());

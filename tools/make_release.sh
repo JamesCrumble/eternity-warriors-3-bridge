@@ -3,6 +3,7 @@
 #   Eternity-Warriors-3-Bridge-<v>.apk        release-signed APK (not debuggable)
 #   Eternity-Warriors-3-Bridge-<v>-src.zip    source: tracked and not-yet-committed files of the working tree (what the APK was built from)
 #   qemu-patches.zip                          the patches libqemu.so (QEMU, GPL-2.0) was built with
+#   *-extended.ew3x                           the extended pack from gamebin/, if there is one
 #   INSTALL.txt, RELEASE_NOTES.md, SHA256SUMS
 # The game's own files are the player's and are never part of a release.
 # Usage: tools/make_release.sh   (run from WSL; needs apk/build/sysroot inputs, see apk/make_sysroot.sh)
@@ -13,7 +14,7 @@ cd "$P"
 VER=$(grep -o 'versionName="[^"]*"' apk/AndroidManifest.xml | head -1 | cut -d'"' -f2)
 NAME="Eternity-Warriors-3-Bridge"
 OUT="$P/release/v$VER"
-QEMU_SRC="${QEMU_SRC:-$P/../shadowgun-probe/qemu}"
+QEMU_SRC="${QEMU_SRC:-$P/qemu}"
 rm -rf "$OUT"; mkdir -p "$OUT"
 ./build.sh > logs/build.log 2>&1
 RELEASE=1 bash apk/build_apk.sh > logs/apk_release.log 2>&1
@@ -47,6 +48,8 @@ with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
             z.write(p, "qemu/" + os.path.relpath(p, root))
 PY
 fi
+# The optional extended pack (tools/make_extended.py), a separate attachment.
+for f in gamebin/*-extended.ew3x; do [ -f "$f" ] && cp "$f" "$OUT/"; done
 cp tools/release_install.txt "$OUT/INSTALL.txt"
 [ -f tools/release_notes.md ] && cp tools/release_notes.md "$OUT/RELEASE_NOTES.md"
 (cd "$OUT" && sha256sum * | grep -v SHA256SUMS > SHA256SUMS)

@@ -1,9 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jamescrumble.ew3"
-    android:versionCode="1"
-    android:versionName="0.1">
+    android:versionCode="2"
+    android:versionName="0.2">
     <!-- The game and its stand-in server talk over 127.0.0.1 inside the phone. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- The server keeps running while the game is minimized: a foreground service with a notification, and
+         (only with "access from the local network") wake and Wi-Fi locks so that it answers with the screen off. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Android 16+/17: access to the local network (another device reaches the server, or the game reaches a server in the LAN). -->
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
     <!-- API 30+: the user-visible BridgeGames/<package> folder on shared storage (see Storage.java). -->
@@ -22,6 +31,14 @@
         <!-- Not debuggable (CheckJNI would slow every GL call of the bridge), but open to simpleperf from adb. -->
         <profileable android:shell="true" />
         <meta-data android:name="android.game_mode_config" android:resource="@xml/game_mode_config" />
+        <service
+            android:name=".ServerService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="local game server for the game running in this app" />
+        </service>
         <activity
             android:name=".SettingsActivity"
             android:label="Eternity Warriors 3"

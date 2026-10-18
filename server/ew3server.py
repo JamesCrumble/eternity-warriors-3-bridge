@@ -12,12 +12,20 @@ The port sends every connection here (port/src/symtab_net.cpp, port/jni/unity_ww
   :18024  Gluon edge (TCP, BSON) - edge.py; game logic in cgs.py.
 
 Run:  server/.venv/bin/python server/ew3server.py [--host 127.0.0.1]
+
+--host 0.0.0.0 opens both ports to the local network (the Android app's "access from the local network" setting).
+Then /admin, /docs, /redoc and /openapi.json ask clients other than the device itself for HTTP Basic login:
+user "admin", password from --admin-password / EW3_ADMIN_PASSWORD, or the random one kept in <data>/admin_password.txt.
+The game's own traffic and requests from 127.0.0.1 never need it.
 """
 import argparse
 import asyncio
+import base64
 import contextlib
+import hmac
 import json
 import os
+import secrets
 import sys
 import threading
 import zipfile
@@ -136,15 +144,42 @@ class Obb:
         ("base_lvl_gothic_boss_scene", "index_world_gothic_boss_8EB6E7ABF8536307B3E33FD541A9350D.unity3d", "8EB6E7ABF8536307B3E33FD541A9350F", "Scene"),
     ]
 
+    @classmethod
+    def extended_ready(cls, cache_dir):
+        """True when cache_dir holds a complete extended pack (the converted IPA bundles, see tools/make_extended.py):
+        the .has_ipa marker says it was built with the IPA and every converted bundle is there, so the IPA is not needed."""
+        try:
+            if open(os.path.join(cache_dir, ".has_ipa")).read().strip() != "1":
+                return False
+        except OSError:
+            return False
+        return all(os.path.exists(os.path.join(cache_dir, "%s_%s.unity3d" % (b, h))) for b, _, h, _ in cls.IPA_BUNDLE_SPECS)
+
     def __init__(self, path):
         self.zip = zipfile.ZipFile(path) if path and os.path.exists(path) else None
         self.lock = threading.Lock()
         self.overrides: Dict[str, bytes] = {}
+        self.files: Dict[str, str] = {}   # converted bundles of the IPA / extended pack: read when asked for (about 100 MB)
         if self.zip:
             try:
                 cache_dir = os.environ.get("EW3_BUNDLE_CACHE") or os.path.join(cfg["data"], "bundle_cache")
                 os.makedirs(cache_dir, exist_ok=True)
-                has_ipa = os.path.exists(DEFAULT_IPA)
+                # The IPA decides which levels and enemies the patched bundles open, but the cached names do not say
+                # so: a cache built without it must not be reused with it (and the other way round).
+                has_ipa = os.path.exists(DEFAULT_IPA) or self.extended_ready(cache_dir)
+                marker = os.path.join(cache_dir, ".has_ipa")
+                try:
+                    cached_mode = open(marker).read().strip()
+                except OSError:
+                    cached_mode = None
+                if cached_mode != ("1" if has_ipa else "0"):
+                    if cached_mode is not None or any(n.endswith(".unity3d") for n in os.listdir(cache_dir)):
+                        log("bundle cache was built %s the IPA - rebuilding" % ("with" if cached_mode == "1" else "without"))
+                        for n in os.listdir(cache_dir):
+                            if n.endswith(".unity3d"):
+                                os.remove(os.path.join(cache_dir, n))
+                    with open(marker, "w") as f:
+                        f.write("1" if has_ipa else "0")
                 idx_replacements = {}
                 for bprefix, orig_hash, patched_hash, btype, patch_fn in self.PATCH_SPECS:
                     orig_name = "%s_%s.unity3d" % (bprefix, orig_hash)
@@ -175,14 +210,17 @@ class Obb:
                 ipa_idx_lines = []
                 if has_ipa:
                     obb_shaders = None
-                    with zipfile.ZipFile(DEFAULT_IPA, "r") as z_ipa:
+                    z_ipa = None
+                    try:
                         for bprefix, ipa_fname, conv_hash, btype in self.IPA_BUNDLE_SPECS:
                             conv_name = "%s_%s.unity3d" % (bprefix, conv_hash)
                             cache_path = os.path.join(cache_dir, conv_name)
                             if os.path.exists(cache_path):
-                                with open(cache_path, "rb") as f:
-                                    conv_bytes = f.read()
+                                conv_size = os.path.getsize(cache_path)
+                                self.files[conv_name] = cache_path
                             else:
+                                if z_ipa is None:
+                                    z_ipa = zipfile.ZipFile(DEFAULT_IPA, "r")
                                 if obb_shaders is None:
                                     raw_sh = self.zip.read("assets/AssetBundles/base_uniform_shaders_6014689C88D86A127B2EE32DE67AD882.unity3d")
                                     obb_shaders = bundle_patcher.extract_obb_shaders(raw_sh)
@@ -190,11 +228,16 @@ class Obb:
                                 conv_bytes = bundle_patcher.convert_ipa_bundle(raw_ipa, bprefix, btype == "Scene", obb_shaders=obb_shaders)
                                 with open(cache_path, "wb") as f:
                                     f.write(conv_bytes)
-                            self.overrides[conv_name] = conv_bytes
+                                conv_size = len(conv_bytes)
+                                self.files[conv_name] = cache_path
                             ipa_idx_lines.append(
-                                "%s\t%s\t%d\t./%s\t%s" % (bprefix, conv_hash, len(conv_bytes), conv_name, btype)
+                                "%s\t%s\t%d\t./%s\t%s" % (bprefix, conv_hash, conv_size, conv_name, btype)
                             )
-                    log("prepared %d recovered IPA bundles from %s" % (len(ipa_idx_lines), os.path.basename(DEFAULT_IPA)))
+                    finally:
+                        if z_ipa is not None:
+                            z_ipa.close()
+                    log("prepared %d recovered bundles (%s)" % (
+                        len(ipa_idx_lines), os.path.basename(DEFAULT_IPA) if os.path.exists(DEFAULT_IPA) else "extended pack"))
 
                 raw_idx = self.zip.read("assets/AssetBundles/index.version").decode("utf-8")
                 new_lines = []
@@ -215,6 +258,9 @@ class Obb:
     def bundle(self, name):
         if name in self.overrides:
             return self.overrides[name]
+        if name in self.files:
+            with open(self.files[name], "rb") as f:
+                return f.read()
         if not self.zip:
             return None
         with self.lock:
@@ -242,6 +288,62 @@ app = FastAPI(title="Eternity Warriors 3 server",
               description="Stand-in for Glu's retired backend. Game traffic: the catch-all route below and the "
                           "Gluon edge on TCP :18024. Everything under /admin is for people.",
               version="0.1", lifespan=lifespan)
+
+
+# ---- admin access from the local network --------------------------------------
+
+LOOPBACK = ("127.0.0.1", "::1", "localhost")
+ADMIN_PREFIXES = ("/admin", "/docs", "/redoc", "/openapi.json")
+
+
+def is_loopback(host):
+    return host in LOOPBACK or (host or "").startswith("::ffff:127.")
+
+
+def admin_password(data_dir, explicit=None):
+    """The password for /docs and /admin when the server listens on the network: given, else kept in a file."""
+    if explicit:
+        return explicit
+    path = os.path.join(data_dir, "admin_password.txt")
+    try:
+        with open(path) as f:
+            pw = f.read().strip()
+        if pw:
+            return pw
+    except OSError:
+        pass
+    pw = secrets.token_urlsafe(6)
+    os.makedirs(data_dir, exist_ok=True)
+    with open(path, "w") as f:
+        f.write(pw + "\n")
+    with contextlib.suppress(OSError):
+        os.chmod(path, 0o600)
+    return pw
+
+
+@app.get("/_ew3/ready", include_in_schema=False)
+def ready():
+    """Which server instance answers: the Android app waits for the token it gave this launch, so a previous instance
+    that is still shutting down cannot be mistaken for the new one."""
+    return Response(cfg.get("ready_token") or "", media_type="text/plain")
+
+
+@app.middleware("http")
+async def admin_login(request: Request, call_next):
+    pw = cfg.get("admin_password")
+    if pw and request.url.path.startswith(ADMIN_PREFIXES) and not is_loopback(request.client.host if request.client else None):
+        ok = False
+        header = request.headers.get("authorization", "")
+        if header[:6].lower() == "basic ":
+            try:
+                user, _, given = base64.b64decode(header[6:]).decode("utf-8").partition(":")
+                ok = hmac.compare_digest(user.encode(), b"admin") and hmac.compare_digest(given.encode(), pw.encode())
+            except Exception:
+                ok = False
+        if not ok:
+            return Response("admin login required", status_code=401,
+                            headers={"WWW-Authenticate": 'Basic realm="EW3 admin", charset="UTF-8"'})
+    return await call_next(request)
 
 
 # ---- admin API ---------------------------------------------------------------
@@ -357,8 +459,16 @@ def main():
     ap.add_argument("--host", default=cfg["host"])
     ap.add_argument("--obb", default=cfg["obb"])
     ap.add_argument("--data", default=cfg["data"])
+    ap.add_argument("--ready-token", default=os.environ.get("EW3_READY_TOKEN"),
+                    help="returned by GET /_ew3/ready (the Android app tells instances of the server apart with it)")
+    ap.add_argument("--admin-password", default=os.environ.get("EW3_ADMIN_PASSWORD"),
+                    help="login password for /docs and /admin from other devices (when --host is not loopback)")
     a = ap.parse_args()
-    cfg.update(host=a.host, obb=a.obb, data=a.data)
+    cfg.update(host=a.host, obb=a.obb, data=a.data, admin_password=None, ready_token=a.ready_token)
+    if not is_loopback(a.host):
+        cfg["admin_password"] = admin_password(a.data, a.admin_password)
+        log("listening on %s: /docs and /admin from other devices ask for login 'admin' (password: %s)" % (
+            a.host, "given on the command line" if a.admin_password else os.path.join(a.data, "admin_password.txt")))
     uvicorn.run(app, host=a.host, port=HTTP_PORT, log_level="warning")
 
 

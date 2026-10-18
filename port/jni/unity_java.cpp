@@ -10,6 +10,7 @@
 #include "dyn.h"
 #include "unity_java.h"
 #include "so_util.h"
+#include "port_env.h"
 #include "trace.h"
 #include <vector>
 
@@ -494,7 +495,18 @@ static void register_system()
     dyn_method(D, "getHeight()I", [](JNIEnv *, jobject, const jvalue *) { return JI(g_cfg.height); });
     dyn_method(D, "getRotation()I", [](JNIEnv *, jobject, const jvalue *) { return JI(1); });       /* ROTATION_90: landscape */
     dyn_method(D, "getOrientation()I", [](JNIEnv *, jobject, const jvalue *) { return JI(1); });
-    dyn_method(D, "getRefreshRate()F", [](JNIEnv *, jobject, const jvalue *) { return JF(60.0f); });
+    /* Unity 4 paces its frames by what the display says it refreshes at: a fixed 60 kept the game at 60 fps whatever
+     * targetFrameRate was forced to (src/fps_unlock.cpp). EW3_REFRESH_RATE is the rate to tell it (the Android wrapper
+     * passes the frame-rate limit of its menu); 60 when unset, as before. */
+    dyn_method(D, "getRefreshRate()F", [](JNIEnv *, jobject, const jvalue *) {
+        static float rate = 0;
+        if (rate == 0) {
+            long r = port_getenv_long("REFRESH_RATE", 60);
+            rate = (float)(r < 30 ? 30 : r > 240 ? 240 : r);
+            trace("display refresh rate reported to the engine: %.0f Hz", rate);
+        }
+        return JF(rate);
+    });
     dyn_method(D, "getDisplayId()I", [](JNIEnv *, jobject, const jvalue *) { return JI(0); });
 
     dyn_method("android/hardware/display/DisplayManager", "getDisplay(I)Landroid/view/Display;", [](JNIEnv *, jobject, const jvalue *) {

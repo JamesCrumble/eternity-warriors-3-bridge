@@ -1,16 +1,23 @@
 package com.jamescrumble.ew3;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -39,7 +46,8 @@ public final class SettingsActivity extends Activity {
 
     private final Map<String, String> values = new LinkedHashMap<>();
     private float dp;
-    private TextView folderInfo;
+    private TextView folderInfo, serverInfo, notifyInfo;
+    private EditText serverAddr;
     private boolean hadAccess, asked;
 
     /** The existing settings file (main folder first, then the other), or where it would be written. */
@@ -64,7 +72,26 @@ public final class SettingsActivity extends Activity {
         return m;
     }
 
+    /** A dotted IPv4 address (the port takes nothing else in EW3_SERVER). */
+    static boolean validIpv4(String a) {
+        if (a == null || !a.matches("\\d{1,3}(\\.\\d{1,3}){3}")) return false;
+        for (String part : a.split("\\.")) if (Integer.parseInt(part) > 255) return false;
+        return true;
+    }
+
+    /** The address field can be edited only while "connect to another server" is on. */
+    private void applyCustomState() {
+        if (serverAddr == null) return;
+        boolean on = "1".equals(values.get("SERVER_CUSTOM"));
+        serverAddr.setEnabled(on);
+        serverAddr.setAlpha(on ? 1f : 0.4f);
+    }
+
     private boolean save() {
+        if ("1".equals(values.get("SERVER_CUSTOM")) && !validIpv4(values.get("SERVER_ADDR"))) {
+            Toast.makeText(this, "Введите IPv4-адрес сервера, например 192.168.1.20", Toast.LENGTH_LONG).show();
+            return false;
+        }
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> e : values.entrySet()) sb.append(e.getKey()).append('=').append(e.getValue()).append('\n');
         try (FileOutputStream out = new FileOutputStream(new File(Storage.mainDir(this), "settings.txt"))) {
@@ -96,7 +123,7 @@ public final class SettingsActivity extends Activity {
                 "Ширина считается по пропорциям экрана. Ниже — быстрее и крупнее интерфейс. Файл resolution.txt рядом с логом важнее этого значения."));
 
         col.addView(choice("Лимит кадров", "FPS_LIMIT", new int[] { 30, 60, 90, 120 }, null, 120, " fps",
-                "Целевая частота игры и экрана. Игра сейчас тянет около 50-60 fps в тяжёлых сценах: выше 60 имеет смысл только в лёгких. Если игра не успевает за лимитом, экран пропускает кадры (например 90 -> 45), тогда выбери 60."));
+                "Целевая частота игры и экрана. Игра упирается в процессор телефона (движок идёт в эмуляции): в лёгких сценах 90-110 fps, в тяжёлых и в меню инвентаря около 60-70. Если экран не успевает за лимитом, он пропускает кадры (например 90 -> 45), тогда выбери 60."));
 
         col.addView(toggle("Счётчик FPS", "FPS_COUNTER", true, "Маленькая зелёная цифра вверху по центру экрана."));
 
@@ -104,6 +131,47 @@ public final class SettingsActivity extends Activity {
         col.addView(choice("Буфер звука", "AUDIO_LATENCY_MS", new int[] { 0, 200, 400 },
                 new String[] { "минимум", "200 мс", "400 мс" }, 0, "",
                 "Минимум (на OnePlus 13s это 120 мс) — звук ближе всего к картинке. Если потрескивает при просадках FPS — увеличь."));
+
+        col.addView(section("Сервер"));
+        col.addView(toggle("Доступ из локальной сети", "SERVER_LAN", false,
+                "Выкл: сервер слушает только этот телефон (127.0.0.1): /docs (Swagger) открывается в браузере на телефоне, "
+                        + "пока игра свёрнута. Вкл: сервер слушает 0.0.0.0 и виден в домашней сети, с компьютера можно открыть /docs "
+                        + "и менять сохранения; вход по логину admin и паролю ниже. Работа в фоне держится уведомлением; "
+                        + "в этом режиме телефон не засыпает, пока игра запущена. Применяется при следующем запуске игры."));
+        notifyInfo = text("Уведомления выключены: Android может остановить сервер, когда игра свёрнута, и не покажет, что он "
+                + "работает. Нажмите здесь, чтобы разрешить уведомления.", 13, Color.rgb(255, 183, 77), false);
+        notifyInfo.setPadding(0, px(8), 0, px(2));
+        notifyInfo.setOnClickListener(v -> {
+            Intent i = new Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, getPackageName());
+            startActivity(i);
+        });
+        col.addView(notifyInfo);
+        serverInfo = text("", 13, FG, false);
+        serverInfo.setTextIsSelectable(true);
+        serverInfo.setPadding(0, px(6), 0, 0);
+        col.addView(serverInfo);
+        col.addView(toggle("Подключаться к другому серверу", "SERVER_CUSTOM", false,
+                "Выкл: игра работает со встроенным сервером. Вкл: игра подключается к серверу по адресу ниже (например, "
+                        + "ew3server.py на компьютере: python server/ew3server.py --host 0.0.0.0), встроенный сервер тогда не запускается. "
+                        + "Нужен IPv4-адрес; порты те же: 18080 (HTTP) и 18024 (Gluon)."));
+        serverAddr = new EditText(this);
+        serverAddr.setHint("192.168.1.20");
+        serverAddr.setText(values.containsKey("SERVER_ADDR") ? values.get("SERVER_ADDR") : "");
+        serverAddr.setTextColor(FG);
+        serverAddr.setHintTextColor(DIM);
+        serverAddr.setSingleLine();
+        serverAddr.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        serverAddr.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence c, int a, int b, int d) { }
+            @Override public void onTextChanged(CharSequence c, int a, int b, int d) { }
+            @Override public void afterTextChanged(Editable e) {
+                values.put("SERVER_ADDR", e.toString().trim());
+                showServer();
+            }
+        });
+        col.addView(serverAddr, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        applyCustomState();
 
         col.addView(section("Производительность"));
         col.addView(toggle("Только быстрые ядра (6-7)", "CPU_PRIME", false,
@@ -151,6 +219,8 @@ public final class SettingsActivity extends Activity {
         setContentView(root);
         hadAccess = Storage.hasAccess(this);
         showFolder();
+        showServer();
+        askNotifications();
         if (!hadAccess) askAccess();
         else moveFiles();
     }
@@ -162,11 +232,48 @@ public final class SettingsActivity extends Activity {
         if (now && !hadAccess) moveFiles();
         hadAccess = now;
         showFolder();
+        showServer();
+    }
+
+    /** Where /docs can be opened and with which login; the password is made by the server on its first LAN start. */
+    private void showServer() {
+        if (serverInfo == null) return;
+        if (notifyInfo != null) notifyInfo.setVisibility(ServerService.notificationsAllowed(this) ? View.GONE : View.VISIBLE);
+        StringBuilder sb = new StringBuilder();
+        if ("1".equals(values.get("SERVER_CUSTOM"))) {
+            String a = values.get("SERVER_ADDR");
+            sb.append(validIpv4(a) ? "Игра подключится к серверу http://" + a + ":" + ServerService.PORT + "/docs (встроенный не запускается)"
+                    : "Введите IPv4-адрес сервера");
+            serverInfo.setText(sb.toString());
+            return;
+        }
+        sb.append("На этом телефоне: http://127.0.0.1:" + ServerService.PORT + "/docs");
+        if ("1".equals(values.get("SERVER_LAN"))) {
+            java.util.List<String> ips = ServerService.addresses();
+            if (ips.isEmpty()) sb.append("\nЛокальная сеть: подключитесь к Wi-Fi (адрес появится здесь)");
+            for (String ip : ips) sb.append("\nС компьютера: http://").append(ip).append(':').append(ServerService.PORT).append("/docs");
+            String pw = "";
+            try (FileInputStream in = new FileInputStream(new File(getFilesDir(), "serverdata/admin_password.txt"))) {
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                byte[] b = new byte[256];
+                int n;
+                while ((n = in.read(b)) > 0) out.write(b, 0, n);
+                pw = out.toString("UTF-8").trim();
+            } catch (IOException ignored) { }
+            sb.append("\nЛогин: admin   Пароль: ").append(pw.isEmpty() ? "появится после первого запуска игры с этой настройкой" : pw);
+        }
+        serverInfo.setText(sb.toString());
+    }
+
+    /** Android 13+: the notification that says the server is running needs this permission. */
+    private void askNotifications() {
+        ServerService.askNotifications(this);
     }
 
     @Override public void onRequestPermissionsResult(int code, String[] perms, int[] results) {
         if (Storage.hasAccess(this)) { hadAccess = true; moveFiles(); }
         showFolder();
+        showServer();
     }
 
     private void showFolder() {
@@ -312,7 +419,17 @@ public final class SettingsActivity extends Activity {
         sw.setTextColor(FG);
         sw.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         sw.setChecked(intOf(key, def ? 1 : 0) != 0);
-        sw.setOnCheckedChangeListener((b, on) -> values.put(key, on ? "1" : "0"));
+        sw.setOnCheckedChangeListener((b, on) -> {
+            values.put(key, on ? "1" : "0");
+            if (key.equals("SERVER_LAN")) {
+                showServer();
+                if (on) askNotifications();
+            }
+            if (key.equals("SERVER_CUSTOM")) {
+                applyCustomState();
+                showServer();
+            }
+        });
         row.addView(sw);
         row.addView(text(hint, 12, DIM, false));
         return row;
