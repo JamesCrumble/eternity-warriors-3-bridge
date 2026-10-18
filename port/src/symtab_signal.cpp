@@ -173,6 +173,12 @@ static int s_tkill(int tid, int sig) { return (int)syscall(SYS_tkill, tid, sig);
  * longer exists (SIGSEGV in GC_push_all_stack). So the frames are chained per
  * thread and s_pthread_exit unwinds the chain first.
  */
+#include <setjmp.h>
+
+__thread jmp_buf t_thread_exit_jmp;
+__thread void *t_thread_exit_val = NULL;
+__thread int t_has_thread_exit_jmp = 0;
+
 struct bionic_cleanup { struct bionic_cleanup *prev; void (*routine)(void *); void *arg; };
 static __thread struct bionic_cleanup *t_cleanup;
 static void s_cleanup_push(struct bionic_cleanup *c, void (*routine)(void *), void *arg)
@@ -194,6 +200,11 @@ static void s_pthread_exit(void *value)
         t_cleanup = c->prev;
         if (c->routine)
             c->routine(c->arg);
+    }
+    if (t_has_thread_exit_jmp) {
+        t_has_thread_exit_jmp = 0;
+        t_thread_exit_val = value;
+        longjmp(t_thread_exit_jmp, 1);
     }
     pthread_exit(value);
 }

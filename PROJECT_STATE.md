@@ -1,118 +1,63 @@
 # Eternity Warriors 3 Bridge (Windows 11): состояние проекта
 
-Цель: запустить Eternity Warriors 3 v4.1.0 (Glu, Android armeabi-v7a) на Windows 11 x64 той же прослойкой,
-что `../shadowgun-probe`, но вместо qemu-user — dynarmic. Сохранить возможность Android-сборки
-(qemu + Java-обёртка, как в shadowgun) с пробросом типа устройства.
+Цель: запустить Eternity Warriors 3 v4.1.0 (Glu, Android armeabi-v7a) на Windows 11 x64 прослойкой на базе `dynarmic` + `ANGLE` и локальным сервером Gluon/CGS, а также восстановить недостающий CDN-контент (миры, мобы, боссы) из архивной iOS-сборки v0.1.0.
 
-Обновлено: 2026-10-15.
+Обновлено: 2026-10-18.
 
-## Игра (`gamebin/`, не в git)
+## Игра (`gamebin/` и корень, не в git)
 - `E-Warriors-3-v4-1-0.apk`: `lib/armeabi-v7a/{libmain,libmono,libunity}.so`, `classes.dex` + `classes2.dex`
-  (SDK Glu, Tapjoy, AWS).
-- `E-Warriors-3-v4-1-0-cache.zip` -> `com.glu.ewarriors3/main.4100.com.glu.ewarriors3.obb` (90 МБ).
-- **Unity 4.5.2f1, Mono** (не IL2CPP): managed-DLL лежат в OBB, `assets/bin/Data/Managed/`:
-  `Assembly-CSharp.dll` (3 МБ), `Assembly-CSharp-firstpass.dll`, `Photon3Unity3D.dll`, `UnityEngine*.dll`,
-  `mscorlib`, `System*`, `Mono.Security`. Распакованы в `extracted/obb/`.
-- Сеть: Photon (Photon3Unity3D) + Java-SDK Glu/AWS. Серверы, скорее всего, давно мертвы.
+  (SDK Glu, Tapjoy, AWS). Движок в APK — **Unity 4.6.1p5** (`armeabi-v7a`, Mono).
+- `E-Warriors-3-v4-1-0-cache.zip` -> `ew3data/Android/obb/com.glu.ewarriors3/main.4100.com.glu.ewarriors3.obb` (90 МБ).
+- `31263-Eternity-Warriors-3-v0-1-0.ipa`: архивная iOS-сборка v0.1.0 (Unity 4.2.1f4), содержащая все базовые сцены, окружение, мобов и боссов 3 королевств.
+- Managed-DLL лежат в OBB (`assets/bin/Data/Managed/`): `Assembly-CSharp.dll`, `Assembly-CSharp-firstpass.dll`,
+  `Photon3Unity3D.dll`, `UnityEngine*.dll`. Декомпилированы в `extracted/decompiled/`.
 
-## Окружение
-- WSL Ubuntu 20.04 (glibc 2.31), Windows 11 (26200) доступен через interop (`cmd.exe` и `.exe` запускаются).
-- Есть: `arm-linux-gnueabihf-g++`, `qemu-arm`, docker, python 3.8.
-- На Windows уже стоит: VS 2026 Community (`.../Microsoft Visual Studio/18/Community`, MSVC 14.50 и 14.44,
-  `vcvars64.bat`), CMake 4.2.3 и `ninja.exe` из VS (`Common7/IDE/CommonExtensions/Microsoft/CMake/`),
-  dotnet SDK 10.0.203 / 8.0.411 (`/mnt/c/Program Files/dotnet/dotnet.exe`).
-- llvm-mingw не подходит: его сборки под Ubuntu 22.04 не запускаются на glibc 2.31. Поэтому для Windows
-  собираем через MSVC.
-- **Правило: ничего не ставить глобально.** Всё лежит в проекте, переменные — `source env.sh`.
-  Python — только venv в проекте.
-
-## Структура (как в остальных `*-probe`)
-| Каталог | Что | git |
+## Структура проекта
+| Каталог / файл | Назначение | git |
 |---|---|---|
-| `gamebin/` | APK и cache-zip как скачаны | нет |
-| `ew3data/` | рабочие данные игры: `com.glu.ewarriors3/main.4100.com.glu.ewarriors3.obb`, потом `lib/`, `saves/` | нет |
-| `extracted/` | извлечённое для анализа: `obb/` (assets из OBB), `decompiled/<сборка>/` (ilspycmd) | нет |
-| `dotnet/` | .NET 8 SDK (Linux), `tools/` (ilspycmd 9.1), `home/`, `nuget/` | нет |
-| `third_party/` | `dynarmic/` (клон), `boost/` (заголовки 1.86) | нет |
-| `downloads/` | исходные архивы (`boost.tar.gz`, `dotnet-install/`) | нет |
-| `env.sh` | `EW3_PROBE`, `EW3_GAMEDIR`, `DOTNET_*`, `BOOST_ROOT`, PATH | да |
+| `host/` | Windows x64 хост (`ew3host.exe`): `dynarmic` ARM32 JIT, эмуляция Linux-сисколлов/сигналов/потоков, GL-мост через ANGLE, звук и ввод (SDL2) | да |
+| `port/` | Гостевой ARM32-лоадер (`port/build/ew3`): Bionic ELF loader, thunks, JNI-заглушки Glu/Tapjoy/WWW, перехват сети и GLES wire-протокол | да |
+| `server/` | Локальный бэкенд (`ew3server.py`, `edge.py`, `cgs.py`, `cgs_state.py`, `bundle_patcher.py`, `generated/game_data.json`) | да |
+| `play_win.cmd` / `play_win.py` | Скрипт запуска локального сервера и `ew3host.exe` | да |
+| `ew3data/` | Рабочие данные игры (OBB, распакованные `.so`, сохранения `ew3data/server/players.json`, кэш бандлов `ew3data/server/bundle_cache/`) | нет |
+| `extracted/` | Извлечённые данные OBB и декомпилированный C#-код (`ilspycmd`) | нет |
+| `third_party/` | `dynarmic/`, `boost/` (1.86) | нет |
 
-Код порта появится в `port/` (с `portbase/` и `game/`), утилиты — в `tools/`, документация — в `docs/`.
+## Что сделано и работает (2026-10-18)
 
-## Сделано
-- `git init` (ветка main, без remote). Пока ничего не закоммичено.
-- `third_party/dynarmic` — клон `azahar-emu/dynarmic` (a4660158, 2026-09-26) с сабмодулями
-  (fmt, mcl, xbyak, zydis, robin-map и др.).
-- `third_party/boost` — заголовки Boost 1.86 (`downloads/boost.tar.gz`, распакован только `boost/`).
-- .NET 8 SDK для Linux поставлен в `dotnet/` (`dotnet-install.sh --channel 8.0 --install-dir dotnet --no-path`);
-  Windows-dotnet с UNC-путём падал (код 137). ilspycmd 9.1.0.7988 (8.x требует .NET 6):
-  `source env.sh && dotnet tool install ilspycmd --version 9.1.0.7988 --tool-path dotnet/tools`.
-- Декомпилировано (`ilspycmd -p -o extracted/decompiled/<A> -r <Managed> <A>.dll`):
-  Assembly-CSharp (1604 файла, ~201 тыс. строк), Assembly-CSharp-firstpass (214), Photon3Unity3D (40).
+### 1. Windows x64 хост (`host/`, `ew3host.exe`) и ARM32 гость (`port/`)
+- Полностью рабочий запуск на Windows 11 x64 через `ew3host.exe` (MSVC + `dynarmic` + `ANGLE` + `SDL2`) без WSL во время игры.
+- Поддержка многопоточности (`clone` -> потоки Windows, `futex`, TLS, общие таблицы памяти и `ExclusiveMonitor`), обработка JIT `cacheflush` (`InvalidateCacheRange`).
+- Проброс `SIGSEGV` из JIT-кода Mono в обработчик `libmono.so` (корректная генерация `NullReferenceException` в C#).
+- Исправлен `__fpclassifyf` в `port/thunks/libc/legacy.cpp` (битовые флаги Bionic вместо констант glibc, иначе PhysX 2.8 отвергал матрицы с `0.0f`).
+- Перехват сетевых обращений (`symtab_net.cpp`, `unity_www.cpp`) и перенаправление HTTP на `127.0.0.1:18080` и Gluon TCP на `127.0.0.1:18024`.
 
-## Прототип: стартовый экран (2026-10-15)
-Гостевой ARM32-лоадер (`port/`, основа — shadowgun) под qemu-arm в WSL + llvmpipe доходит до **экрана загрузки игры**
-(арт EW3, полоса загрузки, подсказка; `scratch/shot_last.png`) и останавливается на диалоге
-«Sorry: Failed to Connect to Server [Retry]» (`AppManager.OnServerPostFailedDialog`) — блокер serverpost из `docs/NETWORK.md`.
-- Сборка: `./build.sh` -> `port/build/ew3`. Запуск: `tools/run_local.sh [сек]`, лог `logs/local.log`, кадры `ctl/shot_*.bmp`
-  (`EW3_SHOT_EVERY`). Данные: `ew3data/{base.apk -> gamebin, lib/armeabi-v7a/*.so, Android/obb/com.glu.ewarriors3/*.obb,
-  glu_properties.txt}`. `glu_properties.txt` делает `tools/extract_properties.sh` (AES-ключ из `AJTUtil.GetProperty`).
-- Отличия от shadowgun, найденные по дороге:
-  - Unity 4.5: `nativeRecreateGfxState(Surface)`, `nativeResize(IIII)`, `nativeSetDefaultDisplay(I)`; размер поверхности
-    движок спрашивает через `UnityPlayer.triggerResizeCall()` -> синхронный `nativeResize` (без этого рисовал в 128x128).
-  - libunity 4.5 импортирует zlib и `_ZSt7nothrow`/`__cxa_guard_abort` -> `src/symtab_zlib.cpp`.
-  - **`__fpclassifyf` возвращал константы glibc** (FP_ZERO=2), а bionic — битовые флаги (FP_ZERO=0x10). PhysX 2.8 проверяет
-    `tst r0,#3` и считал каждый 0.0f в матрице позы NaN/Inf -> `NxActorDesc is not valid` -> NULL-актёр -> SIGSEGV.
-    Исправлено в `thunks/libc/legacy.cpp`. **Та же ошибка есть в соседних проектах** (общая заготовка thunks).
-  - Mono превращает SIGSEGV в JIT-коде в NullReferenceException. Мост `sigaction` глотал обработчики фатальных сигналов;
-    теперь обработчик из libmono.so запоминается, и `crash.cpp` отдаёт ему падения вне загруженных модулей (JIT-код).
-  - Java-плагины Glu: `jni/glu_plugins.cpp`. `dyn_inert_prefix()` — неизвестные вызовы классов `com/glu/`, `com/tapjoy/`, ...,
-    возвращающие объект, получают пустой объект нужного класса (C# бросает исключение на null). `AJTUtil.GetProperty` —
-    из `glu_properties.txt`, `GetDeviceLanguage` -> "en", `AJTUI.ShowAlert` — в лог.
-- Отладка: `EW3_TRAP_AT=<hex>[,<hex>...]` ставит `udf` в libunity, отчёт о падении печатает r4-r11 и память по ним.
+### 2. Локальный сервер Gluon + CGS (`server/`)
+- **HTTP-сервер (`server/ew3server.py`, порт `:18080`)**:
+  - Отдаёт `serverpost_<tag>.json`, `DynamicContentInfo.json`, пропатченный `index.version` и AssetBundle-файлы (из OBB и сконвертированного кэша IPA).
+  - Предоставляет Swagger-админку (`/docs`, `/admin/players`) для редактирования сохранений и просмотра логов.
+- **Gluon Edge (`server/edge.py`, порт `:18024`)**:
+  - Бинарный протокол Gluon поверх TCP + BSON: авторизация клиента, чтение/запись серверных атрибутов профиля (`ew3data/server/players.json`), маршрутизация пакетов `CustomGameServerMessage`.
+- **Игровая логика CGS (`server/cgs.py`, `server/cgs_state.py`)**:
+  - Автоматическая инициализация стартового профиля для всех 3 классов (`warrior`, `mage`, `monk`) со стартовой экипировкой и предзавершёнными шагами боевого туториала (активные кнопки скиллов со старта).
+  - Полный цикл боя (`battle_start`, `battle_end`): генерация сидов и дроп-листов по реальным таблицам `server/generated/game_data.json` (мобы, сундуки, боссы), начисление XP, золота (`<role>_sc_current`), кристаллов (`hc_current`) и предметов.
+  - Инвентарь, смена экипировки, пересчёт `gearscore`, продажа предметов, прокачка скиллов (`skill_upgrade`), слияние (`fusion`), эволюция (`evolution`), гача-сундуки (`gacha`), квесты и ежедневные задания (`quest_claim`).
 
-## Не доделано
-- **Windows-хост (приоритет)**: `ew3host.exe` на dynarmic + GL-мост на ANGLE, исполняющий тот же `port/build/ew3`.
-  Сборка dynarmic через MSVC из WSL ещё не проверялась.
-- Дальше старта: ответ на serverpost и `DynamicContentInfo.json` (локальные файлы через `jni/unity_www.cpp` или мок),
-  затем Gluon/CGS (логин, сохранения) — см. `docs/NETWORK.md`.
-- Разобрать декомпилированный код: сетевые точки (Photon, HTTP/WWW, Glu SDK) -> окончательный план сервера.
-- Сборка MSVC+Ninja из UNC-пути `\\wsl.localhost\Ubuntu-20.04\...` ещё не проверена. Если будет медленно или
-  сломается, держать build-каталог на диске Windows.
+### 3. Патчер бандлов и восстановление контента из iOS IPA v0.1.0 (`server/bundle_patcher.py`)
+- **Патчи базовых бандлов OBB v4.1.0**:
+  - `base_uniform_global_manager`: расширен список ежедневных заданий (`QuestListData._dailyQuests`) с одного туториального дейлика на полноценную ротацию из 7 разных ежедневных заданий по дням недели (`4101`–`4107`); удалены отсутствующие на CDN фоновые треки из `SoundTrackData`.
+  - `base_uniform_data-levels`: при наличии `31263-Eternity-Warriors-3-v0-1-0.ipa` активируются все **25 уровней кампании** в 3 королевствах (**Moria / Greece**, **Binhai / China**, **Gothia / Gothic**).
+- **Бинарный конвертер AssetBundle из Unity 4.2.1f4 (iOS) в Unity 4.6.1p5 (Android)**:
+  - Автоматически конвертирует 33 бандла из IPA (`base_char_enemy0`, `base_weapon_monster`, 9 `*_raw` бандлов окружения и 22 сцены уровней):
+    - Обновление заголовков `UnityRaw` и `SerializedFile`, перенос флага `m_IsStreamedSceneAssetBundle`.
+    - Конвертация бинарных структур классов Unity 4.2 -> 4.6:
+      - `Material` (`cid=21`): вставка `m_CustomRenderQueue`, перенаправление внешних ссылок шейдеров/текстур в `base_weapon_monster` на `CAB-base_uniform_shaders` (`fileID=2`).
+      - `MeshRenderer` (`cid=23`), `SceneSettings` (`cid=29`), `Mesh` (`cid=43`), `Shader` (`cid=48`, подмена iOS-шейдеров на Android-шейдеры из OBB).
+      - `AnimationClip` (`cid=74`): поддержка как `Legacy` (`m_AnimationType=1`), так и `Mecanim` (`m_AnimationType=2`, пересборка `MuscleClip`, `ClipBindingConstant` и полных CRC32-путей костей).
+      - `Avatar` (`cid=90`), `AnimatorController` (`cid=91`), `Animator` (`cid=95`), `RenderSettings` (`cid=104`), `Animation` (`cid=111`), `SkinnedMeshRenderer` (`cid=137`), `ParticleSystemRenderer` (`cid=199`).
+      - `MonoBehaviour` (`cid=114`): адаптация `EnemySpot`, `TriggerManager`, `UIPanel`, `UIHPController`, `UISprite`, `UILabel`, `AvatarController`.
+      - `AssetBundle` (`cid=142`): генерация XML-индекса `TextAsset` (`pathID=999999`) для `Glu.AssetBundles.IndexInfo`, лексикографическая сортировка `m_Container` и сортировка таблицы объектов `SerializedFile::m_Objects` по знаковым 32-битным `pathID` (для корректной работы бинарного поиска `std::lower_bound` в движке Unity).
 
-## Архитектура (план)
-```
- ew3host.exe (Windows x64, MSVC)                         гостевой ARM32 Linux-процесс
- ┌──────────────────────────────────────┐            ┌────────────────────────────────────┐
- │ linux-user на dynarmic:              │            │ порт-лоадер из shadowgun (glibc armhf)│
- │  ELF + ld-linux, syscalls ARM EABI   │  syscalls  │  bionic ELF loader                 │
- │  mmap/futex/clone(=поток Windows)    │ ◄────────► │  libunity / libmono / libmain      │
- │  сигналы (GC Mono, SIGSEGV null-ref) │            │  dyn JNI, Android API на заглушках │
- │  cacheflush -> InvalidateCacheRange  │            │  gl_bridge: тот же wire-протокол   │
- │ host-мост: GLES -> ANGLE, звук, ввод │ ◄─ pipe ── │                                    │
- └──────────────────────────────────────┘            └────────────────────────────────────┘
-```
-- Гостевая часть (лоадер, thunks, JNI, gl_bridge) общая с Android-сборкой. Хост-слой сменный:
-  `windows` (dynarmic + C++-порт GlBridge.java на ANGLE) | `android` (qemu + Java-обёртка из shadowgun).
-- Тип устройства пробрасывается через JNI-обработчики (`Build.*`, Display), чтобы игра видела нужное устройство.
-- dynarmic: один Jit на поток, общий fastmem на 4 ГБ, общий ExclusiveMonitor; инвалидация кэша рассылается
-  всем потокам. Mono генерирует код в рантайме и зовёт `cacheflush` (ARM syscall 0xf0002). Для точного PC
-  при SIGSEGV (null-ref в Mono) — `check_halt_on_memory_access` + `HaltReason::MemoryAbort`,
-  запасной вариант — `MONO_DEBUG=explicit-null-checks`.
-- GLES на Windows: ANGLE (`libEGL.dll`/`libGLESv2.dll`, можно скопировать из Edge/Chrome в проект).
-- Отладка гостевой части: сначала под `qemu-arm` в WSL + llvmpipe (как `tools/run_local.sh` в shadowgun),
-  чтобы отделять баги порта от багов эмулятора.
-- Unity 4.5 `UnityPlayer` (порядок натив-вызовов) отличается от 5.3: снять заново из `classes.dex`
-  (`dexdump`, `tools/dexclass.py` из shadowgun).
-
-## Сервер (план)
-Гибрид, окончательно решается после декомпиляции `Assembly-CSharp.dll`:
-1. HTTP(S)-запросы (Glu/AWS, конфиги, сохранения, магазин) — мок-сервер на Python (локальный venv).
-   Адреса подменить в DLL или через `UnityEngine.WWW` в порте (`jni/unity_www.cpp`) и хост-резолвер.
-2. Photon (бинарный протокол, мультиплеер) — эмулировать нецелесообразно: патч IL (dnlib/Mono.Cecil,
-   локальный NuGet) в копии `Assembly-CSharp.dll` внутри копии OBB, чтобы онлайн-методы сразу возвращали
-   «успех/офлайн».
-3. Java-SDK Glu (логин, IAP, реклама) — заглушки в dyn JNI порта, как плагины в shadowgun.
-
-## Управление
-Отложено (по просьбе пользователя). Потом: убрать мобильный UI на ПК, описать схему клавиатура/мышь/геймпад.
+## Что осталось / дальнейшие планы
+- Проверить прохождение остальных восстановленных уровней и боссов (2-й регион Греции, Китай, Готика) по мере открытия кампании и при необходимости допатчить специфичные для отдельных сцен ассеты или скрипты.
+- По желанию: улучшение управления с клавиатуры/мыши/геймпада и скрытие мобильных элементов HUD.

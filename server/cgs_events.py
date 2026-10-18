@@ -153,17 +153,116 @@ _QUESTS = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__))
 _QUEST_BY_ID = {q["quest_id"]: q for q in _QUESTS}
 
 
+def _player_level(pl):
+    try:
+        basic = json.loads(pl.get(pl.role + "_basic") or "{}")
+        lvl = int(basic.get("_currentLevel") or 0)
+        if lvl > 0:
+            return lvl
+    except (ValueError, TypeError):
+        pass
+    return max(1, pl.get_int("level", 1))
+
+
+# Daily combat quest unlock prerequisite -> expiration quest (stored in QuestDB's prequest_id field)
+_DAILY_COMBAT_UNLOCK = {
+    4001: 2003, 4002: 2004, 4003: 2005,
+    4004: 2010, 4005: 2010, 4006: 2010,
+    4007: 2014, 4008: 2014, 4009: 2014,
+    4010: 2019, 4011: 2019, 4012: 2019,
+    4013: 2023, 4014: 2023, 4015: 2023,
+    4031: 2105, 4032: 2105, 4033: 2105,
+    4034: 2110, 4035: 2110, 4036: 2110,
+    4037: 2114, 4038: 2114, 4039: 2114,
+    4040: 2119, 4041: 2119, 4042: 2119,
+    4043: 2123, 4044: 2123, 4045: 2123,
+    4016: 2024, 4017: 2030, 4046: 2125, 4047: 2130,
+}
+
+
 def _claimed(pl):
     try:
-        return set(json.loads(pl.get(pl.role + "_quests_claimed") or "[]"))
+        done = set(json.loads(pl.get(pl.role + "_quests_claimed") or "[]"))
     except ValueError:
-        return set()
+        done = set()
+    today = time.strftime("%Y-%m-%d", time.gmtime())
+    last_day = pl.get(pl.role + "_daily_date")
+    if last_day != today:
+        if last_day:
+            done = {qid for qid in done if not (4000 <= qid < 4200 or 5100 <= qid < 5200)}
+            pl.set(pl.role + "_quests_claimed", json.dumps(sorted(done)))
+        pl.set(pl.role + "_daily_date", today)
+        pl.save()
+    return done
 
 
 def _active(pl):
     done = _claimed(pl)
-    return [str(q["quest_id"]) for q in _QUESTS
-            if q["quest_id"] not in done and (q["prequest_id"] < 0 or q["prequest_id"] in done)]
+    pl_lvl = _player_level(pl)
+    enabled = [q for q in _QUESTS if q.get("status", 1) == 1 and q["quest_id"] not in done]
+
+    active_ids = []
+
+    # 1. Tutorial quests (1000..1999)
+    for q in enabled:
+        qid = q["quest_id"]
+        if 1000 <= qid < 2000 and (q["prequest_id"] < 0 or q["prequest_id"] in done):
+            active_ids.append(qid)
+
+    # 2. Normal Story chain (2000..2099): only the next unclaimed quest in order
+    normal_story = sorted((q["quest_id"] for q in enabled if 2000 <= q["quest_id"] < 2100))
+    if normal_story:
+        active_ids.append(normal_story[0])
+
+    # 3. Hard Story chain (2100..2199): unlocked after Greece Boss (2006), one at a time
+    if 2006 in done:
+        hard_story = sorted((q["quest_id"] for q in enabled if 2100 <= q["quest_id"] < 2200))
+        if hard_story:
+            active_ids.append(hard_story[0])
+
+    # 4. Normal Side Quests (3000..3099): up to 2 active at a time in order
+    normal_side = sorted((q["quest_id"] for q in enabled if 3000 <= q["quest_id"] < 3100))
+    active_ids.extend(normal_side[:2])
+
+    # 5. Hard Side Quests (3100..3199): unlocked after 2101, up to 2 active at a time
+    if 2101 in done:
+        hard_side = sorted((q["quest_id"] for q in enabled if 3100 <= q["quest_id"] < 3200))
+        active_ids.extend(hard_side[:2])
+
+    # 6. Daily Combat Quests (4000..4099): unlocked by story progress, retired when q["prequest_id"] is done
+    dailies = []
+    for q in enabled:
+        qid = q["quest_id"]
+        if 4000 <= qid < 4100:
+            unlock_q = _DAILY_COMBAT_UNLOCK.get(qid)
+            expire_q = q["prequest_id"]
+            if unlock_q and unlock_q in done and (expire_q < 0 or expire_q not in done):
+                dailies.append(qid)
+    active_ids.extend(sorted(dailies))
+
+    # 7. Daily Fusion quest (4100..4199): all 4101..4117 are level-bracketed variants of IDS_STR_QUEST_4001.
+    # Offer at most one per day (only if no 4100..4199 quest has been claimed today).
+    if not any(4100 <= d < 4200 for d in done):
+        lvl_quests = sorted(
+            q["quest_id"]
+            for q in enabled
+            if 4100 <= q["quest_id"] < 4200
+            and q["visible_player_level_low"] <= pl_lvl <= q["visible_player_level_high"]
+        )
+        if lvl_quests:
+            active_ids.append(lvl_quests[0])
+
+    # 8. Endless Tower Quests (5000..5999): unlocked after 2006
+    if 2006 in done:
+        tower_story = sorted((q["quest_id"] for q in enabled if 5000 <= q["quest_id"] < 5100 or 5500 <= q["quest_id"] < 5600))
+        if tower_story:
+            active_ids.append(tower_story[0])
+        if 5100 not in done:
+            active_ids.append(5100)
+        if 2024 in done and 5101 not in done:
+            active_ids.append(5101)
+
+    return [str(qid) for qid in active_ids]
 
 
 @handler("quest")
@@ -188,11 +287,13 @@ def quest(store, pid, msg):
         role_index = st.ROLES.index(pl.role)
         for it in q["reward_item_list"]:
             if it["reward_role"] in (-1, role_index):
-                touched += st.add_item(inv, it["reward_item_id"], it["reward_item_count"])
+                touched += st.add_item(inv, it["reward_item_id"], it["reward_item_count"], pl=pl)
         pl.save_inventory(inv)
+        gs = pl.update_gs()
         pl.save()
-        log("quest %d claimed: +%d xp +%d sc +%d hc, %d item(s)" % (qid, q["reward_exp"], q["reward_sc"],
-                                                                   q["reward_hc"], len(touched)))
-        return True, dict(st.currencies(pl), exp=pl.xp, items=touched, quest_id_list=_active(pl))
+        log("quest %d claimed: +%d xp +%d sc +%d hc, %d item(s), tokens=%s" % (
+            qid, q["reward_exp"], q["reward_sc"], q["reward_hc"], len(touched), json.dumps(pl.tokens())))
+        return True, dict(st.currencies(pl), exp=pl.xp, gs=gs, token=pl.tokens(), items=touched,
+                          quest_id_list=_active(pl))
     log("quest/%s not implemented: %s" % (op, json.dumps(msg)[:200]))
     return st.error(NOT_AVAILABLE)

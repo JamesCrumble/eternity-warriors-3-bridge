@@ -21,9 +21,11 @@
 /port/build/
 __pycache__/
 *.apk
+*.ipa
+*.obb
 *.idsig
 release.pass
 *:Zone.Identifier
 /host/build-win/
 /third_party/*
-/server/.venv/lib
+/server/.venv/

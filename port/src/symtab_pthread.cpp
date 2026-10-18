@@ -362,7 +362,12 @@ static void report_thread(int rc, pthread_t *thread, void *(*entry)(void *))
  * cannot be reported at all: the handler has nowhere to run, and what reaches
  * the log is qemu's bare "uncaught target signal 11".
  */
+#include <setjmp.h>
+
 extern "C" void crash_report_thread_init(void);
+extern "C" __thread jmp_buf t_thread_exit_jmp;
+extern "C" __thread void *t_thread_exit_val;
+extern "C" __thread int t_has_thread_exit_jmp;
 
 struct ThreadStart { void *(*entry)(void *); void *arg; };
 static void *thread_trampoline(void *p)
@@ -370,7 +375,11 @@ static void *thread_trampoline(void *p)
     ThreadStart st = *(ThreadStart *)p;
     free(p);
     crash_report_thread_init();
-    return st.entry(st.arg);
+    if (setjmp(t_thread_exit_jmp) == 0) {
+        t_has_thread_exit_jmp = 1;
+        return st.entry(st.arg);
+    }
+    return t_thread_exit_val;
 }
 static int create_with_altstack(pthread_t *thread, const pthread_attr_t *host,
                                 void *(*entry)(void *), void *arg)

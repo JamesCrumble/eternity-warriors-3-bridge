@@ -55,7 +55,7 @@ char* strtok(char* __s, const char* __delimiter);
 char* strtok_r(char* __s, const char* __delimiter, char** __pos_ptr);
 char* strerror(int __errno_value);
 char* strerror_l(int __errno_value, locale_t __l) __INTRODUCED_IN(23);
-int strerror_r(int __errno_value, char* __buf, size_t __n);
+using ::strerror_r;
 size_t strnlen(const char* __s, size_t __n) __attribute_pure__;
 char* strncat(char* __dst, const char* __src, size_t __n);
 char* strndup(const char* __s, size_t __n);
@@ -376,7 +376,7 @@ void* realloc(void* __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
 void* reallocarray(void* __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __wur __INTRODUCED_IN(29);
 void free(void* __ptr);
 void* memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2) __wur;
-size_t malloc_usable_size(const void* __ptr) __INTRODUCED_IN(17);
+size_t malloc_usable_size(void* __ptr) __INTRODUCED_IN(17);
 struct mallinfo mallinfo(void);
 int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
 int mallopt(int __option, int __value) __INTRODUCED_IN(26);
@@ -548,25 +548,13 @@ int unlockpt(int __fd);
 
 int getsubopt(char** __option, char* const* __tokens, char** __value_ptr) __INTRODUCED_IN(26);
 
-typedef struct {
-  int quot;
-  int rem;
-} div_t;
-
+using ::div_t;
 div_t div(int __numerator, int __denominator) __attribute_const__;
 
-typedef struct {
-  long int quot;
-  long int rem;
-} ldiv_t;
-
+using ::ldiv_t;
 ldiv_t ldiv(long __numerator, long __denominator) __attribute_const__;
 
-typedef struct {
-  long long int quot;
-  long long int rem;
-} lldiv_t;
-
+using ::lldiv_t;
 lldiv_t lldiv(long long __numerator, long long __denominator) __attribute_const__;
 int getloadavg(double __averages[], int __n) __INTRODUCED_IN(29);
 const char* getprogname(void) __INTRODUCED_IN(21);
@@ -577,21 +565,5 @@ int mbtowc(wchar_t* __wc_ptr, const char* __s, size_t __n) __INTRODUCED_IN_NO_GU
 int wctomb(char* __dst, wchar_t __wc) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
 size_t wcstombs(char* __dst, const wchar_t* __src, size_t __n);
 size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
-int abs(int __x) __attribute_const__ __INTRODUCED_IN(19);
-long labs(long __x) __attribute_const__ __INTRODUCED_IN(19);
-long long llabs(long long __x) __attribute_const__ __INTRODUCED_IN(19);
-float strtof(const char* __s, char** __end_ptr) __INTRODUCED_IN(21);
-double atof(const char* __s) __attribute_pure__ __INTRODUCED_IN(21);
-int rand(void) __INTRODUCED_IN(21);
-void srand(unsigned int __seed) __INTRODUCED_IN(21);
-long random(void) __INTRODUCED_IN(21);
-void srandom(unsigned int __seed) __INTRODUCED_IN(21);
-int grantpt(int __fd) __INTRODUCED_IN(21);
-long long strtoll_l(const char* __s, char** __end_ptr, int __base, locale_t __l) __INTRODUCED_IN(21);
-unsigned long long strtoull_l(const char* __s, char** __end_ptr, int __base, locale_t __l) __INTRODUCED_IN(21);
-long double strtold_l(const char* __s, char** __end_ptr, locale_t __l) __INTRODUCED_IN(21);
-double strtod_l(const char* __s, char** __end_ptr, locale_t __l) __INTRODUCED_IN(26);
-float strtof_l(const char* __s, char** __end_ptr, locale_t __l) __INTRODUCED_IN(26);
-long strtol_l(const char* __s, char** __end_ptr, int, locale_t __l) __INTRODUCED_IN(26);
 char *index(const char *p, int ch);
 wchar_t *wcswcs (const wchar_t *__haystack, const wchar_t *__needle);

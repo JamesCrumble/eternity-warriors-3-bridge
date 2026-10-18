@@ -14,6 +14,7 @@
 #include <filesystem>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "../../src/port_env.h"
 
 namespace fs = std::filesystem;

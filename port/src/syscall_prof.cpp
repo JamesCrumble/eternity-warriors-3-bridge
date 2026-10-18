@@ -39,7 +39,7 @@ inline void unlock() { __atomic_store_n(&g_lock, 0, __ATOMIC_RELEASE); }
 static inline bool enabled()
 {
     if (__builtin_expect(g_enabled < 0, 0))
-        g_enabled = port_getenv_long("SYSCALL_PROF", 1) ? 1 : 0;
+        g_enabled = port_getenv_long("SYSCALL_PROF", 0) ? 1 : 0;
     return g_enabled != 0;
 }
 
@@ -91,7 +91,7 @@ static void describe(uintptr_t addr, char *out, size_t n)
 extern "C" void sysprof_tick(long frame)
 {
     const long kWindow = 300;
-    if (!g_enabled || frame == 0 || frame % kWindow != 0)
+    if (!enabled() || frame == 0 || frame % kWindow != 0)
         return;
     std::vector<Slot> snap;
     uint64_t calls[SP_KINDS], ns[SP_KINDS];

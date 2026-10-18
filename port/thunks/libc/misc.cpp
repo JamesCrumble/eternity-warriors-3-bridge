@@ -43,8 +43,11 @@ extern "C" ABI_ATTR long syscall_impl(long number, ...)
     return 0;
 }
 
+extern "C" void crash_report_backtrace(const char *tag);
+
 extern "C" ABI_ATTR void abort_impl(void)
 {
+    crash_report_backtrace("abort");
     fatal_error("Guest called abort!\n");
     exit(-1);
 }
@@ -67,6 +70,10 @@ extern "C" ABI_ATTR void *dlopen_impl(const char *filename, int flags)
 
     const char *base = strrchr(filename, '/');
     base = base ? base + 1 : filename;
+    if (strstr(base, ".dll.so") != NULL) {
+        dl_last_error = "library not found";
+        return NULL;
+    }
     if (getenv("EW3_DLSYM_TRACE"))
         warning("dlopen: %s (flags 0x%x)\n", filename, flags);
 
@@ -162,15 +169,28 @@ extern "C" ABI_ATTR int* __errno_impl(void)
     return __errno_location();
 }
 
+static bool unity_log_enabled(void)
+{
+    static int on = -1;
+    if (__builtin_expect(on < 0, 0)) {
+        const char *v = getenv("EW3_UNITY_LOG");
+        on = (v && *v && *v != '0') ? 1 : 0;
+    }
+    return on != 0;
+}
+
 extern "C" ABI_ATTR int __android_log_write_impl(int prio, const char *tag, const char *text)
 {
-    char andlog[2048] = {};
+    if (!unity_log_enabled())
+        return 1;
     warning("LOG[%s]: %s\n", tag, text);
     return 1;
 }
 
 extern "C" ABI_ATTR int __android_log_print_impl(int prio, const char *tag, const char *fmt, ...)
 {
+    if (!unity_log_enabled())
+        return 1;
     char andlog[2048] = {};
     va_list va;
     va_start(va, fmt);
@@ -183,6 +203,8 @@ extern "C" ABI_ATTR int __android_log_print_impl(int prio, const char *tag, cons
 
 extern "C" ABI_ATTR int __android_log_vprint_impl(int prio, const char *tag, const char *fmt, va_list va)
 {
+    if (!unity_log_enabled())
+        return 1;
     char andlog[2048] = {};
     warning("LOG[%s]: ", tag);
     int r = vsnprintf(andlog, 2047, fmt, va);
