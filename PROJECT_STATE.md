@@ -16,6 +16,7 @@
 - `E-Warriors-3-v4-1-0.apk`: `lib/armeabi-v7a/{libmain,libmono,libunity}.so`, `classes.dex` + `classes2.dex`
   (SDK Glu, Tapjoy, AWS). Движок в APK — **Unity 4.6.1p5** (`armeabi-v7a`, Mono).
 - `E-Warriors-3-v4-1-0-cache.zip` -> `ew3data/Android/obb/com.glu.ewarriors3/main.4100.com.glu.ewarriors3.obb` (90 МБ).
+- `E-Warriors-3-v4-1-0-cache-extended.ew3x`: расширенный пакет (zip, ~106 МБ): 33 бандла, конвертированные из IPA, и 3 пропатченных бандла OBB, готовые для сервера; делается `tools/make_extended.py`, заменяет IPA.
 - `31263-Eternity-Warriors-3-v0-1-0.ipa`: архивная iOS-сборка v0.1.0 (Unity 4.2.1f4), содержащая все базовые сцены, окружение, мобов и боссов 3 королевств.
 - Managed-DLL лежат в OBB (`assets/bin/Data/Managed/`): `Assembly-CSharp.dll`, `Assembly-CSharp-firstpass.dll`,
   `Photon3Unity3D.dll`, `UnityEngine*.dll`. Декомпилированы в `extracted/decompiled/`.
@@ -28,7 +29,7 @@
 | `apk/` | Android-обёртка (Java: `GameProcess`, `GlBridge`, `MainActivity`, `SettingsActivity`, `Storage`), `build_apk.sh`, `make_sysroot.sh`, `make_icon.py`, `patch_syscalls.py` | да |
 | `server/` | Бэкенд (`ew3server.py`, `edge.py`, `cgs*.py`, `bundle_patcher.py`, `generated/`), `requirements-android.txt`, `des_py.py` | да |
 | `host/` | Windows: `ew3gl.exe` (GL-мост, работает) и заготовка нативного хоста `ew3host.exe` (не закончен) | да |
-| `tools/` | `play_win.sh`, `make_release.sh`, `release_install.txt`, `release_notes.md`, `build_port.py`, дампы данных и прочее | да |
+| `tools/` | `play_win.sh`, `make_release.sh`, `make_extended.py` (расширенный пакет), `adb`, `release_install.txt`, `release_notes.md`, `build_port.py`, дампы данных и прочее | да |
 | `docs/` | `PORTING_GUIDE.md` (как делался порт, части 1–7), `NETWORK.md` (сетевые маршруты и локальная подмена) | да |
 | `play_win.cmd` / `play_win.py` | запуск для Windows, не закончен (см. статус) | да |
 | `ew3data/` | рабочие данные игры на ПК (OBB, `.so`, `server/players.json`, `server/bundle_cache/`) | нет |
@@ -46,7 +47,7 @@
 - `GC_RETRY_SIGNALS=1` (`main.cpp`): сборщик Boehm повторяет потерянные сигналы остановки потоков под qemu-user.
 - `unity_www.cpp`: бандлы, которых нет в OBB (пропатченные, с другим хэшем), берутся из `EW3_BUNDLE_CACHE` или у сервера.
 
-### 1a. Android (`apk/`, релиз v0.1)
+### 1a. Android (`apk/`, релиз v0.2)
 - APK: `libqemu.so` (aarch64 qemu-arm, QEMU 11.1.2 + патчи Shadowgun-проекта, приложены к релизу), sysroot armhf (glibc 2.31, SDL2, Python 3.8), гость `ew3`, файлы сервера, Java-обёртка; игра идёт в qemu-user, GLES выполняется на GPU телефона (`GlBridge`).
 - Сервер работает на телефоне в том же `libqemu.so` (armhf Python 3.8); зависимости чистый Python: `server/requirements-android.txt` (FastAPI 0.95 + pydantic 1.10) и `server/des_py.py` вместо pycryptodome (сверен на 300 наборах). Данные сервера — в личной папке приложения.
 - Файлы игры (APK, cache-zip/OBB, по желанию `.ipa`) игрок кладёт в `/sdcard/BridgeGames/com.jamescrumble.ew3/`; `glu_properties.txt` обёртка расшифровывает из APK сама.
@@ -56,7 +57,7 @@
 - Старт сервера на телефоне ~3 с (кэш `.pyc`, готовность по токену `/_ew3/ready`).
 - Частота кадров разблокирована: движок больше не привязан к vsync (`vSyncCount` -> 0, `fps_unlock.cpp`), лимит из меню работает (30 даёт 30,0; при 120 в лёгких сценах 84-108, в тяжёлых ~70: упор в процессор, поток движка занят на ~90% ядра).
 - Только сенсорное управление; онлайн-режимы, покупки и реклама отключены.
-- Релиз: `tools/make_release.sh` -> `release/v0.1/` (APK, `INSTALL.txt`, `RELEASE_NOTES.md`, исходники, патчи qemu, `SHA256SUMS`). Ключ подписи: `apk/build/release.keystore` (копию хранить вне репозитория).
+- Релиз: `tools/make_release.sh` -> `release/v0.2/` (APK, расширенный пакет `.ew3x`, `INSTALL.txt`, `RELEASE_NOTES.md`, исходники, патчи qemu, `SHA256SUMS`). Ключ подписи: `apk/build/release.keystore` (копию хранить вне репозитория).
 
 ### 1b. Windows
 - Игра идёт через `tools/play_win.sh`: гость под `qemu-arm` в WSL, GL-поток по TCP в `ew3gl.exe` (ANGLE -> D3D11, SDL2), управление WASD/мышь переводится в касания (`ew3gl_input.inc`), сервер Python.
@@ -74,6 +75,7 @@
   - Инвентарь, смена экипировки, пересчёт `gearscore`, продажа предметов, прокачка скиллов (`skill_upgrade`), слияние (`fusion`), эволюция (`evolution`), гача-сундуки (`gacha`), квесты и ежедневные задания (`quest_claim`).
 
 ### 3. Патчер бандлов и восстановление контента из iOS IPA v0.1.0 (`server/bundle_patcher.py`)
+- Результат сервер кэширует в `bundle_cache/`; тот же кэш, собранный заранее, поставляется отдельным файлом `.ew3x` (см. «Игра»). Кэш помнит, собран ли он с IPA (`.has_ipa`), и пересобирается при смене режима.
 - **Патчи базовых бандлов OBB v4.1.0**:
   - `base_uniform_global_manager`: расширен список ежедневных заданий (`QuestListData._dailyQuests`) с одного туториального дейлика на полноценную ротацию из 7 разных ежедневных заданий по дням недели (`4101`–`4107`); удалены отсутствующие на CDN фоновые треки из `SoundTrackData`.
   - `base_uniform_data-levels`: при наличии `31263-Eternity-Warriors-3-v0-1-0.ipa` активируются все **25 уровней кампании** в 3 королевствах (**Moria / Greece**, **Binhai / China**, **Gothia / Gothic**).

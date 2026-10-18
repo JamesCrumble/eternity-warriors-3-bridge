@@ -9,7 +9,7 @@ ETERNITY WARRIORS 3 4.1.0 (Glu) — игра на Unity 4.5.2 с кодом на
 в [PROJECT_STATE.md](../PROJECT_STATE.md), сетевой протокол — в [NETWORK.md](NETWORK.md).
 
 Состояние: меню, выбор героя, город, вход в сюжетные уровни, бой; звук; 60 кадров/с на RX 9070 XT при 720p
-(процессор эмулирует qemu-arm в WSL). Android: релиз v0.1, около 60 кадров/с на OnePlus CPH2723 (Adreno 830).
+(процессор эмулирует qemu-arm в WSL). Android: релиз v0.2, 70-108 кадров/с на OnePlus CPH2723 (Adreno 830), лимит до 120.
 
 ## Почему не пересобрать под x86 или arm64
 
@@ -206,7 +206,7 @@ tools/make_release.sh      # release/v<версия>/: подписанный AP
 ### 7.2. Раскладка данных на телефоне
 
 - **Видно:** без файлов игры приложение пишет «Не найден оригинальный APK игры».
-- **Решение:** игрок кладёт `.apk`, cache-`.zip` (или `main.*.obb`) и, по желанию, `.ipa` в
+- **Решение:** игрок кладёт `.apk`, cache-`.zip` (или `main.*.obb`) и, по желанию, расширенный пакет `.ew3x` (7.7) либо `.ipa` в
   `/sdcard/BridgeGames/com.jamescrumble.ew3/` (нужен доступ ко всем файлам) или в `Android/data/<пакет>/files/`.
   Приложение собирает из них `files/game/` в том виде, как ждёт порт: `lib/armeabi-v7a/{libmain,libmono,libunity}.so`,
   `base.apk`, `Android/obb/com.glu.ewarriors3/main.*.obb`.
@@ -222,8 +222,9 @@ tools/make_release.sh      # release/v<версия>/: подписанный AP
   [requirements-android.txt](../server/requirements-android.txt) (FastAPI 0.95 + pydantic 1.10), а DES-CBC для отчёта
   боя даёт [des_py.py](../server/des_py.py), к которому [cgs_state.py](../server/cgs_state.py) переходит, если
   `Crypto` не импортируется (результат сверен с pycryptodome на 300 случайных наборах).
-- Сервер стартует около 20 секунд на ПК. `GameProcess.startServer` ждёт ответа `:18080` до трёх минут и только
-  потом запускает игру (`EW3_SERVER=127.0.0.1`). Для сокетов на loopback приложению нужно разрешение `INTERNET`.
+- Сервер стартует за ~3 секунды на телефоне (с кэшем `.pyc`; без него и с чтением всего кэша бандлов — десятки секунд).
+  `GameProcess.startServer` ждёт готовность до трёх минут (токен на `/_ew3/ready`, см. 7.6) и только потом запускает игру
+  (`EW3_SERVER=127.0.0.1`). Для сокетов на loopback приложению нужно разрешение `INTERNET`.
 - Данные сервера (`players.json`, `bundle_cache/`) — в личной папке приложения, `files/serverdata/`. Они пропадают
   вместе с приложением.
 - **Ловушка:** первая сборка sysroot пропустила `libutil.so.1`, потому что тест на ПК прошёл: qemu на хосте
@@ -292,8 +293,8 @@ IPA не нужен: на Android файл кладётся рядом с APK и
   статус содержит `state` и `frame` (поля `menu` нет, обёртка выходит с экрана загрузки по числу кадров).
 - Релиз: `tools/make_release.sh` кладёт в `release/v<версия>/` APK (подпись release-ключом `apk/build/release.keystore`,
   пароль в `apk/build/release.pass`; оба вне git, копию надо хранить), архив исходников рабочего дерева,
-  `qemu-patches.zip`, `INSTALL.txt`, `RELEASE_NOTES.md` и `SHA256SUMS`. Тег `v0.1` указывает на коммит, из которого
-  собран этот релиз.
+  расширенный пакет `.ew3x` (если он есть в `gamebin/`), `qemu-patches.zip`, `INSTALL.txt`, `RELEASE_NOTES.md` и `SHA256SUMS`.
+  Тег (`v0.1`, `v0.2`) указывает на коммит, из которого собран релиз.
 
 ## Что осталось
 
@@ -301,7 +302,7 @@ IPA не нужен: на Android файл кладётся рядом с APK и
   `StoreDataConfig`, `GachaItemList`, `FusionList`… лежат в бандлах без typetree, нужен декодер по C#-классам.
 - Башня, рейд-боссы, PvP, гильдии — отвечают «недоступно».
 - `MethodBase.GetCurrentMethod()` под Mono (5.4).
-- Потолок 60 кадров/с.
+- Частота кадров: потолок 60 снят (3.2), но до стабильных 120 не хватает процессора: поток движка в эмуляции занят на ~90% ядра.
 - Свой exe для Windows: эмулятор Linux-процесса на dynarmic вместо qemu (`host/src/` пока только привязка dynarmic
   и память, без `main`, ELF-загрузчика, сисколлов, потоков и сокетов), сервер на портативном Python, упаковка,
   меню настроек (окно / без рамки / полный экран).
