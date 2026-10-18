@@ -518,6 +518,10 @@ static void *main_thread(void *p)
 
 int main(int argc, char **argv)
 {
+    /* Mono's Boehm GC suspends threads with SIGPWR and waits on GC_suspend_ack_sem.
+     * Under qemu-user a suspend signal can occasionally be lost; GC_RETRY_SIGNALS makes
+     * suspend_all() re-send SIGPWR after 100 ms instead of hanging in sem_wait forever. */
+    setenv("GC_RETRY_SIGNALS", "1", 0);
     MainArgs args = {argc, argv, 1};
     pthread_attr_t attr;
     pthread_attr_init(&attr);

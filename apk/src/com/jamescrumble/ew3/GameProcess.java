@@ -325,6 +325,10 @@ final class GameProcess {
                 "--data", data.getPath());
         if (obbs != null && obbs.length > 0) { b.command().add("--obb"); b.command().add(obbs[0].getPath()); }
         Map<String, String> env = b.environment();
+        // Patched/recovered AssetBundles: the server writes them here, the game reads them from here (or over HTTP).
+        File bundleCache = new File(data, "bundle_cache");
+        bundleCache.mkdirs();
+        env.put("EW3_BUNDLE_CACHE", bundleCache.getPath());
         env.put("PYTHONHOME", "/usr");
         env.put("PYTHONDONTWRITEBYTECODE", "1");
         env.put("PYTHONIOENCODING", "utf-8");
@@ -453,6 +457,7 @@ final class GameProcess {
         // Shorter than one 1024-frame period (23.2 ms): the device thread is then paced by the FIFO, see audioLoop().
         env.put("SDL_DISKAUDIODELAY", "15");
         env.put("EW3_SERVER", "127.0.0.1");
+        env.put("EW3_BUNDLE_CACHE", new File(root, "serverdata/bundle_cache").getPath());
         env.put("EW3_ALLOW_UNRESOLVED", "1");
         env.put("EW3_CONTROL_DIR", control.getPath());
         // OpenGL ES calls are executed by the app on the GPU (GlBridge); nothing renders inside qemu.
@@ -548,7 +553,9 @@ final class GameProcess {
         // The menu's frame-rate limit is what the engine is told to run at (src/fps_unlock.cpp).
         if (settings.containsKey("FPS_LIMIT")) env.put("EW3_TARGET_FPS", settings.get("FPS_LIMIT"));
         // Our qemu: guest syscall counts and a sampled guest-PC profile every 10 s in the log.
-        if (!"0".equals(settings.get("PROFILING"))) {
+        // Off by default: the sampling profiler signals the engine thread 250 times a second, and that can leave Boehm's
+        // stop-the-world waiting forever for two freshly started Mono threads (game frozen on a black screen).
+        if ("1".equals(settings.get("PROFILING"))) {
             env.put("QEMU_SYSCALL_STATS", "1");
             env.put("QEMU_GUEST_PROF", "1");
             env.put("EW3_GL_PROFILE", "1");

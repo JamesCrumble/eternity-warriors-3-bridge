@@ -122,30 +122,47 @@ std::map<std::string, zip_t *> g_zip_cache;
 
 bool read_zip_entry(const std::string &zip_path, const std::string &entry, std::vector<char> *out)
 {
-    std::lock_guard<std::mutex> lock(g_zip_lock);
-    zip_t *z = NULL;
-    auto it = g_zip_cache.find(zip_path);
-    if (it != g_zip_cache.end()) {
-        z = it->second;
-    } else {
-        int err = 0;
-        z = zip_open(zip_path.c_str(), ZIP_RDONLY, &err);
-        if (!z)
-            return false;
-        g_zip_cache[zip_path] = z;
+    {
+        std::lock_guard<std::mutex> lock(g_zip_lock);
+        zip_t *z = NULL;
+        auto it = g_zip_cache.find(zip_path);
+        if (it != g_zip_cache.end()) {
+            z = it->second;
+        } else {
+            int err = 0;
+            z = zip_open(zip_path.c_str(), ZIP_RDONLY, &err);
+            if (z)
+                g_zip_cache[zip_path] = z;
+        }
+        if (z) {
+            zip_stat_t st;
+            if (zip_stat(z, entry.c_str(), 0, &st) == 0 && (st.valid & ZIP_STAT_SIZE))
+                out->reserve((size_t)st.size);
+            zip_file_t *zf = zip_fopen(z, entry.c_str(), 0);
+            if (zf) {
+                char buf[65536];
+                zip_int64_t n;
+                while ((n = zip_fread(zf, buf, sizeof(buf))) > 0)
+                    out->insert(out->end(), buf, buf + n);
+                zip_fclose(zf);
+                return true;
+            }
+        }
     }
-    zip_stat_t st;
-    if (zip_stat(z, entry.c_str(), 0, &st) == 0 && (st.valid & ZIP_STAT_SIZE))
-        out->reserve((size_t)st.size);
-    zip_file_t *zf = zip_fopen(z, entry.c_str(), 0);
-    if (!zf)
-        return false;
-    char buf[65536];
-    zip_int64_t n;
-    while ((n = zip_fread(zf, buf, sizeof(buf))) > 0)
-        out->insert(out->end(), buf, buf + n);
-    zip_fclose(zf);
-    return true;
+    const char *kPrefix = "assets/AssetBundles/";
+    if (entry.compare(0, strlen(kPrefix), kPrefix) == 0) {
+        std::string fname = entry.substr(strlen(kPrefix));
+        const char *cache_dir = getenv("EW3_BUNDLE_CACHE");
+        if (cache_dir && *cache_dir && read_file(std::string(cache_dir) + "/" + fname, out))
+            return true;
+        std::string raw;
+        Request hr{0, "http://cdn.ew3.local/ew3/android/live/bundles/41005/AssetBundles/1/" + fname, {}};
+        int code = fetch_http(hr, &raw, out);
+        if (code >= 200 && code < 400)
+            return true;
+        out->clear();
+    }
+    return false;
 }
 
 bool fetch_local(const std::string &url, std::vector<char> *out, bool *is_local)

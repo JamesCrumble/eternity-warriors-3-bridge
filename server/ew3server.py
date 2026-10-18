@@ -142,7 +142,7 @@ class Obb:
         self.overrides: Dict[str, bytes] = {}
         if self.zip:
             try:
-                cache_dir = os.path.join(cfg["data"], "bundle_cache")
+                cache_dir = os.environ.get("EW3_BUNDLE_CACHE") or os.path.join(cfg["data"], "bundle_cache")
                 os.makedirs(cache_dir, exist_ok=True)
                 has_ipa = os.path.exists(DEFAULT_IPA)
                 idx_replacements = {}

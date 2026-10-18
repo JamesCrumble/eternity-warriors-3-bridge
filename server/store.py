@@ -12,6 +12,7 @@ import uuid
 
 class Store:
     def __init__(self, data_dir):
+        os.makedirs(data_dir, exist_ok=True)
         self.path = os.path.join(data_dir, "players.json")
         self.lock = threading.RLock()
         self.data = {"players": {}}
