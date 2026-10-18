@@ -116,7 +116,9 @@ def h_get_attributes(s, req):
 
 
 def h_set_attributes(s, req):
-    store.set_attributes(req.get("playerId") or s.pid, req.get("attributes") or [])
+    pid = req.get("playerId") or s.pid
+    store.set_attributes(pid, req.get("attributes") or [])
+    cgs.ensure_starter_profile(store, pid)
     return ok(req)
 
 

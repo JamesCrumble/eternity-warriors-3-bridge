@@ -8,6 +8,7 @@
  */
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 extern "C" {
 
@@ -41,6 +42,14 @@ static char prio_letter(int prio)
  * and hard-float variants, so no ABI bridge is needed or possible here. */
 int __android_log_print(int prio, const char *tag, const char *fmt, ...)
 {
+    static int log_on = -1;
+    if (__builtin_expect(log_on < 0, 0)) {
+        const char *v = getenv("EW3_UNITY_LOG");
+        log_on = (v && *v && *v != '0') ? 1 : 0;
+    }
+    if (!log_on && prio < ANDROID_LOG_ERROR)
+        return 1;
+
     va_list ap;
     va_start(ap, fmt);
     int n = fprintf(stderr, "[%c/%s] ", prio_letter(prio), tag ? tag : "?");

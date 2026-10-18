@@ -38,6 +38,7 @@
 #include <functional>
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include <algorithm>  /* std::find - relied on a transitive include upstream */
 
 #include "platform.h"
@@ -70,7 +71,7 @@ extern "C" void jni_resolve_native(so_module *so);
 
 static void so_flush_caches(so_module *mod, int write) {
   // clear cache and set EXEC on all executable regions
-	__builtin___clear_cache((void*)mod->patch_base, (void*)(mod->cave_head));
+	__builtin___clear_cache((char*)mod->patch_base, (char*)(mod->cave_head));
 	mprotect((void*)mod->patch_base, mod->cave_head - mod->patch_base, PROT_EXEC|(write ? PROT_WRITE|PROT_READ : PROT_READ));
 }
 
@@ -1015,11 +1016,11 @@ void rehook_new(so_module *mod, ReentrantHook *hook, uintptr_t addr, uintptr_t d
 void rehook_hook(ReentrantHook *hook)
 {
   memcpy((void *)hook->addr, (void *)hook->trampoline, sizeof(hook->trampoline));
-  __builtin___clear_cache((void *)hook->addr, (void *)hook->addr+sizeof(hook->trampoline));
+  __builtin___clear_cache((char *)hook->addr, (char *)hook->addr+sizeof(hook->trampoline));
 }
 
 void rehook_unhook(ReentrantHook *hook)
 {
   memcpy((void *)hook->addr, (void *)hook->prologue, sizeof(hook->prologue));
-  __builtin___clear_cache((void *)hook->addr, (void *)hook->addr+sizeof(hook->prologue));
+  __builtin___clear_cache((char *)hook->addr, (char *)hook->addr+sizeof(hook->prologue));
 }

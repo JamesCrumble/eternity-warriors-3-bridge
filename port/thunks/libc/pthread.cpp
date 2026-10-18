@@ -17,6 +17,8 @@ ABI_ATTR pthread_t pthread_self_impl()
 ABI_ATTR int pthread_key_create_impl(pthread_key_t *key, void (*destr_function) (void *))
 {
     int ret = pthread_key_create(key, destr_function);
+    if (ret == 0 && key && *key == 0)
+        ret = pthread_key_create(key, destr_function);
     return ret;
 }
 

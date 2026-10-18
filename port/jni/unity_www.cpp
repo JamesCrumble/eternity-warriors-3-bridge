@@ -22,6 +22,7 @@
 #include <vector>
 #include <condition_variable>
 #include <deque>
+#include <map>
 #include <mutex>
 
 #include <arpa/inet.h>
@@ -102,6 +103,12 @@ bool read_file(const std::string &path, std::vector<char> *out)
     FILE *f = fopen(path.c_str(), "rb");
     if (!f)
         return false;
+    if (fseek(f, 0, SEEK_END) == 0) {
+        long sz = ftell(f);
+        if (sz > 0)
+            out->reserve((size_t)sz);
+        fseek(f, 0, SEEK_SET);
+    }
     char buf[65536];
     size_t n;
     while ((n = fread(buf, 1, sizeof(buf), f)) > 0)
@@ -110,24 +117,35 @@ bool read_file(const std::string &path, std::vector<char> *out)
     return true;
 }
 
+std::mutex g_zip_lock;
+std::map<std::string, zip_t *> g_zip_cache;
+
 bool read_zip_entry(const std::string &zip_path, const std::string &entry, std::vector<char> *out)
 {
-    int err = 0;
-    zip_t *z = zip_open(zip_path.c_str(), ZIP_RDONLY, &err);
-    if (!z)
-        return false;
-    bool ok = false;
-    zip_file_t *zf = zip_fopen(z, entry.c_str(), 0);
-    if (zf) {
-        char buf[65536];
-        zip_int64_t n;
-        while ((n = zip_fread(zf, buf, sizeof(buf))) > 0)
-            out->insert(out->end(), buf, buf + n);
-        zip_fclose(zf);
-        ok = true;
+    std::lock_guard<std::mutex> lock(g_zip_lock);
+    zip_t *z = NULL;
+    auto it = g_zip_cache.find(zip_path);
+    if (it != g_zip_cache.end()) {
+        z = it->second;
+    } else {
+        int err = 0;
+        z = zip_open(zip_path.c_str(), ZIP_RDONLY, &err);
+        if (!z)
+            return false;
+        g_zip_cache[zip_path] = z;
     }
-    zip_close(z);
-    return ok;
+    zip_stat_t st;
+    if (zip_stat(z, entry.c_str(), 0, &st) == 0 && (st.valid & ZIP_STAT_SIZE))
+        out->reserve((size_t)st.size);
+    zip_file_t *zf = zip_fopen(z, entry.c_str(), 0);
+    if (!zf)
+        return false;
+    char buf[65536];
+    zip_int64_t n;
+    while ((n = zip_fread(zf, buf, sizeof(buf))) > 0)
+        out->insert(out->end(), buf, buf + n);
+    zip_fclose(zf);
+    return true;
 }
 
 bool fetch_local(const std::string &url, std::vector<char> *out, bool *is_local)
@@ -215,24 +233,26 @@ void *request_main(void *arg)
         hdr += std::string("content-type: ") + (local ? "content/unknown" : "application/octet-stream") + "\n\r";
         if (header)
             header(env, cls, r->ptr, env->NewStringUTF(hdr.c_str()));
-        const size_t chunk = 32 * 1024;
+        const size_t chunk = 256 * 1024;
         static const long kbps = port_getenv_long("WWW_KBPS", 0);   /* 0: memory speed */
         const jint total = (jint)data.size();
+        size_t first_cap = data.size() < chunk ? data.size() : chunk;
+        jbyteArray arr = first_cap > 0 ? env->NewByteArray((jsize)first_cap) : NULL;
         for (size_t off = 0; off < data.size(); off += chunk) {
             size_t n = data.size() - off < chunk ? data.size() - off : chunk;
-            jbyteArray arr = env->NewByteArray((jsize)n);
             env->SetByteArrayRegion(arr, 0, (jsize)n, (const jbyte *)data.data() + off);
             /* The return value is not "stop": Unity 4.5 answers false for every chunk
              * it accepts (every response, the JSON ones included, parsed fine). Breaking
              * on it delivered only the first chunk - a bundle's cached copy came out
              * truncated and was thrown away. */
             read(env, cls, r->ptr, arr, (jint)n);
-            env->DeleteLocalRef(arr);
             if (progress)
                 progress(env, cls, r->ptr, 1.0f, total ? (float)(off + n) / (float)total : 1.0f, 0.0, total);
             if (kbps > 0)
                 usleep((useconds_t)(n * 1000 / kbps));
         }
+        if (arr)
+            env->DeleteLocalRef(arr);
         /* EW3_WWW_KBPS > 0 simulates a slow network (debug aid). */
         done(env, cls, r->ptr);
     } else if (error) {

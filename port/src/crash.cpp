@@ -243,7 +243,7 @@ static void put_stack(uintptr_t sp)
         if (v < 0x10000 || so_module_for_address(v))
             continue;
         Dl_info di;
-        if (!dladdr((void *)v, &di) || !di.dli_fname || !strstr(di.dli_fname, "shadowgun"))
+        if (!dladdr((void *)v, &di) || !di.dli_fname || !strstr(di.dli_fname, "ew3"))
             continue;
         put("         +");
         put_hex(v - (uintptr_t)di.dli_fbase);
@@ -367,14 +367,29 @@ static void on_fault(int sig, siginfo_t *si, void *ucontext)
     const ucontext_t *uc = (const ucontext_t *)ucontext;
 
     /*
-     * A fault in code that belongs to no loaded module is JIT output - C# that
-     * Mono compiled. A null dereference there is how Mono raises
-     * NullReferenceException, so its handler gets the fault and, on return,
+     * A fault in code that belongs to no loaded module and no host ELF (dladdr)
+     * is JIT output - C# that Mono compiled. A null dereference there is how Mono
+     * raises NullReferenceException, so its handler gets the fault and, on return,
      * the rewritten context resumes in the throw path.
      */
-    if ((sig == SIGSEGV || sig == SIGBUS || sig == SIGFPE) && !so_module_for_address(uc->uc_mcontext.arm_pc) &&
-        signal_guest_handler(sig, si, ucontext))
-        return;
+    if ((sig == SIGSEGV || sig == SIGBUS || sig == SIGFPE) && uc &&
+        uc->uc_mcontext.arm_pc >= 0x10000 &&
+        !so_module_for_address(uc->uc_mcontext.arm_pc)) {
+        Dl_info di;
+        if (!dladdr((void *)uc->uc_mcontext.arm_pc, &di) || !di.dli_fname) {
+            put("TRACE: JIT fault sig=");
+            put(signal_name(sig));
+            put(" addr=");
+            put_hex((uintptr_t)(si ? si->si_addr : 0));
+            put(" pc=");
+            put_hex(uc->uc_mcontext.arm_pc);
+            put(" lr=");
+            put_hex(uc->uc_mcontext.arm_lr);
+            put("\n");
+            if (signal_guest_handler(sig, si, ucontext))
+                return;
+        }
+    }
 
     /*
      * __sync_lock_test_and_set rather than a mutex: this is a signal handler

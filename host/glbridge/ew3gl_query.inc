@@ -168,11 +168,19 @@ static int exec_query(int op)
         if (pname == GL_COMPRESSED_TEXTURE_FORMATS) {
             GLint num = 0;
             glGetIntegerv(GL_NUM_COMPRESSED_TEXTURE_FORMATS, &num);
-            n = num < 64 ? num : 64;
-            if (num > 64)
-                break;   /* would overflow v; answer below with nothing */
+            n = num < 60 ? num : 60;
+            if (n > 0)
+                glGetIntegerv(pname, v);
+            v[n++] = 0x8D64; /* GL_ETC1_RGB8_OES */
+            v[n++] = 0x8C92; /* GL_ATC_RGB_AMD */
+            v[n++] = 0x8C93; /* GL_ATC_RGBA_EXPLICIT_ALPHA_AMD */
+            v[n++] = 0x87EE; /* GL_ATC_RGBA_INTERPOLATED_ALPHA_AMD */
+            reply_ints(v, n);
+            return 1;
         }
         glGetIntegerv(pname, v);
+        if (pname == GL_NUM_COMPRESSED_TEXTURE_FORMATS)
+            v[0] = (v[0] < 60 ? v[0] : 60) + 4;
         switch (pname) {   /* the guest knows objects by its own names */
         case GL_FRAMEBUFFER_BINDING: v[0] = idmap_reverse(&g_ids.fbo, (GLuint)v[0]); break;
         case GL_RENDERBUFFER_BINDING: v[0] = idmap_reverse(&g_ids.rbo, (GLuint)v[0]); break;

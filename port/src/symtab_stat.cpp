@@ -34,6 +34,26 @@
 #include "so_util.h"
 #include "thunk_gen.h"
 
+extern "C" {
+int __xstat(int ver, const char *path, struct stat *buf);
+int __xstat64(int ver, const char *path, struct stat64 *buf);
+int __fxstat(int ver, int fd, struct stat *buf);
+int __fxstat64(int ver, int fd, struct stat64 *buf);
+int __lxstat(int ver, const char *path, struct stat *buf);
+int __lxstat64(int ver, const char *path, struct stat64 *buf);
+int __fxstatat(int ver, int dirfd, const char *path, struct stat *buf, int flags);
+int __fxstatat64(int ver, int dirfd, const char *path, struct stat64 *buf, int flags);
+
+int stat(const char *path, struct stat *buf) noexcept { return __xstat(3, path, buf); }
+int stat64(const char *path, struct stat64 *buf) noexcept { return __xstat64(3, path, buf); }
+int fstat(int fd, struct stat *buf) noexcept { return __fxstat(3, fd, buf); }
+int fstat64(int fd, struct stat64 *buf) noexcept { return __fxstat64(3, fd, buf); }
+int lstat(const char *path, struct stat *buf) noexcept { return __lxstat(3, path, buf); }
+int lstat64(const char *path, struct stat64 *buf) noexcept { return __lxstat64(3, path, buf); }
+int fstatat(int dirfd, const char *path, struct stat *buf, int flags) noexcept { return __fxstatat(3, dirfd, path, buf, flags); }
+int fstatat64(int dirfd, const char *path, struct stat64 *buf, int flags) noexcept { return __fxstatat64(3, dirfd, path, buf, flags); }
+}
+
 /*
  * bionic/libc/include/sys/stat.h, __arm__ branch. The padding is part of the
  * ABI - the kernel's stat64 has those holes and bionic reproduces them - so it

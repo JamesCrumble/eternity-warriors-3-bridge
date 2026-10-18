@@ -44,6 +44,7 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
+#include <poll.h>
 
 #include <initializer_list>
 #include <map>
@@ -302,11 +303,21 @@ static uint32_t g_next_obj[6];
 
 static GLuint g_array_buf = 0;
 static GLuint g_elem_buf = 0;
+static GLuint g_fbo = 0;
+static GLuint g_rbo = 0;
 static std::vector<uint32_t> g_buf_size;
+static std::vector<GLenum>   g_buf_usage;
 
 static int g_unpack_align = 4;
 static int g_pack_align = 4;
 static int g_unpack_row_length = 0;
+
+static bool  g_viewport_set = false;
+static GLint g_viewport[4] = { 0, 0, 0, 0 };
+static bool  g_scissor_set = false;
+static GLint g_scissor[4] = { 0, 0, 0, 0 };
+static GLint g_color_mask[4] = { 1, 1, 1, 1 };
+static GLint g_depth_mask = 1;
 
 /* Mirrors of GL state the redundancy filters below compare against. */
 struct UniSlot {
@@ -318,11 +329,12 @@ static std::vector<std::vector<UniSlot> > g_uni;   /* [program][location] */
 static GLuint   g_cur_prog;
 static GLenum   g_active_unit = 0x84C0;            /* GL_TEXTURE0 */
 static GLuint   g_bound_tex[32][2];                /* [unit][2D, cube map] */
-static std::vector<std::vector<uint8_t> > g_elem_shadow;  /* index buffers, see elem_shadow() */
+static std::vector<std::vector<uint8_t> > g_buf_shadow;  /* VBO & IBO shadow buffers */
 
 struct Attrib {
     bool enabled;
     bool client;
+    GLuint vbo;
     GLint size;
     GLenum type;
     GLboolean normalized;
@@ -384,9 +396,16 @@ static int type_size(GLenum t)
 
 static void gb_glPixelStorei(GLenum pname, GLint param)
 {
-    if (pname == 0x0CF5) g_unpack_align = param;
-    else if (pname == 0x0D05) g_pack_align = param;
-    else if (pname == 0x0CF2) g_unpack_row_length = param;
+    if (pname == 0x0CF5) {
+        if (g_unpack_align == param) return;
+        g_unpack_align = param;
+    } else if (pname == 0x0D05) {
+        if (g_pack_align == param) return;
+        g_pack_align = param;
+    } else if (pname == 0x0CF2) {
+        if (g_unpack_row_length == param) return;
+        g_unpack_row_length = param;
+    }
     gb_raw_glPixelStorei(pname, param);
 }
 
@@ -487,13 +506,21 @@ static void gb_glLinkProgram(GLuint program)
 
 static void gb_glEnableVertexAttribArray(GLuint index)
 {
-    if (index < (GLuint)kMaxAttribs) g_attr[index].enabled = true;
+    if (index < (GLuint)kMaxAttribs) {
+        if (g_attr[index].enabled)
+            return;
+        g_attr[index].enabled = true;
+    }
     gb_raw_glEnableVertexAttribArray(index);
 }
 
 static void gb_glDisableVertexAttribArray(GLuint index)
 {
-    if (index < (GLuint)kMaxAttribs) g_attr[index].enabled = false;
+    if (index < (GLuint)kMaxAttribs) {
+        if (!g_attr[index].enabled)
+            return;
+        g_attr[index].enabled = false;
+    }
     gb_raw_glDisableVertexAttribArray(index);
 }
 
@@ -528,9 +555,21 @@ static void delete_objects(int kind, GLsizei n, const GLuint *ids)
         for (GLsizei i = 0; i < n; i++) {
             if (ids[i] == g_array_buf) g_array_buf = 0;
             if (ids[i] == g_elem_buf) g_elem_buf = 0;
-            if (ids[i] < g_elem_shadow.size())
-                std::vector<uint8_t>().swap(g_elem_shadow[ids[i]]);
+            for (int a = 0; a < kMaxAttribs; a++)
+                if (g_attr[a].vbo == ids[i]) g_attr[a].vbo = 0;
+            if (ids[i] < g_buf_shadow.size())
+                std::vector<uint8_t>().swap(g_buf_shadow[ids[i]]);
+            if (ids[i] < g_buf_size.size())
+                g_buf_size[ids[i]] = 0;
+            if (ids[i] < g_buf_usage.size())
+                g_buf_usage[ids[i]] = 0;
         }
+    } else if (kind == KIND_FBO) {
+        for (GLsizei i = 0; i < n; i++)
+            if (ids[i] == g_fbo) g_fbo = 0;
+    } else if (kind == KIND_RBO) {
+        for (GLsizei i = 0; i < n; i++)
+            if (ids[i] == g_rbo) g_rbo = 0;
     }
 }
 
@@ -588,31 +627,44 @@ static void gb_glShaderSource(GLuint shader, GLsizei count, const GLchar *const 
 
 static void gb_glBindBuffer(GLenum target, GLuint buffer)
 {
-    if (target == 0x8892) g_array_buf = buffer;
-    else if (target == 0x8893) g_elem_buf = buffer;
+    if (target == 0x8892) {
+        if (g_array_buf == buffer)
+            return;
+        g_array_buf = buffer;
+    } else if (target == 0x8893) {
+        if (g_elem_buf == buffer)
+            return;
+        g_elem_buf = buffer;
+    }
     emit(GB_OP_BIND_BUFFER, { (int32_t)target, (int32_t)buffer });
 }
 
 /*
- * Index buffers, shadowed. A draw that takes its indices from a buffer but its
- * vertices from client memory has to ship the vertices it touches, and only
- * the indices say which those are; the host's copy cannot be read back
- * cheaply, so the guest keeps its own.
+ * Vertex and index buffers, shadowed.
+ * 1) A draw that takes its indices from a buffer but its vertices from client
+ *    memory uses the shadow copy to know which vertices the draw reaches.
+ * 2) In Town, the engine re-uploads ~315 KB/frame via glBufferData; comparing
+ *    against the shadow copy skips unchanged buffers and sends only modified
+ *    byte ranges via GB_OP_BUFFER_SUB_DATA.
  */
-static std::vector<uint8_t> *elem_shadow(GLuint id)
+static std::vector<uint8_t> *buf_shadow(GLuint id)
 {
     if (id == 0)
         return NULL;
-    if (id >= g_elem_shadow.size())
-        g_elem_shadow.resize((size_t)id + 64);
-    return &g_elem_shadow[id];
+    if (id >= g_buf_shadow.size())
+        g_buf_shadow.resize((size_t)id + 64);
+    return &g_buf_shadow[id];
+}
+
+static std::vector<uint8_t> *elem_shadow(GLuint id)
+{
+    return buf_shadow(id);
 }
 
 static void shadow_write(GLenum target, size_t offset, const void *data, size_t size, bool whole)
 {
-    if (target != 0x8893)
-        return;
-    std::vector<uint8_t> *s = elem_shadow(g_elem_buf);
+    GLuint id = target == 0x8893 ? g_elem_buf : (target == 0x8892 ? g_array_buf : 0);
+    std::vector<uint8_t> *s = buf_shadow(id);
     if (!s)
         return;
     if (whole)
@@ -623,27 +675,85 @@ static void shadow_write(GLenum target, size_t offset, const void *data, size_t 
         memcpy(s->data() + offset, data, size);
 }
 
+static void emit_buffer_diff(GLenum target, std::vector<uint8_t> *s, size_t offset, const void *data, size_t size)
+{
+    const uint8_t *src = (const uint8_t *)data;
+    uint8_t *dst = s->data() + offset;
+    size_t first = 0;
+    while (first + 8 <= size) {
+        uint64_t a, b;
+        memcpy(&a, dst + first, 8);
+        memcpy(&b, src + first, 8);
+        if (a != b)
+            break;
+        first += 8;
+    }
+    while (first < size && dst[first] == src[first])
+        first++;
+    if (first == size)
+        return;
+    size_t last = size;
+    while (last >= first + 8) {
+        uint64_t a, b;
+        memcpy(&a, dst + last - 8, 8);
+        memcpy(&b, src + last - 8, 8);
+        if (a != b)
+            break;
+        last -= 8;
+    }
+    while (last > first && dst[last - 1] == src[last - 1])
+        last--;
+    size_t diff_len = last - first;
+    memcpy(dst + first, src + first, diff_len);
+    emit(GB_OP_BUFFER_SUB_DATA,
+         { (int32_t)target, (int32_t)(offset + first), (int32_t)diff_len, (int32_t)diff_len },
+         src + first, diff_len);
+}
+
 static void gb_glBufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage)
 {
-    GLuint id = target == 0x8893 ? g_elem_buf : g_array_buf;
-    if (id >= g_buf_size.size())
+    GLuint id = target == 0x8893 ? g_elem_buf : (target == 0x8892 ? g_array_buf : 0);
+    if (id >= g_buf_size.size()) {
         g_buf_size.resize((size_t)id + 64, 0);
-    g_buf_size[id] = size > 0 ? (uint32_t)size : 0;
-    shadow_write(target, 0, data, size > 0 ? (size_t)size : 0, true);
+        g_buf_usage.resize((size_t)id + 64, 0);
+    }
+    size_t sz = size > 0 ? (size_t)size : 0;
+    std::vector<uint8_t> *s = buf_shadow(id);
+    bool same_alloc = (id != 0 && s && g_buf_size[id] == (uint32_t)sz && g_buf_usage[id] == usage && s->size() == sz && sz > 0);
+    g_buf_size[id] = (uint32_t)sz;
+    g_buf_usage[id] = usage;
+
+    if (same_alloc) {
+        if (!data) {
+            /* Buffer orphaning of identical size/usage: host buffer is already allocated. */
+            return;
+        }
+        emit_buffer_diff(target, s, 0, data, sz);
+        return;
+    }
+
+    shadow_write(target, 0, data, sz, true);
     emit(GB_OP_BUFFER_DATA, { (int32_t)target, (int32_t)size, (int32_t)usage, data ? (int32_t)size : -1 },
-         data, data && size > 0 ? (size_t)size : 0);
+         data, data && size > 0 ? sz : 0);
 }
 
 static void gb_glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void *data)
 {
-    if (!data || size <= 0)
+    if (!data || size <= 0 || offset < 0)
         return;
-    shadow_write(target, (size_t)offset, data, (size_t)size, false);
-    emit(GB_OP_BUFFER_SUB_DATA, { (int32_t)target, (int32_t)offset, (int32_t)size, (int32_t)size }, data, (size_t)size);
+    GLuint id = target == 0x8893 ? g_elem_buf : (target == 0x8892 ? g_array_buf : 0);
+    std::vector<uint8_t> *s = buf_shadow(id);
+    size_t off = (size_t)offset, sz = (size_t)size;
+    if (s && off + sz <= s->size()) {
+        emit_buffer_diff(target, s, off, data, sz);
+        return;
+    }
+    shadow_write(target, off, data, sz, false);
+    emit(GB_OP_BUFFER_SUB_DATA, { (int32_t)target, (int32_t)offset, (int32_t)size, (int32_t)size }, data, sz);
 }
 
-/* The engine maps buffers for writing; hand it scratch memory and upload on unmap. */
-struct MapState { void *ptr; size_t size; };
+/* The engine maps buffers for writing; hand it scratch memory initialized from shadow and upload only the modified range on unmap. */
+struct MapState { std::vector<uint8_t> buf; bool active; };
 static MapState g_map[2];
 
 static void *gb_glMapBufferOES(GLenum target, GLenum access)
@@ -653,23 +763,33 @@ static void *gb_glMapBufferOES(GLenum target, GLenum access)
     GLuint id = slot ? g_elem_buf : g_array_buf;
     if (id >= g_buf_size.size() || g_buf_size[id] == 0)
         return NULL;
-    free(g_map[slot].ptr);
-    g_map[slot].size = g_buf_size[id];
-    g_map[slot].ptr = calloc(1, g_map[slot].size);
-    return g_map[slot].ptr;
+    size_t sz = g_buf_size[id];
+    g_map[slot].buf.resize(sz);
+    std::vector<uint8_t> *s = buf_shadow(id);
+    if (s && s->size() == sz)
+        memcpy(g_map[slot].buf.data(), s->data(), sz);
+    else
+        memset(g_map[slot].buf.data(), 0, sz);
+    g_map[slot].active = true;
+    return g_map[slot].buf.data();
 }
 
 static GLboolean gb_glUnmapBufferOES(GLenum target)
 {
     int slot = target == 0x8893 ? 1 : 0;
-    if (!g_map[slot].ptr)
+    if (!g_map[slot].active)
         return GL_FALSE;
-    shadow_write(target, 0, g_map[slot].ptr, g_map[slot].size, false);
-    emit(GB_OP_BUFFER_SUB_DATA, { (int32_t)target, 0, (int32_t)g_map[slot].size, (int32_t)g_map[slot].size },
-         g_map[slot].ptr, g_map[slot].size);
-    free(g_map[slot].ptr);
-    g_map[slot].ptr = NULL;
-    g_map[slot].size = 0;
+    g_map[slot].active = false;
+    GLuint id = slot ? g_elem_buf : g_array_buf;
+    std::vector<uint8_t> *s = buf_shadow(id);
+    size_t sz = g_map[slot].buf.size();
+    const uint8_t *ptr = g_map[slot].buf.data();
+    if (s && s->size() == sz) {
+        emit_buffer_diff(target, s, 0, ptr, sz);
+    } else {
+        shadow_write(target, 0, ptr, sz, false);
+        emit(GB_OP_BUFFER_SUB_DATA, { (int32_t)target, 0, (int32_t)sz, (int32_t)sz }, ptr, sz);
+    }
     return GL_TRUE;
 }
 
@@ -847,6 +967,101 @@ static void gbf_glBindTexture(GLenum target, GLuint tex)
     gb_glBindTexture(target, tex);
 }
 
+static void gbf_glBindFramebuffer(GLenum target, GLuint framebuffer)
+{
+    if (target == 0x8D40) {
+        if (g_fbo == framebuffer)
+            return;
+        g_fbo = framebuffer;
+    }
+    gb_glBindFramebuffer(target, framebuffer);
+}
+
+static void gbf_glBindRenderbuffer(GLenum target, GLuint renderbuffer)
+{
+    if (target == 0x8D41) {
+        if (g_rbo == renderbuffer)
+            return;
+        g_rbo = renderbuffer;
+    }
+    gb_glBindRenderbuffer(target, renderbuffer);
+}
+
+static void gbf_glViewport(GLint x, GLint y, GLsizei w, GLsizei h)
+{
+    if (g_viewport_set && g_viewport[0] == x && g_viewport[1] == y && g_viewport[2] == w && g_viewport[3] == h)
+        return;
+    g_viewport_set = true;
+    g_viewport[0] = x; g_viewport[1] = y; g_viewport[2] = w; g_viewport[3] = h;
+    gb_glViewport(x, y, w, h);
+}
+
+static void gbf_glScissor(GLint x, GLint y, GLsizei w, GLsizei h)
+{
+    if (g_scissor_set && g_scissor[0] == x && g_scissor[1] == y && g_scissor[2] == w && g_scissor[3] == h)
+        return;
+    g_scissor_set = true;
+    g_scissor[0] = x; g_scissor[1] = y; g_scissor[2] = w; g_scissor[3] = h;
+    gb_glScissor(x, y, w, h);
+}
+
+static void gbf_glColorMask(GLboolean r, GLboolean g, GLboolean b, GLboolean a)
+{
+    GLint ir = r != 0, ig = g != 0, ib = b != 0, ia = a != 0;
+    if (g_color_mask[0] == ir && g_color_mask[1] == ig && g_color_mask[2] == ib && g_color_mask[3] == ia)
+        return;
+    g_color_mask[0] = ir; g_color_mask[1] = ig; g_color_mask[2] = ib; g_color_mask[3] = ia;
+    gb_glColorMask(r, g, b, a);
+}
+
+static void gbf_glDepthMask(GLboolean flag)
+{
+    GLint f = flag != 0;
+    if (g_depth_mask == f)
+        return;
+    g_depth_mask = f;
+    gb_glDepthMask(flag);
+}
+
+static int cap_slot(GLenum cap)
+{
+    switch (cap) {
+    case 0x0BE2: return 0; /* GL_BLEND */
+    case 0x0B44: return 1; /* GL_CULL_FACE */
+    case 0x0B71: return 2; /* GL_DEPTH_TEST */
+    case 0x0BD0: return 3; /* GL_DITHER */
+    case 0x8037: return 4; /* GL_POLYGON_OFFSET_FILL */
+    case 0x809E: return 5; /* GL_SAMPLE_ALPHA_TO_COVERAGE */
+    case 0x80A0: return 6; /* GL_SAMPLE_COVERAGE */
+    case 0x0C11: return 7; /* GL_SCISSOR_TEST */
+    case 0x0B90: return 8; /* GL_STENCIL_TEST */
+    default: return -1;
+    }
+}
+static uint8_t g_cap_state[9]; /* 0 = unknown, 1 = disabled, 2 = enabled */
+
+static void gbf_glEnable(GLenum cap)
+{
+    int s = cap_slot(cap);
+    if (s >= 0) {
+        if (g_cap_state[s] == 2)
+            return;
+        g_cap_state[s] = 2;
+    }
+    gb_glEnable(cap);
+}
+
+static void gbf_glDisable(GLenum cap)
+{
+    int s = cap_slot(cap);
+    if (s >= 0) {
+        if (g_cap_state[s] == 1)
+            return;
+        g_cap_state[s] = 1;
+    }
+    gb_glDisable(cap);
+}
+
 static void gbf_glUniform1i(GLint loc, GLint v)
 {
     if (loc < 0 || uni_same(100, loc, 1, &v, 4))
@@ -899,12 +1114,18 @@ static void gb_glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
     if (index >= (GLuint)kMaxAttribs)
         return;
     Attrib &a = g_attr[index];
+    bool is_client = (g_array_buf == 0);
+    if (!is_client && !a.client && a.vbo == g_array_buf && a.size == size && a.type == type &&
+        a.normalized == normalized && a.stride == stride && a.ptr == pointer) {
+        return;
+    }
     a.size = size;
     a.type = type;
     a.normalized = normalized;
     a.stride = stride;
     a.ptr = pointer;
-    a.client = g_array_buf == 0;
+    a.client = is_client;
+    a.vbo = is_client ? 0 : g_array_buf;
     if (!a.client)
         emit(GB_OP_ATTRIB_POINTER_VBO, { (int32_t)index, size, (int32_t)type, (int32_t)normalized, stride,
                                          (int32_t)(uintptr_t)pointer });
@@ -996,30 +1217,30 @@ static void gb_glDrawElements(GLenum mode, GLsizei count, GLenum type, const voi
     const bool client_indices = g_elem_buf == 0;
     size_t idx_bytes = 0;
 
+    bool any_client = false;
+    for (int i = 0; i < kMaxAttribs; i++)
+        any_client |= g_attr[i].enabled && g_attr[i].client && g_attr[i].ptr;
+
     if (client_indices) {
         if (!indices)
             return;
         idx_bytes = (size_t)count * (size_t)type_size(type);
-        collect_client(0, (GLsizei)max_index_of(indices, count, type) + 1, blocks);
-    } else {
-        bool any_client = false;
-        for (int i = 0; i < kMaxAttribs; i++)
-            any_client |= g_attr[i].enabled && g_attr[i].client && g_attr[i].ptr;
-        if (any_client) {
-            /* Indices in a buffer, vertices in client memory: the shadow copy
-             * says how many vertices the draw reaches. */
-            std::vector<uint8_t> *s = elem_shadow(g_elem_buf);
-            size_t off = (size_t)(uintptr_t)indices;
-            size_t need = off + (size_t)count * (size_t)type_size(type);
-            if (s && need <= s->size()) {
-                collect_client(0, (GLsizei)max_index_of(s->data() + off, count, type) + 1, blocks);
-            } else {
-                static bool warned = false;
-                if (!warned) {
-                    warned = true;
-                    trace("gl bridge: indexed draw past its index buffer's known contents (%zu > %zu)",
-                          need, s ? s->size() : (size_t)0);
-                }
+        if (any_client)
+            collect_client(0, (GLsizei)max_index_of(indices, count, type) + 1, blocks);
+    } else if (any_client) {
+        /* Indices in a buffer, vertices in client memory: the shadow copy
+         * says how many vertices the draw reaches. */
+        std::vector<uint8_t> *s = elem_shadow(g_elem_buf);
+        size_t off = (size_t)(uintptr_t)indices;
+        size_t need = off + (size_t)count * (size_t)type_size(type);
+        if (s && need <= s->size()) {
+            collect_client(0, (GLsizei)max_index_of(s->data() + off, count, type) + 1, blocks);
+        } else {
+            static bool warned = false;
+            if (!warned) {
+                warned = true;
+                trace("gl bridge: indexed draw past its index buffer's known contents (%zu > %zu)",
+                      need, s ? s->size() : (size_t)0);
             }
         }
     }
@@ -1074,7 +1295,11 @@ static void gb_glVertexAttrib2fv(GLuint i, const GLfloat *v) { gb_glVertexAttrib
 static void gb_glVertexAttrib3fv(GLuint i, const GLfloat *v) { gb_glVertexAttrib3f(i, v[0], v[1], v[2]); }
 static void gb_glVertexAttrib4fv(GLuint i, const GLfloat *v) { gb_glVertexAttrib4f(i, v[0], v[1], v[2], v[3]); }
 static void gb_glReleaseShaderCompiler(void) {}
-static GLboolean gb_glIsEnabled(GLenum) { return GL_FALSE; }
+static GLboolean gb_glIsEnabled(GLenum cap)
+{
+    int s = cap_slot(cap);
+    return (s >= 0 && g_cap_state[s] == 2) ? GL_TRUE : GL_FALSE;
+}
 static GLboolean gb_glIsTexture(GLuint id) { return id != 0; }
 static GLboolean gb_glIsBuffer(GLuint id) { return id != 0; }
 static GLboolean gb_glIsFramebuffer(GLuint id) { return id != 0; }
@@ -1148,6 +1373,19 @@ static std::string filter_extensions(const std::string &all)
         }
         pos = end + 1;
     }
+    static const char *const kAlways[] = {
+        "GL_OES_compressed_ETC1_RGB8_texture",
+        "GL_AMD_compressed_ATC_texture",
+        "GL_ATI_texture_compression_atitc",
+        NULL,
+    };
+    for (int i = 0; kAlways[i]; i++) {
+        if ((" " + out + " ").find(std::string(" ") + kAlways[i] + " ") == std::string::npos) {
+            if (!out.empty())
+                out += ' ';
+            out += kAlways[i];
+        }
+    }
     return out;
 }
 
@@ -1191,20 +1429,110 @@ static const GLubyte *gb_glGetString(GLenum name)
 
 static void gb_glGetIntegerv(GLenum pname, GLint *data)
 {
+    if (!data)
+        return;
+    switch (pname) {
+    case 0x8CA6: /* GL_FRAMEBUFFER_BINDING */
+        data[0] = (GLint)g_fbo;
+        return;
+    case 0x8CA7: /* GL_RENDERBUFFER_BINDING */
+        data[0] = (GLint)g_rbo;
+        return;
+    case 0x8894: /* GL_ARRAY_BUFFER_BINDING */
+        data[0] = (GLint)g_array_buf;
+        return;
+    case 0x8895: /* GL_ELEMENT_ARRAY_BUFFER_BINDING */
+        data[0] = (GLint)g_elem_buf;
+        return;
+    case 0x8B8D: /* GL_CURRENT_PROGRAM */
+        data[0] = (GLint)g_cur_prog;
+        return;
+    case 0x84E0: /* GL_ACTIVE_TEXTURE */
+        data[0] = (GLint)g_active_unit;
+        return;
+    case 0x8069: /* GL_TEXTURE_BINDING_2D */
+        data[0] = (g_active_unit >= 0x84C0 && g_active_unit < 0x84C0 + 32)
+                      ? (GLint)g_bound_tex[g_active_unit - 0x84C0][0] : 0;
+        return;
+    case 0x8514: /* GL_TEXTURE_BINDING_CUBE_MAP */
+        data[0] = (g_active_unit >= 0x84C0 && g_active_unit < 0x84C0 + 32)
+                      ? (GLint)g_bound_tex[g_active_unit - 0x84C0][1] : 0;
+        return;
+    case 0x0CF5: /* GL_UNPACK_ALIGNMENT */
+        data[0] = g_unpack_align;
+        return;
+    case 0x0D05: /* GL_PACK_ALIGNMENT */
+        data[0] = g_pack_align;
+        return;
+    case 0x0C23: /* GL_COLOR_WRITEMASK */
+        memcpy(data, g_color_mask, 16);
+        return;
+    case 0x0B72: /* GL_DEPTH_WRITEMASK */
+        data[0] = g_depth_mask;
+        return;
+    case 0x0BA2: /* GL_VIEWPORT */
+        if (g_viewport_set) {
+            memcpy(data, g_viewport, 16);
+            return;
+        }
+        break;
+    case 0x0C10: /* GL_SCISSOR_BOX */
+        if (g_scissor_set) {
+            memcpy(data, g_scissor, 16);
+            return;
+        }
+        break;
+    default:
+        break;
+    }
+
+    size_t max_bytes = (pname == 0x86A3) ? 256 : 64;
+    static std::map<GLenum, std::vector<uint8_t> > int_cache;
+    {
+        Lock l;
+        std::map<GLenum, std::vector<uint8_t> >::iterator it = int_cache.find(pname);
+        if (it != int_cache.end()) {
+            size_t n = it->second.size() < max_bytes ? it->second.size() : max_bytes;
+            if (n)
+                memcpy(data, it->second.data(), n);
+            return;
+        }
+    }
     std::vector<uint8_t> rep;
     query(GB_OP_Q_GET_INTEGERV, { (int32_t)pname }, rep);
-    size_t n = rep.size() < 64 ? rep.size() : 64;
-    if (data && n)
+    size_t n = rep.size() < max_bytes ? rep.size() : max_bytes;
+    if (n)
         memcpy(data, rep.data(), n);
+    if (pname != 0x0BA2 && pname != 0x0C10) {
+        Lock l;
+        int_cache[pname] = rep;
+    }
 }
 
 static void gb_glGetFloatv(GLenum pname, GLfloat *data)
 {
+    if (!data)
+        return;
+    static std::map<GLenum, std::vector<uint8_t> > float_cache;
+    {
+        Lock l;
+        std::map<GLenum, std::vector<uint8_t> >::iterator it = float_cache.find(pname);
+        if (it != float_cache.end()) {
+            size_t n = it->second.size() < 64 ? it->second.size() : 64;
+            if (n)
+                memcpy(data, it->second.data(), n);
+            return;
+        }
+    }
     std::vector<uint8_t> rep;
     query(GB_OP_Q_GET_FLOATV, { (int32_t)pname }, rep);
     size_t n = rep.size() < 64 ? rep.size() : 64;
-    if (data && n)
+    if (n)
         memcpy(data, rep.data(), n);
+    {
+        Lock l;
+        float_cache[pname] = rep;
+    }
 }
 
 static void gb_glGetShaderiv(GLuint shader, GLenum pname, GLint *params)
@@ -1355,7 +1683,8 @@ static GLint gb_glGetUniformLocation(GLuint program, const GLchar *name)
 
 static GLenum gb_glCheckFramebufferStatus(GLenum target)
 {
-    return (GLenum)query_int(GB_OP_Q_CHECK_FB, { (int32_t)target });
+    (void)target;
+    return 0x8CD5; /* GL_FRAMEBUFFER_COMPLETE */
 }
 
 /*
@@ -1424,6 +1753,14 @@ static const Entry kEntries[] = {
     { "glUseProgram", (void *)gbf_glUseProgram },
     { "glActiveTexture", (void *)gbf_glActiveTexture },
     { "glBindTexture", (void *)gbf_glBindTexture },
+    { "glBindFramebuffer", (void *)gbf_glBindFramebuffer },
+    { "glBindRenderbuffer", (void *)gbf_glBindRenderbuffer },
+    { "glViewport", (void *)gbf_glViewport },
+    { "glScissor", (void *)gbf_glScissor },
+    { "glColorMask", (void *)gbf_glColorMask },
+    { "glDepthMask", (void *)gbf_glDepthMask },
+    { "glEnable", (void *)gbf_glEnable },
+    { "glDisable", (void *)gbf_glDisable },
     { "glUniform1i", (void *)gbf_glUniform1i },
     { "glUniform1f", (void *)gbf_glUniform1f },
     GB_SIMPLE_CALLS(GB_ENTRY)
@@ -1482,7 +1819,7 @@ static int listen_for_host(long port)
     memset(&a, 0, sizeof(a));
     a.sin_family = AF_INET;
     a.sin_port = htons((uint16_t)port);
-    a.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    a.sin_addr.s_addr = htonl(INADDR_ANY);
     if (ls < 0 || bind(ls, (struct sockaddr *)&a, sizeof(a)) != 0 || listen(ls, 1) != 0) {
         fatal("GL bridge: cannot listen on 127.0.0.1:%ld: %s", port, strerror(errno));
         return -1;
@@ -1522,8 +1859,20 @@ extern "C" int gl_bridge_init(void)
         fatal("GL bridge: set GL_LISTEN=<port>, or the GL_CMD and GL_REPLY pipe paths");
         return 0;
     }
-    g_cmd_fd = open(cmd, O_WRONLY);
-    g_rep_fd = open(rep, O_RDONLY);
+    if (strcmp(cmd, rep) == 0) {
+        g_cmd_fd = g_rep_fd = open(cmd, O_RDWR);
+        if (g_cmd_fd < 0) {
+            fatal("GL bridge: cannot open %s: %s", cmd, strerror(errno));
+            return 0;
+        }
+        trace("gl bridge: waiting for host on %s", cmd);
+        struct pollfd pfd = { g_cmd_fd, POLLOUT, 0 };
+        while (poll(&pfd, 1, 100) >= 0 && (pfd.revents & POLLHUP))
+            usleep(20000);
+    } else {
+        g_cmd_fd = open(cmd, O_WRONLY);
+        g_rep_fd = open(rep, O_RDONLY);
+    }
     if (g_cmd_fd < 0 || g_rep_fd < 0) {
         fatal("GL bridge: cannot open the pipes (%s, %s): %s", cmd, rep, strerror(errno));
         return 0;
