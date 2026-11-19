@@ -119,7 +119,7 @@
   server/.venv-android/bin/python tools/make_extended.py   # gamebin/E-Warriors-3-v4-1-0-cache-extended.ew3x из IPA
   tools/make_release.sh      # release/v<версия>/: подписанный APK, расширенный пакет, INSTALL.txt, RELEASE_NOTES.md, src, SHA256SUMS
   ```
-  Всё нужное для сборки (Android SDK с `adb` — `tools/adb`, JDK, SDL для ARM, qemu в `third_party/qemu/`) лежит в проекте, вне git.
+  Всё нужное для сборки (Android SDK с `adb` — `tools/adb`, JDK, SDL для ARM, qemu в `../__shared-third-party__/qemu/`) лежит в общей папке `../__shared-third-party__`, вне git.
 - **GL-мост для Windows (`host/build-win/ew3gl.exe`)** — MSVC + CMake + Ninja из WSL: `host/build.sh ew3gl`. Цель `ew3host` пока не линкуется (хост не закончен).
 - **Кэш сконвертированных бандлов**: `ew3data/server/bundle_cache/` (пересоздаётся автоматически при изменении хэшей в `server/ew3server.py`; каталог задаёт `EW3_BUNDLE_CACHE`).
 

@@ -1,12 +1,11 @@
-# Third-party toolchains, sources and downloads (fetched locally, never committed)
-/dotnet/
-/android-sdk
-/jdk
-/sdl-arm
+# Third-party toolchains/sources/downloads: the project may hold a local copy (it takes precedence), by default they come from ../__shared-third-party__
+/android-sdk/
+/jdk/
+/sdl-arm/
 /downloads/
-/third_party/boost/
-# clone of azahar-emu/dynarmic, commit recorded in PROJECT_STATE.md
-/third_party/dynarmic/
+/qemu-src/
+/dotnet/
+/third_party/
 # Game files are the player's own (Glu), never the repo's
 /gamebin/
 /ew3data/
@@ -27,7 +26,6 @@ __pycache__/
 release.pass
 *:Zone.Identifier
 /host/build-win/
-/third_party/*
 /server/.venv/
 /server/.venv-android/
 /apk/build/

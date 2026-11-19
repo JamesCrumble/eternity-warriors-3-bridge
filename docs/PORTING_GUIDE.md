@@ -192,15 +192,15 @@ CGS (`server/cgs*.py`). Правило для всех ответов: блок�
 
 ```bash
 ./build.sh                 # гость port/build/ew3
-bash apk/make_sysroot.sh   # sysroot + serverroot (нужны downloads/armhf/debs и wheels-android)
+bash apk/make_sysroot.sh   # sysroot + serverroot (нужны ../__shared-third-party__/downloads/armhf/debs и wheels-android)
 bash apk/build_apk.sh      # Eternity-Warriors-3-Bridge-debug.apk
 tools/make_release.sh      # release/v<версия>/: подписанный APK, INSTALL.txt, RELEASE_NOTES.md, src, SHA256SUMS
 ```
 
-`libqemu.so` берётся из `third_party/qemu/qemu-arm-E.stripped` (`QEMU_BIN` меняет путь; патчи и скрипт сборки qemu — в [qemu/](../qemu));
+`libqemu.so` берётся из `../__shared-third-party__/qemu/qemu-arm-E.stripped` (`QEMU_BIN` меняет путь; патчи и скрипт сборки qemu — в [qemu/](../qemu));
 `patch_syscalls.py` переписывает в нём `set_robust_list`/`rseq`/`faccessat2` под seccomp-фильтр Android.
-`jdk/`, `android-sdk/` (с `adb`: `tools/adb`), `sdl-arm/` и `third_party/qemu/` — копии в проекте, вне git. Debian-пакеты Python (`downloads/armhf/debs`) и
-чистые колёса (`downloads/armhf/wheels-android`, `pip download --no-deps --platform any -r server/requirements-android.txt`)
+`jdk/`, `android-sdk/` (с `adb`: `tools/adb`), `sdl-arm/` и `qemu/` лежат в общей папке `../__shared-third-party__`, вне git. Debian-пакеты Python (`../__shared-third-party__/downloads/armhf/debs`) и
+чистые колёса (`../__shared-third-party__/downloads/armhf/wheels-android`, `pip download --no-deps --platform any -r server/requirements-android.txt`)
 лежат вне git.
 
 ### 7.2. Раскладка данных на телефоне

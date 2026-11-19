@@ -5,9 +5,16 @@ import subprocess
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
+# Third-party dependencies: looked up in this project first (local_rel), then in ../__shared-third-party__.
+SHARED = os.path.normpath(os.path.join(ROOT, "..", "__shared-third-party__"))
 
-zig = os.path.abspath("third_party/zig/zig.exe")
-sysroot = os.path.abspath("third_party/sysroot-armhf")
+
+def tp(name, local_rel=None):
+    local = os.path.join(ROOT, local_rel or name)
+    return local if os.path.exists(local) else os.path.join(SHARED, name)
+
+zig = os.path.join(tp("zig", "third_party/zig"), "zig.exe")
+sysroot = tp("sysroot-armhf", "third_party/sysroot-armhf")
 src_dirs = [
     "src",
     "android",
@@ -32,7 +39,7 @@ includes = [
     "-Iport/thunks/libc",
     "-Iport/thunks/libc/generated",
     "-Iport/jni",
-    "-Ithird_party/khronos/include",
+    f"-I{tp('khronos', 'third_party/khronos')}/include",
     f"-I{sysroot}/usr/include",
     f"-I{sysroot}/usr/include/arm-linux-gnueabihf",
     f"-I{sysroot}/usr/include/SDL2",
@@ -99,9 +106,9 @@ def build_all():
             print(err[:1500])
         raise SystemExit(1)
 
-    os.makedirs("sdl-arm/lib", exist_ok=True)
+    os.makedirs("build/sdl-shim/lib", exist_ok=True)
     sdl_shim = os.path.join(ROOT, "tools", "sdl_shim.cpp")
-    sdl_so = "sdl-arm/lib/libSDL2-2.0.so.0"
+    sdl_so = "build/sdl-shim/lib/libSDL2-2.0.so.0"
     sdl_rebuilt = False
     if not os.path.exists(sdl_so) or os.path.getmtime(sdl_so) < os.path.getmtime(sdl_shim):
         sdl_cmd = [
@@ -127,7 +134,7 @@ def build_all():
             for s in srcs
         ]
         lib_dirs = [
-            "-Lsdl-arm/lib",
+            "-Lbuild/sdl-shim/lib",
             f"-L{sysroot}/usr/lib/arm-linux-gnueabihf",
             f"-L{sysroot}/lib/arm-linux-gnueabihf",
         ]

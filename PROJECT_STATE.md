@@ -35,7 +35,8 @@
 | `ew3data/` | рабочие данные игры на ПК (OBB, `.so`, `server/players.json`, `server/bundle_cache/`) | нет |
 | `release/` | `release/v<версия>/`: файлы для GitHub-релиза (`tools/make_release.sh`) | нет |
 | `qemu/` | патчи и скрипт сборки qemu (GPL, прикладываются к релизу) | да |
-| `android-sdk/`, `jdk/`, `sdl-arm/`, `third_party/qemu/`, `downloads/`, `apk/build/`, `third_party/`, `extracted/` | копии SDK/JDK/SDL и бинарник qemu (проект самодостаточен), загрузки, сборка APK и ключи подписи, зависимости, декомпиляция | нет |
+| `../__shared-third-party__/` (`android-sdk`, `jdk`, `sdl-arm`, `qemu`, `downloads`, `dotnet`, `boost`, `dynarmic`, `angle`, `khronos`, `sdl2-win`) | общая папка внешних зависимостей всех проектов, вне репозитория | нет |
+| `apk/build/`, `extracted/` | сборка APK и ключи подписи, декомпиляция | нет |
 
 ## Что сделано и работает (2026-10-18)
 

@@ -6,6 +6,7 @@
 # Starts the stand-in server if it is not running.
 # Usage: tools/play_wslg.sh [WIDTHxHEIGHT]   Logs: logs/play.log, logs/server.log
 P=$(cd "$(dirname "$0")/.." && pwd)
+tp() { [ -e "$P/${2:-$1}" ] && echo "$P/${2:-$1}" || echo "${SHARED_3P:-$P/../__shared-third-party__}/$1"; }  # third-party: this project first, then ../__shared-third-party__
 cd "$P"
 mkdir -p logs ctl build
 RES=${1:-1280x720}
@@ -32,6 +33,6 @@ export EGL_PLATFORM=surfaceless LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe 
 export EW3_SERVER=127.0.0.1 EW3_WIDTH=${RES%x*} EW3_HEIGHT=${RES#*x} EW3_ALLOW_UNRESOLVED=1
 export EW3_CONTROL_DIR=ctl EW3_FB_SHM=$FB
 export QEMU_LD_PREFIX=/usr/arm-linux-gnueabihf
-export LD_LIBRARY_PATH="$P/sdl-arm/lib:/usr/lib/arm-linux-gnueabihf"
+export LD_LIBRARY_PATH="$(tp sdl-arm)/lib:/usr/lib/arm-linux-gnueabihf"
 qemu-arm port/build/ew3 ew3data > logs/play.log 2>&1
 kill $VIEW 2>/dev/null

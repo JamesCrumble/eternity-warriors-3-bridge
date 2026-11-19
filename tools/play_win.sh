@@ -5,6 +5,7 @@
 # Sound: the guest's SDL -> WSLg's PulseAudio. Starts the stand-in server if it is not running.
 # Usage: tools/play_win.sh [WIDTHxHEIGHT]   Logs: logs/play.log (guest), logs/ew3gl.log, logs/server.log
 P=$(cd "$(dirname "$0")/.." && pwd)
+tp() { [ -e "$P/${2:-$1}" ] && echo "$P/${2:-$1}" || echo "${SHARED_3P:-$P/../__shared-third-party__}/$1"; }  # third-party: this project first, then ../__shared-third-party__
 cd "$P"
 mkdir -p logs ctl
 RES=${1:-1280x720}
@@ -44,7 +45,7 @@ esac
     export SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=${SDL_AUDIODRIVER:-pulseaudio}
     export EW3_GL_BRIDGE=1 EW3_GL_LISTEN=$PORT EW3_SERVER=127.0.0.1 EW3_ALLOW_UNRESOLVED=1 LOADER_TRACE=1
     export QEMU_LD_PREFIX=/usr/arm-linux-gnueabihf
-    export LD_LIBRARY_PATH="$P/sdl-arm/lib:/usr/lib/arm-linux-gnueabihf"
+    export LD_LIBRARY_PATH="$(tp sdl-arm)/lib:/usr/lib/arm-linux-gnueabihf"
     exec qemu-arm port/build/ew3 ew3data
 ) > logs/play.log 2>&1 &
 GUEST=$!

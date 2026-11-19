@@ -9,17 +9,32 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 set(EW3_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/..)
+# Third-party dependencies (boost, dynarmic, angle, sdl2-win, khronos): third_party/<name> of this project if present,
+# else ../__shared-third-party__/<name>.
+set(SHARED_3P ${EW3_ROOT}/../__shared-third-party__ CACHE PATH "shared third-party folder")
+macro(third_party_dir var name)
+    if (EXISTS ${EW3_ROOT}/third_party/${name})
+        set(${var} ${EW3_ROOT}/third_party/${name})
+    else()
+        set(${var} ${SHARED_3P}/${name})
+    endif()
+endmacro()
+third_party_dir(BOOST_3P boost)
+third_party_dir(DYNARMIC_3P dynarmic)
+third_party_dir(ANGLE_3P angle)
+third_party_dir(SDL2_WIN_3P sdl2-win)
+third_party_dir(KHRONOS_3P khronos)
 
-# dynarmic: A32 frontend, x64 backend, bundled externals; Boost headers from third_party/boost.
-set(Boost_INCLUDE_DIR ${EW3_ROOT}/third_party/boost CACHE PATH "" FORCE)
-set(BOOST_ROOT ${EW3_ROOT}/third_party/boost CACHE PATH "" FORCE)
+# dynarmic: A32 frontend, x64 backend, bundled externals; Boost headers from ${BOOST_3P}.
+set(Boost_INCLUDE_DIR ${BOOST_3P} CACHE PATH "" FORCE)
+set(BOOST_ROOT ${BOOST_3P} CACHE PATH "" FORCE)
 set(Boost_NO_SYSTEM_PATHS ON CACHE BOOL "" FORCE)
 set(DYNARMIC_TESTS OFF CACHE BOOL "" FORCE)
 set(DYNARMIC_FRONTENDS "A32" CACHE STRING "" FORCE)
 set(DYNARMIC_USE_BUNDLED_EXTERNALS ON CACHE BOOL "" FORCE)
 set(DYNARMIC_WARNINGS_AS_ERRORS OFF CACHE BOOL "" FORCE)
 set(DYNARMIC_USE_PRECOMPILED_HEADERS OFF CACHE BOOL "" FORCE)
-add_subdirectory(${EW3_ROOT}/third_party/dynarmic ${CMAKE_BINARY_DIR}/dynarmic EXCLUDE_FROM_ALL)
+add_subdirectory(${DYNARMIC_3P} ${CMAKE_BINARY_DIR}/dynarmic EXCLUDE_FROM_ALL)
 
 # C17 everywhere; C++ only for the dynarmic binding (src/cpu.cpp), whose API is C++.
 set(CMAKE_C_STANDARD 17)
@@ -35,10 +50,10 @@ if (MSVC)
 endif()
 
 # ew3gl.exe - the GL bridge host (glbridge/ew3gl.c, C): replays the guest's GLES stream on ANGLE
-# (Direct3D 11) in an SDL2 window. Needs third_party/sdl2-win (SDL2 VC package) and third_party/angle
+# (Direct3D 11) in an SDL2 window. Needs sdl2-win (SDL2 VC package) and angle (project third_party/ first, then ../__shared-third-party__)
 # (tools/angle_setup.sh: the DLLs plus libGLESv2.def, made into an import library here).
-set(ANGLE_DIR ${EW3_ROOT}/third_party/angle)
-set(SDL2_WIN_DIR ${EW3_ROOT}/third_party/sdl2-win)
+set(ANGLE_DIR ${ANGLE_3P})
+set(SDL2_WIN_DIR ${SDL2_WIN_3P})
 set(ANGLE_IMPLIB ${CMAKE_BINARY_DIR}/libGLESv2.lib)
 add_custom_command(
     OUTPUT ${ANGLE_IMPLIB}
@@ -49,7 +64,7 @@ add_custom_target(angle_implib DEPENDS ${ANGLE_IMPLIB})
 
 add_executable(ew3gl ${CMAKE_CURRENT_SOURCE_DIR}/glbridge/ew3gl.c)
 add_dependencies(ew3gl angle_implib)
-target_include_directories(ew3gl PRIVATE ${SDL2_WIN_DIR}/include ${EW3_ROOT}/third_party/khronos/include)
+target_include_directories(ew3gl PRIVATE ${SDL2_WIN_DIR}/include ${KHRONOS_3P}/include)
 target_compile_definitions(ew3gl PRIVATE SDL_MAIN_HANDLED NOMINMAX WIN32_LEAN_AND_MEAN _CRT_SECURE_NO_WARNINGS
                                          _WINSOCK_DEPRECATED_NO_WARNINGS)
 target_link_libraries(ew3gl PRIVATE ${SDL2_WIN_DIR}/lib/SDL2.lib ${ANGLE_IMPLIB} ws2_32)

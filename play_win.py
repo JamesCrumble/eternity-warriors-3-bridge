@@ -9,6 +9,13 @@ import time
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 os.chdir(ROOT)
+# Third-party dependencies: looked up in this project first (local_rel), then in ../__shared-third-party__.
+SHARED = os.path.normpath(os.path.join(ROOT, "..", "__shared-third-party__"))
+
+
+def tp(name, local_rel=None):
+    local = os.path.join(ROOT, local_rel or name)
+    return local if os.path.exists(local) else os.path.join(SHARED, name)
 os.makedirs("logs", exist_ok=True)
 os.makedirs("ctl", exist_ok=True)
 
@@ -16,7 +23,7 @@ stop_event = threading.Event()
 
 
 def wsl_base_cmd():
-    vhdx = os.path.join(ROOT, "third_party", "wsl-distro", "instance", "ext4.vhdx")
+    vhdx = os.path.join(tp("wsl-distro", "third_party/wsl-distro"), "instance", "ext4.vhdx")
     if os.path.exists(vhdx):
         return ["wsl", "-d", "ew3-wsl"]
     return ["wsl"]
@@ -25,7 +32,7 @@ def wsl_base_cmd():
 def has_wsl_qemu_arm():
     if os.environ.get("EW3_FORCE_QEMU_SYSTEM", "") == "1":
         return False
-    vhdx = os.path.join(ROOT, "third_party", "wsl-distro", "instance", "ext4.vhdx")
+    vhdx = os.path.join(tp("wsl-distro", "third_party/wsl-distro"), "instance", "ext4.vhdx")
     if os.path.exists(vhdx):
         return True
     try:
@@ -51,7 +58,7 @@ def ensure_build(use_wsl=False):
     import glob
 
     py = os.path.join(ROOT, "server", ".venv", "Scripts", "python.exe")
-    zig = os.path.join(ROOT, "third_party", "zig", "zig.exe")
+    zig = os.path.join(tp("zig", "third_party/zig"), "zig.exe")
 
     ew3gl_exe = os.path.join(ROOT, "host", "build-win", "ew3gl.exe")
     gl_srcs = glob.glob(os.path.join(ROOT, "host", "glbridge", "*.c")) + glob.glob(
@@ -71,11 +78,11 @@ def ensure_build(use_wsl=False):
                 "-O2",
                 "-DSDL_MAIN_HANDLED",
                 "-Ihost/glbridge",
-                "-Ithird_party/khronos/include",
-                "-Ithird_party/sdl2-win/include",
-                "-Ithird_party/sdl2-win/include/SDL2",
+                f"-I{tp('khronos', 'third_party/khronos')}/include",
+                f"-I{tp('sdl2-win', 'third_party/sdl2-win')}/include",
+                f"-I{tp('sdl2-win', 'third_party/sdl2-win')}/include/SDL2",
                 "host/glbridge/ew3gl.c",
-                "third_party/sdl2-win/lib/SDL2.lib",
+                f"{tp('sdl2-win', 'third_party/sdl2-win')}/lib/SDL2.lib",
                 "host/build-win/libGLESv2.lib",
                 "-lws2_32",
                 "-o",
@@ -117,7 +124,7 @@ def ensure_build(use_wsl=False):
     initrd_path = os.path.join(ROOT, "third_party", "qemu-guest", "ew3_initrd.cpio")
     initrd_deps = [
         os.path.join(ROOT, "port", "build", "ew3"),
-        os.path.join(ROOT, "sdl-arm", "lib", "libSDL2-2.0.so.0"),
+        os.path.join(ROOT, "build", "sdl-shim", "lib", "libSDL2-2.0.so.0"),
         os.path.join(ROOT, "third_party", "qemu-guest", "runner.c"),
         os.path.join(ROOT, "third_party", "qemu-guest", "build_initrd.py"),
     ]
@@ -436,7 +443,7 @@ def main():
         guest_proc = start_wsl_guest(w, h, play_log)
     else:
         qemu_exe = os.path.join(
-            ROOT, "third_party", "qemu", "xpack-qemu-arm-9.2.4-1", "bin", "qemu-system-arm.exe"
+            tp("qemu", "third_party/qemu"), "xpack-qemu-arm-9.2.4-1", "bin", "qemu-system-arm.exe"
         )
         gpu_arg = os.environ.get("EW3_GPU", "").strip().replace(" ", "_")
         append_str = f"console=ttyAMA0 raid=noautodetect quiet ew3_w={w} ew3_h={h}"

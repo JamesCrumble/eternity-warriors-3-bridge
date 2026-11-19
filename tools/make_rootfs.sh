@@ -5,10 +5,11 @@
 # Guest layout: /bin/ew3, /lib/ld-linux-armhf.so.3, /lib/arm-linux-gnueabihf/*.so*
 set -euo pipefail
 P=$(cd "$(dirname "$0")/.." && pwd)
+tp() { [ -e "$P/${2:-$1}" ] && echo "$P/${2:-$1}" || echo "${SHARED_3P:-$P/../__shared-third-party__}/$1"; }  # third-party: this project first, then ../__shared-third-party__
 OUT=${1:-$P/build/win/rootfs}
 BIN=$P/port/build/ew3
 READELF=arm-linux-gnueabihf-readelf
-SEARCH="$P/sdl-arm/lib /usr/arm-linux-gnueabihf/lib /usr/lib/arm-linux-gnueabihf /lib/arm-linux-gnueabihf"
+SEARCH="$(tp sdl-arm)/lib /usr/arm-linux-gnueabihf/lib /usr/lib/arm-linux-gnueabihf /lib/arm-linux-gnueabihf"
 [ -f "$BIN" ] || { echo "no $BIN - run ./build.sh first" >&2; exit 1; }
 rm -rf "$OUT"; mkdir -p "$OUT/bin" "$OUT/lib/arm-linux-gnueabihf" "$OUT/etc" "$OUT/tmp"
 cp "$BIN" "$OUT/bin/ew3"

@@ -2,13 +2,14 @@
 # Builds the armhf sysroot qemu-arm runs the game and the server in (assets/sysroot.zip of the APK):
 # the NEEDED closure of port/build/ew3, glibc and its loader, and Python 3.8 with the server's pure-Python
 # packages. Also builds apk/build/serverroot (the server's own files, assets/serverroot.zip).
-# Run in WSL from anywhere. Needs downloads/armhf/debs and downloads/armhf/wheels-android (see PROJECT_STATE.md).
+# Run in WSL from anywhere. Needs downloads/armhf/debs and .../wheels-android (in the project, else in ../__shared-third-party__) (see PROJECT_STATE.md).
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+tp() { [ -e "$REPO/${2:-$1}" ] && echo "$REPO/${2:-$1}" || echo "${SHARED_3P:-$REPO/../__shared-third-party__}/$1"; }  # third-party: this project first, then ../__shared-third-party__
 OUT="$REPO/apk/build/sysroot"
 SRV="$REPO/apk/build/serverroot"
-LIBDIRS=("$REPO/sdl-arm/lib" /lib/arm-linux-gnueabihf /usr/lib/arm-linux-gnueabihf /usr/arm-linux-gnueabihf/lib)
+LIBDIRS=("$(tp sdl-arm)/lib" /lib/arm-linux-gnueabihf /usr/lib/arm-linux-gnueabihf /usr/arm-linux-gnueabihf/lib)
 STRIP=arm-linux-gnueabihf-strip
 GUEST="$REPO/port/build/ew3"
 
@@ -43,10 +44,10 @@ done
 cp "$(readlink -f /usr/arm-linux-gnueabihf/lib/ld-linux-armhf.so.3)" "$OUT/lib/ld-linux-armhf.so.3"
 
 # Python 3.8 (Ubuntu 20.04 armhf) for the server; its libraries that the sysroot does not have yet.
-DEBS="$REPO/downloads/armhf/debs"
+DEBS="$(tp downloads)/armhf/debs"
 for d in "$DEBS"/*.deb; do dpkg-deb -x "$d" "$OUT"; done
 # Debian puts the library files under lib/arm-linux-gnueabihf or usr/lib/arm-linux-gnueabihf; both are on the loader path.
-for w in "$REPO"/downloads/armhf/wheels-android/*.whl; do
+for w in "$(tp downloads)"/armhf/wheels-android/*.whl; do
     python3 -c 'import sys, zipfile; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])' "$w" "$OUT/usr/lib/python3/dist-packages"
 done
 # The NEEDED closure of the Python binary and its extension modules: the debs carry only what Debian splits
